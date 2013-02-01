@@ -8,5 +8,10 @@ public class Main {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public boolean TestGIT()
+	{
+		return true;
+	}
 
 }
