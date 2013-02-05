@@ -4,7 +4,7 @@
 package edu.txstate.hearts.model;
 
 /**
- * @author Neil Stickels
+ * @author Neil Stickels, I Gede Sutapa
  *
  */
 public class Card {
