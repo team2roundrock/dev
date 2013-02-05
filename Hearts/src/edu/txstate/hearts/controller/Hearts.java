@@ -3,8 +3,9 @@
  */
 package edu.txstate.hearts.controller;
 
-import edu.txstate.hearts.model.Deck;
-import edu.txstate.hearts.model.Player;
+import java.util.List;
+
+import edu.txstate.hearts.model.*;
 
 /**
  * @author Neil Stickels
@@ -12,15 +13,16 @@ import edu.txstate.hearts.model.Player;
  */
 public class Hearts {
 
-	private Deck deck;
-	private Player[] players;
+	private static Deck deck;
+	private static List<Player> players;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		deck = new Deck();
+		deck.printCards();
 	}
 	
 	// we will need to add the stuff for managing the game, determining

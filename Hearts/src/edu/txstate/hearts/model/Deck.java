@@ -50,7 +50,8 @@ public class Deck {
 	{
 		for(int i = 0; i < cards.size(); i++)
 		{
-			System.out.printf("%-19s%s", cards.get(i));
+			System.out.printf("%-19s%s", cards.get(i),
+					((i+1)%4 == 0) ? "\n" : "");
 		}
 	}
 
