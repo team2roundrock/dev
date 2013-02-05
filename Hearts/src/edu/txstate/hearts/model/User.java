@@ -17,5 +17,11 @@ public class User extends Player {
 	}
 
 	private Achievements achievements;
+	
+	public Card playCard()
+	{
+		// this is where we need to implement how a human player plays a card
+		return null;
+	}
 
 }
