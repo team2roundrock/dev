@@ -13,5 +13,11 @@ public class Computer extends Player {
 		super(playerName);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Card playCard()
+	{
+		// this is where the AI for a computer player will go
+		return null;
+	}
 
 }

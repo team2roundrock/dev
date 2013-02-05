@@ -12,7 +12,7 @@ import edu.txstate.hearts.controller.Hearts;
  * @author Neil Stickels, I Gede Sutapa
  *
  */
-public class Player {
+public abstract class Player {
 	
 	private String name;
 	private int score;
@@ -39,9 +39,6 @@ public class Player {
 		this.score += point;
 	}
 	
-	public Card playCard()
-	{
-		return null;
-	}
+	public abstract Card playCard();
 
 }
