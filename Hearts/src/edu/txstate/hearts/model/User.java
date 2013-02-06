@@ -3,6 +3,8 @@
  */
 package edu.txstate.hearts.model;
 
+import java.util.List;
+
 import edu.txstate.hearts.model.Achievements;
 
 /**
@@ -17,10 +19,10 @@ public class User extends Player {
 	}
 
 	private Achievements achievements;
-	
-	public Card playCard()
-	{
-		// this is where we need to implement how a human player plays a card
+
+	@Override
+	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn) {
+		// TODO this is where we need to implement how a human player plays a card
 		return null;
 	}
 
