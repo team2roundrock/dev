@@ -34,6 +34,10 @@ public class Deck {
 		}
 		
 		cards = Arrays.asList(deck);
+	}
+	
+	public void shuffleCards()
+	{
 		Collections.shuffle(cards);
 	}
 	

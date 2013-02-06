@@ -39,6 +39,20 @@ public abstract class Player {
 		this.score += point;
 	}
 	
+	public void addCard(Card card)
+	{
+		this.hand.add(card);
+	}
+	
+	public void printHand()
+	{
+		for(int i = 0; i < hand.size(); i++)
+		{
+			System.out.printf("%-19s%s", hand.get(i),
+					((i+1)%4 == 0) ? "\n" : "");
+		}
+	}
+	
 	public abstract Card playCard();
 
 }
