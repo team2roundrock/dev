@@ -21,19 +21,7 @@ public class Deck {
 	
 	public Deck()
 	{
-		Card[] deck = new Card[NUMBER_OF_CARDS];
-		int count = 0;
-		
-		for(Card.Suit suit : Card.Suit.values())
-		{
-			for(Card.Face face : Card.Face.values())
-			{
-				deck[count] = new Card(face, suit);
-				++count;
-			}
-		}
-		
-		cards = Arrays.asList(deck);
+		reset();
 	}
 	
 	public void shuffleCards()
@@ -57,6 +45,23 @@ public class Deck {
 			System.out.printf("%-19s%s", cards.get(i),
 					((i+1)%4 == 0) ? "\n" : "");
 		}
+	}
+
+	public void reset() {
+		Card[] deck = new Card[NUMBER_OF_CARDS];
+		int count = 0;
+		
+		for(Card.Suit suit : Card.Suit.values())
+		{
+			for(Card.Face face : Card.Face.values())
+			{
+				deck[count] = new Card(face, suit);
+				++count;
+			}
+		}
+		
+		cards = Arrays.asList(deck);
+		
 	}
 
 }
