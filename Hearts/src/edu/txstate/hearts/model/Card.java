@@ -3,20 +3,21 @@
  */
 package edu.txstate.hearts.model;
 
+import java.util.Comparator;
+
 /**
  * @author Neil Stickels, I Gede Sutapa
  *
  */
-public class Card {
-
-	public static enum Face { Ace, Deuce, Three, Four, Five, Six
-		, Seven, Eight, Nine, Ten, Jack, Queen, King};
+public class Card
+{
+	public static enum Face { Deuce, Three, Four, Five, Six
+		, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
 		
-	public static enum Suit { Clubs, Diamonds, Hearts, Spades};
+	public static enum Suit { Clubs, Diamonds, Hearts, Spades };
 	
 	private final Face face;
 	private final Suit suit;
-	private int pointValue;
 	
 	public Card(Face cardFace, Suit cardSuit)
 	{
@@ -32,11 +33,6 @@ public class Card {
 	public Suit getSuit()
 	{
 		return this.suit;
-	}
-	
-	public int getPointValue()
-	{
-		return this.pointValue;
 	}
 	
 	public String toString()
