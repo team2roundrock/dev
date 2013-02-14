@@ -47,10 +47,10 @@ public class Hearts {
 		endScore = 100; //default
 		
 		players = new ArrayList<Player>(4);
-		Player player1 = new Agent("Gede");
-		Player player2 = new Agent("Neil");
-		Player player3 = new Agent("Jonathan");
-		Player player4 = new Agent("Maria");
+		Player player1 = new AgentGoofy("Gede");
+		Player player2 = new AgentGoofy("Neil");
+		Player player3 = new AgentGoofy("Jonathan");
+		Player player4 = new AgentGoofy("Maria");
 		
 		players.add(player1);
 		players.add(player2);
