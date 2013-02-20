@@ -155,6 +155,12 @@ public abstract class Player {
 	{
 		this.inPlayCards.clear();
 	}
+	
+	public List<Card> getInPlayCards()
+	{
+		return this.inPlayCards;
+	}
+	
 
 	public void addPlayedCards(Card card)
 	{

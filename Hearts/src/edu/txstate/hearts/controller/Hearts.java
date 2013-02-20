@@ -50,7 +50,7 @@ public class Hearts {
 		Player player1 = new AgentGoofy("Gede");
 		Player player2 = new AgentGoofy("Neil");
 		Player player3 = new AgentGoofy("Jonathan");
-		Player player4 = new AgentGoofy("Maria");
+		Player player4 = new AgentDetermined("Maria");
 		
 		players.add(player1);
 		players.add(player2);
