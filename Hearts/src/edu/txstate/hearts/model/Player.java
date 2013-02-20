@@ -218,6 +218,7 @@ public abstract class Player {
 		}
 		System.out.println("available is "+available);
 		return (long)(Math.pow(3, available));
+// This algorithm gave us the pattern to be able to use the above math function
 //		long totalCombos = 0;
 //		for(int x = 0; x < available+1; x++)
 //		{
