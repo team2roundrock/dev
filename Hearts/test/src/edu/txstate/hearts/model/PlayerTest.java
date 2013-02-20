@@ -1,11 +1,13 @@
 /**
- * 
+ *
  */
 package edu.txstate.hearts.model;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +17,7 @@ import org.junit.Test;
 
 /**
  * @author Neil Stickels
- * 
+ *
  */
 public class PlayerTest {
 
@@ -161,6 +163,52 @@ public class PlayerTest {
 		List<Card> legalCards = p.getLegalCards(Collections.EMPTY_LIST, false);
 		assertEquals("Not the right number of legal cards", legalCards.size(), numLegalCards);
 
+		// check to make sure only the right suit is played when you have that suit
+		boolean hasTwo = false;
+		int numClubs = 0;
+		// this loop will make sure the user doesn't have the two of clubs, but
+		// does have at least one club
+		while(hasTwo || numClubs == 0)
+		{
+			numClubs = 0;
+			dealRandomHand(10);
+			hasTwo = p.hasTwoOfClubs();
+			if(!hasTwo)
+			{
+				Iterator<Card> iterator = p.getHand().iterator();
+				while(iterator.hasNext())
+				{
+					Card newCard = iterator.next();
+					if(newCard.getSuit() == Card.Suit.Clubs)
+					{
+						numClubs++;
+					}
+				}
+			}
+		}
+		// since we know they don't have the two of clubs, but they do have
+		// at least one other club, then whatever clubs they do have should be
+		// playable
+		List<Card> playedCards = new ArrayList<Card>();
+		Card c = new Card(Card.Face.Deuce, Card.Suit.Clubs);
+		playedCards.add(c);
+		List<Card> newLegalCards = p.getLegalCards(playedCards, false);
+		assertEquals("Not the right number of legal cards", newLegalCards.size(), numClubs);
+
+	}
+	
+	/**
+	 * Test method for
+	 * {@link edu.txstate.hearts.model.Player#getTotalCardCombinations(Card.Suit, int)}
+	 * .
+	 */
+	@Test
+	public void testGetTotalCardCombinations() {
+		for(int i = 0; i <= 13; i++)
+		{
+			long num = p.getTotalCardCombinations(Card.Suit.Clubs, i);
+			assertEquals("Didn't get the right number", (long)Math.pow(3, 13-i), num);
+		}
 	}
 
 	private void dealRandomHand(int size) {
