@@ -199,6 +199,20 @@ public class PlayerTest {
 	
 	/**
 	 * Test method for
+	 * {@link edu.txstate.hearts.model.Player#getProbabilityEveryoneHasOne(Card.Suit, int)}
+	 * .
+	 */
+	@Test
+	public void testGetProbabilityEveryoneHasOne() {
+		for(int i = 0; i <= 13; i++)
+		{
+			double num = p.getProbabilityEveryoneHasOne(Card.Suit.Clubs, i);
+			System.out.println("P("+i+") = "+num);
+		}
+	}
+	
+	/**
+	 * Test method for
 	 * {@link edu.txstate.hearts.model.Player#getTotalCardCombinations(Card.Suit, int)}
 	 * .
 	 */
@@ -209,6 +223,44 @@ public class PlayerTest {
 			long num = p.getTotalCardCombinations(Card.Suit.Clubs, i);
 			assertEquals("Didn't get the right number", (long)Math.pow(3, 13-i), num);
 		}
+	}
+	
+	/**
+	 * Test method for
+	 * {@link edu.txstate.hearts.model.Player#getTotalCardCombinationsWithAtLeastOne(Card.Suit, int)}
+	 * .
+	 */
+	@Test
+	public void testGetTotalCardCombinationsWithAtLeastOne() {
+		long num;
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 13);
+		assertEquals("Didn't get the right number", 0, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 12);
+		assertEquals("Didn't get the right number", 0, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 11);
+		assertEquals("Didn't get the right number", 0, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 10);
+		assertEquals("Didn't get the right number", 6, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 9);
+		assertEquals("Didn't get the right number", 36, num);		
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 8);
+		assertEquals("Didn't get the right number", 150, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 7);
+		assertEquals("Didn't get the right number", 540, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 6);
+		assertEquals("Didn't get the right number", 1806, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 5);
+		assertEquals("Didn't get the right number", 5796, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 4);
+		assertEquals("Didn't get the right number", 18150, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 3);
+		assertEquals("Didn't get the right number", 55980, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 2);
+		assertEquals("Didn't get the right number", 171006, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 1);
+		assertEquals("Didn't get the right number", 519156, num);
+		num = p.getTotalCardCombinationsWithAtLeastOne(Card.Suit.Clubs, 0);
+		assertEquals("Didn't get the right number", 1569750, num);
 	}
 
 	private void dealRandomHand(int size) {
