@@ -5,11 +5,9 @@ package edu.txstate.hearts.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -206,6 +204,53 @@ public abstract class Player {
 		clearTakenCards();
 	}
 	
+	/**
+	 * 
+	 *  This is a threshold which can be used for AI to determine 
+	 *  what hand to play (based on probabilities the AI has calculated)
+	 * 
+	 *  Note: For now, this will be a randomly generated value.
+	 *  Threshold will ideally/eventually be adjusted based on 
+	 *  various gameplay factors in the future.
+	 *  
+	 *  @return The next pseudorandom, uniformly distributed float 
+	 *  value between 0.0 and 1.0 from the random number generator.
+	 */
+	public float probabilityThreshold()
+	{
+		float threshold = getRand().nextFloat();
+		return threshold;
+	}
+	
+	/**
+	 * After determining probability, AI can pass the probability to
+	 * this method to compare against threshold. This will allow the AI
+	 * to determine if a particular card is good enough to be played.
+	 * 
+	 * @param threshold
+	 * @param totalProbability
+	 * @return The boolean value goodPlay. This value is designed to
+	 * tell an AI if it should play whichever card it has a probability
+	 * for (is it a "good play"?).
+	 * 
+	 */
+	public boolean compareThreshold(float threshold, float totalProbability)
+	{
+		boolean goodPlay = false;
+		if(totalProbability >= threshold) // if the probability is high enough...
+			goodPlay = true;
+		return goodPlay;
+/*
+ * TODO: Replace with a much more involved/smarter method. Instead of returning 
+ * a boolean, method could hold an array that captures all probabilities higher 
+ * than the threshold, and either the array or the highest value in that
+ * array could be returned. A return value should somehow be linked to whichever
+ * play was passed in (i.e. If the AI has a higher probability of not getting a
+ * heart if it plays card X than card Y, the return value of the higher probability
+ * should be linked with "card X". Whether this should be tracked by this method
+ * or in the AI itself is TBD.
+ */
+	}
 	
 
 }
