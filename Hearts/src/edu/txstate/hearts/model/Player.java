@@ -174,6 +174,11 @@ public abstract class Player {
 		return knownCards;
 	}
 	
+	public Set<Card> getPlayedCards()
+	{
+		return playedCards;
+	}
+
 
 	public void addPlayedCards(Collection<Card> cards)
 	{

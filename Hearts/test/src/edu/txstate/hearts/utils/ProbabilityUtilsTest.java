@@ -141,12 +141,14 @@ public class ProbabilityUtilsTest {
 		  else if(c.getSuit() == Suit.Clubs)
 			  p.addCard(c);
 		}
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, muck, Collections.EMPTY_LIST, p.getKnownCards(), true);
+		p.addPlayedCards(muck);
+		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), p.getInPlayCards(), p.getKnownCards(), true);
 		assertEquals(1d, num, 0.0001);
 		// trying that again, but this time, giving everyone two cards, aces
 		// and kings.  my player is going to have the king of hearts, leaving
 		// 1 heart in 6.
 		muck.clear();
+		p.clearPlayedCards();
 		p.getHand().clear();
 		deck = new Deck();
 		deck.shuffleCards();
@@ -160,33 +162,34 @@ public class ProbabilityUtilsTest {
 		  else if(c.getFace() == Face.King && c.getSuit() == Suit.Hearts)
 			  p.addCard(c);
 		}
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, muck, Collections.EMPTY_LIST, p.getKnownCards(), true);
+		p.addPlayedCards(muck);
+		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), p.getInPlayCards(), p.getKnownCards(), true);
 		assertEquals(0.5070, num, 0.0001);
 		// now let's say that the first person has played the King of Clubs,
 		// which takes that card out of the mix
 		List<Card> playedCards = new ArrayList<Card>();
 		playedCards.add(new Card(Face.King, Suit.Clubs));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, muck, playedCards, p.getKnownCards(), true);
+		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), playedCards, p.getKnownCards(), true);
 		assertEquals(0.6897, num, 0.0001);
 		// now let's pretend that both the Ace of Spades and the Ace of Diamonds have been played
 		playedCards.add(new Card(Face.Ace, Suit.Diamonds));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, muck, playedCards, p.getKnownCards(), true);
+		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), playedCards, p.getKnownCards(), true);
 		assertEquals(0.4444, num, 0.0001);
 		// if we remove that Ace of Diamonds from the second person, and say
 		// it was the Ace of Hearts, then this should return that there is a
 		// probability of 1 that someone plays a heart
 		playedCards.remove(1);
 		playedCards.add(new Card(Face.Ace, Suit.Hearts));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, muck, playedCards, p.getKnownCards(), true);
+		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), playedCards, p.getKnownCards(), true);
 		assertEquals(1d, num, 0.0001);
 		// have the last person play the King of Diamonds, this should return 1
 		playedCards.add(new Card(Face.King, Suit.Diamonds));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, muck, playedCards, p.getKnownCards(), true);
+		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), playedCards, p.getKnownCards(), true);
 		assertEquals(1d, num, 0.0001);
 		// change the 2nd card back to the Ace of Diamonds, this should return 0 now
 		playedCards.remove(1);
 		playedCards.add(new Card(Face.Ace, Suit.Diamonds));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, muck, playedCards, p.getKnownCards(), true);
+		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), playedCards, p.getKnownCards(), true);
 		assertEquals(0d, num, 0.0001);
 		
 		
