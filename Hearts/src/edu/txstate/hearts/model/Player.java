@@ -5,13 +5,13 @@ package edu.txstate.hearts.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
-import org.apache.commons.math3.util.ArithmeticUtils;
 
 import edu.txstate.hearts.model.Card.Suit;
 
@@ -82,7 +82,7 @@ public abstract class Player {
 
 	public abstract List<Card> getCardsToPass();
 
-	protected List<Card> getHand() {
+	public List<Card> getHand() {
 		return hand;
 	}
 
@@ -206,111 +206,7 @@ public abstract class Player {
 		clearTakenCards();
 	}
 	
-	public double getProbabilityEveryoneHasOne(Card.Suit suit, int myCount)
-	{
-		double countWithOne = getTotalCardCombinationsWithAtLeastOne(suit, myCount);
-		double totalCount = getTotalCardCombinations(suit, myCount);
-		return countWithOne/totalCount;
-	}
 	
-	public long getTotalCardCombinationsWithAtLeastOne(Card.Suit suit, int myCount) 
-	{
-		int available = 13 - myCount;
-		Iterator<Card> iterator = playedCards.iterator();
-		while (iterator.hasNext()) {
-			Card c = iterator.next();
-			if (c.getSuit() == suit)
-				available--;
-		}
-		//System.out.println("available is " + available);
-		// This algorithm gave us the pattern to be able to use the above math
-		// function
-		long totalCombos = 0;
-		for (int x = 1; x < available + 1; x++) {
-			for (int y = 1; y < available + 1; y++) {
-				for (int z = 1; z < available + 1; z++) {
-					if (x + y + z == available) {
-						long xNewCombos, yNewCombos, zNewCombos;
-						xNewCombos = ArithmeticUtils.binomialCoefficient(
-								available, x);
-						//System.out.println("adding "+available+"C"+x+" for player 1 - "+xNewCombos);
-						// totalCombos += newCombos;
-						yNewCombos = ArithmeticUtils.binomialCoefficient(
-								available - x, y);
-						//System.out.println("adding "+(available-x)+"C"+y+" for player 2 - "+yNewCombos);
-						// totalCombos += newCombos;
-						zNewCombos = ArithmeticUtils.binomialCoefficient(
-								available - x - y, z);
-						//System.out.println("adding "+(available-x-y)+"C"+z+" for player 3 - "+zNewCombos);
-						long newCombos = (xNewCombos * yNewCombos * zNewCombos);
-						if (newCombos < 1)
-							newCombos = 1;
-						totalCombos += newCombos;
-						//System.out.println("adding "+newCombos);
-
-						//System.out.println("---");
-
-					}
-				}
-			}
-		}
-		return totalCombos;
-
-	}
-
-	//TODO I realized there is a flaw in our logic here.  We also need to
-	//     take into account the total number of cards in a player's hand
-	//     for example, if the first two hands resulted in everyone playing
-	//     clubs, and then the next two rounds had everyone playing spades,
-	//     there are now only 9 cards left in everyone's hand.  If I had
-	//     one diamond, and wanted to see the ways everyone else could have
-	//     the remaining 12 diamonds, it would not be possible for someone
-	//     to have 10, 11 or 12 diamonds in a hand with only 9 cards.
-	public long getTotalCardCombinations(Card.Suit suit, int myCount)
-	{
-		int available = 13-myCount;
-		Iterator<Card> iterator = playedCards.iterator();
-		while(iterator.hasNext())
-		{
-			Card c = iterator.next();
-			if(c.getSuit() == suit)
-				available--;
-		}
-		//System.out.println("available is "+available);
-		return (long)(Math.pow(3, available));
-// This algorithm gave us the pattern to be able to use the above math function
-//		long totalCombos = 0;
-//		for(int x = 0; x < available+1; x++)
-//		{
-//			for(int y = 0; y < available+1; y++)
-//			{
-//				for(int z= 0; z < available+1; z++)
-//				{
-//					if(x+y+z == available)
-//					{
-//					long xNewCombos, yNewCombos, zNewCombos;
-//					xNewCombos = ArithmeticUtils.binomialCoefficient(available, x);
-//					//System.out.println("adding "+available+"C"+x+" for player 1 - "+xNewCombos);
-//					//totalCombos += newCombos;
-//					yNewCombos = ArithmeticUtils.binomialCoefficient(available-x, y);
-//					//System.out.println("adding "+(available-x)+"C"+y+" for player 2 - "+yNewCombos);
-//					//totalCombos += newCombos;
-//					zNewCombos = ArithmeticUtils.binomialCoefficient(available-x-y, z);
-//					//System.out.println("adding "+(available-x-y)+"C"+z+" for player 3 - "+zNewCombos);
-//					long newCombos = (xNewCombos*yNewCombos*zNewCombos);
-//					if(newCombos < 1)
-//						newCombos = 1;
-//					totalCombos += newCombos;
-//					//System.out.println("adding "+newCombos);
-//
-//					//System.out.println("---");
-//
-//					}
-//				}
-//			}
-//		}
-//		return totalCombos;
-	}
 
 }
 
