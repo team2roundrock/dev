@@ -183,10 +183,30 @@ public abstract class ProbabilityUtils {
 	 * @param hand the Player's hand
 	 * @param suit the Suit the Player is determining the probability for
 	 * @param muck the Cards that have already been played in the entire game
+	 * @param cardsPlayedThisTurn a List of Cards that have already been played this turn
+	 * @param knownCards a list of three Sets of known cards for opponents
+	 * @param qosPlayed a boolean indicator of whether or not the Queen of Spades
+	 * 			has already been played in this game, if not, this algorithm
+	 * 			will count the Queen of Spades as a heart
 	 * @return probability another player does not have the suit in question and does have hearts
 	 */
-	public static double getProbabilityNoneOfSuitAndHasHearts(List<Card> hand, Suit suit, Set<Card> muck)
+	public static double getProbabilityNoneOfSuitAndHasHearts(List<Card> hand, 
+			Suit suit, Set<Card> muck, List<Card> cardsPlayedThisTurn, 
+			List<Set<Card>> knownCards, boolean qosPlayed)
 	{
+		if(cardsPlayedThisTurn.size() > 0)
+		{
+			if(cardsPlayedThisTurn.size() == 3)
+				return 0d;
+			else if(cardsPlayedThisTurn.size() == 2)
+			{
+				knownCards.get(1).add(cardsPlayedThisTurn.get(0));
+				knownCards.get(2).add(cardsPlayedThisTurn.get(1));
+			} else if(cardsPlayedThisTurn.size() == 1)
+				knownCards.get(2).add(cardsPlayedThisTurn.get(0));
+			else
+				throw new RuntimeException("how i get here? cards played this turn - "+cardsPlayedThisTurn.size());
+		}
 		Map<Card.Suit, Integer> suitCounter = new HashMap<Card.Suit, Integer>();
 		suitCounter.put(Card.Suit.Clubs, 13);
 		suitCounter.put(Card.Suit.Diamonds, 13);
@@ -212,16 +232,44 @@ public abstract class ProbabilityUtils {
 			return 1d;
 		//System.out.println("suitCounter: "+suitCounter);
 		CounterObject co = new CounterObject();
-		for(int c = 0; c <= Math.min(hand.size(), suitCounter.get(Suit.Clubs)); c++)
+		int[] knownCounterArray = createKnownCounter(knownCards);
+		// i know the condition for this is enough to make someone's head hurt
+		// because it made mine hurt to come up with it.  So here is how
+		// i came up with it...
+		// starting from the inside, we want c to go up to the size of the hand
+		// or up to however many clubs are available, which ever is less.
+		// for determining how many clubs are available for player 1, we 
+		// already have the suitCounter map which maps how many cards of each
+		// suit are not in the calling players hand or in the muck.
+		// but we also want to subtract off any known clubs we know in either
+		// player 2's or player 3's hands.  
+		// we want the mimimum because let's say that the size of the hand is
+		// 5, in theory, this player could have up to 5 clubs.  Unless there
+		// are fewer than 5 clubs left, in which case this player can't have
+		// more than the number of clubs available.  But if there were still
+		// 7 clubs available, this player could only have 5, i.e., the size
+		// of the hand.
+		// in theory, the Math.max part I have there should never be needed,
+		// but it is there in case there is a some type of a problem which
+		// causes the value returned by that Math.min call to be less than
+		// however many clubs this player must have.  in that case, this
+		// for loop wouldn't run, which would cause nothing to run.
+		// the rest of the nested for loops proceed in much the same way, but
+		// in each one, it will also count the number of cards that player 1
+		// already has from previous iterations of the for loop, i.e., if c = 2,
+		// and the hand size is 5, then player 1 couldn't have more than 3
+		// diamonds.
+
+		for(int c = knownCounterArray[0]; c <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Clubs)-knownCounterArray[4]-knownCounterArray[8]), knownCounterArray[0]); c++)
 		{
 			//System.out.println("max diamonds should be "+(Math.max(Math.min(hand.size(), suitCounter.get(Suit.Diamonds)-c), 0)));
-			for(int d = 0; d <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Diamonds)-c), 0); d++)
+			for(int d = knownCounterArray[1]; d <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Diamonds)-knownCounterArray[5]-knownCounterArray[9])-c, knownCounterArray[1]); d++)
 			{
 				//System.out.println("max hearts should be "+(Math.max(Math.min(hand.size(), suitCounter.get(Suit.Hearts)-c-d), 0)));
-				for(int h = 0; h <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Hearts)-c-d), 0); h++)
+				for(int h = knownCounterArray[2]; h <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Hearts)-knownCounterArray[6]-knownCounterArray[10])-c-d, knownCounterArray[2]); h++)
 				{
 					//System.out.println("max spades should be "+(Math.max(Math.min(hand.size(), suitCounter.get(Suit.Spades)-c-d-h), 0)));
-					for(int s = 0; s <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Spades)-c-d-h), 0); s++)
+					for(int s = knownCounterArray[3]; s <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Spades)-knownCounterArray[7]-knownCounterArray[11])-c-d-h, knownCounterArray[3]); s++)
 					{
 						//System.out.println("Testing P1 has "+c+"C "+d+"D "+s+"S "+h+"H");
 						//System.out.println("c+d+h+s is "+(c+d+h+s));
@@ -233,7 +281,7 @@ public abstract class ProbabilityUtils {
 							p1Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Hearts), h);
 							p1Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), s);
 
-							doP2Counts(p1Count, co, c, d, h, s, hand.size(), suitCounter, suit);
+							doP2Counts(p1Count, co, c, d, h, s, suitCounter, suit, knownCounterArray, cardsPlayedThisTurn.size(), qosPlayed, hand, muck);
 						}
 					}
 				}
@@ -248,15 +296,45 @@ public abstract class ProbabilityUtils {
 	}
 
 	
-	private static void doP2Counts(long p1Count, CounterObject co, int p1c,
-			int p1d, int p1h, int p1s, int handSize, Map<Suit, Integer> suitCounter, Suit suit) {
-		for(int c = 0; c <= Math.max(Math.min(handSize, suitCounter.get(Suit.Clubs)-p1c), 0); c++)
+	private static int[] createKnownCounter(List<Set<Card>> knownCards) 
+	{
+		int[] knownCounterArray = new int[12];
+		for (int i = 0; i < 12; i++)
+			knownCounterArray[i] = 0;
+		for (int j = 0; j < 3; j++)
 		{
-			for(int d = 0; d <= Math.max(Math.min(handSize, suitCounter.get(Suit.Diamonds)-c-p1d), 0); d++)
+			Iterator<Card> kcIterator = knownCards.get(j).iterator();
+			int offset = j * 4;
+			while (kcIterator.hasNext()) 
 			{
-				for(int h = 0; h <= Math.max(Math.min(handSize, suitCounter.get(Suit.Hearts)-c-d-p1h), 0); h++)
+				Card c = kcIterator.next();
+				if (c.getSuit() == Suit.Clubs) 
+					knownCounterArray[offset] = (knownCounterArray[offset] + 1);
+				if (c.getSuit() == Suit.Diamonds) 
+					knownCounterArray[offset+1] = (knownCounterArray[offset+1] + 1);			
+				if (c.getSuit() == Suit.Hearts) 
+					knownCounterArray[offset+2] = (knownCounterArray[offset+2] + 1);
+				if (c.getSuit() == Suit.Spades) 
+					knownCounterArray[offset+3] = (knownCounterArray[offset+3] + 1);
+			}
+		}
+		return knownCounterArray;
+	}
+
+
+	private static void doP2Counts(long p1Count, CounterObject co, int p1c,
+			int p1d, int p1h, int p1s, Map<Suit, Integer> suitCounter, Suit suit, 
+			int[] knownCounterArray, int cardsAlreadyPlayed, boolean qosPlayed,
+			List<Card> hand, Set<Card> muck) 
+	{
+		int handSize = hand.size();
+		for(int c = knownCounterArray[4]; c <= Math.max(Math.min(handSize, suitCounter.get(Suit.Clubs)-p1c-knownCounterArray[8]), knownCounterArray[4]); c++)
+		{
+			for(int d = knownCounterArray[5]; d <= Math.max(Math.min(handSize, suitCounter.get(Suit.Diamonds)-p1d-knownCounterArray[9])-c, knownCounterArray[5]); d++)
+			{
+				for(int h = knownCounterArray[6]; h <= Math.max(Math.min(handSize, suitCounter.get(Suit.Hearts)-p1h-knownCounterArray[10])-c-d, knownCounterArray[6]); h++)
 				{
-					for(int s = 0; s <= Math.max(Math.min(handSize, suitCounter.get(Suit.Spades)-c-d-h-p1s), 0); s++)
+					for(int s = knownCounterArray[7]; s <= Math.max(Math.min(handSize, suitCounter.get(Suit.Spades)-p1s-knownCounterArray[11])-c-d-h, knownCounterArray[7]); s++)
 					{
 						if((c+d+h+s) == handSize)
 						{
@@ -272,20 +350,52 @@ public abstract class ProbabilityUtils {
 							//System.out.println("Using P3 has "+p3c+"C "+p3d+"D "+p3s+"S "+p3h+"H");
 
 							boolean countHeartsPlayableCombos = false;
-							if(h > 0)
+							if(h > 0 && cardsAlreadyPlayed < 2)
 								countHeartsPlayableCombos = determineHeartsPlayable(suit, c, d, s);
 							if(!countHeartsPlayableCombos && p1h > 0)
 								countHeartsPlayableCombos = determineHeartsPlayable(suit, p1c, p1d, p1s);
-							if(!countHeartsPlayableCombos && p3h > 0)
+							if(!countHeartsPlayableCombos && p3h > 0 && cardsAlreadyPlayed == 1)
 								countHeartsPlayableCombos = determineHeartsPlayable(suit, p3c, p3d, p3s);
 							co.addTotalCombos(p1Count*p2Count);
 							if(countHeartsPlayableCombos)
 								co.addWithHeartsNoSuitCombos(p1Count*p2Count);
+							else if(!qosPlayed)
+							{
+								boolean doQosCount = false;
+								if(s > 0 && cardsAlreadyPlayed < 2 && determineQosPlayable(suit, c, d))
+									doQosCount = true;
+								if(p3s > 0 && cardsAlreadyPlayed == 2 && determineQosPlayable(suit, p3c, p3d))
+									doQosCount = true;
+								if(p1s > 0 && determineQosPlayable(suit, p1c, p1d))
+									doQosCount = true;
+								if(doQosCount)
+								{
+									long qosVariations = 1;
+									long totalSpadeVariations = getTotalCardCombinationsForSuit(suit, hand, muck);
+									if(determineQosPlayable(suit, p1c, p1d))
+										qosVariations *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), p1s);
+									if(cardsAlreadyPlayed < 2 && determineQosPlayable(suit, c, d))
+										qosVariations *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), s);
+									if(cardsAlreadyPlayed < 3 && determineQosPlayable(suit, p3c, p3d))
+										qosVariations *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), p3s);
+									co.addWithHeartsNoSuitCombos(p1Count*p2Count*qosVariations/totalSpadeVariations);
+								}
+
+							}
 						}
 					}
 				}
 			}
 		}	
+	}
+
+
+	private static boolean determineQosPlayable(Suit suit, int c, int d) {
+		if((suit == Suit.Clubs) && c == 0)
+			return true;
+		if((suit == Suit.Diamonds) && d == 0)
+			return true;		
+		return false;
 	}
 
 

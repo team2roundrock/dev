@@ -133,21 +133,21 @@ public class ProbabilityUtilsTest {
 		p.addCard(new Card(Face.Queen, Suit.Clubs));
 		p.addCard(new Card(Face.King, Suit.Clubs));
 		p.addCard(new Card(Face.Ace, Suit.Clubs));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
-		assertEquals(1d, num, 0.0001);
+		//num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
+		//assertEquals(1d, num, 0.0001);
 		//assertEquals("Didn't get the right number", 0d, num);
 		p.getHand().remove(p.getHand().get(0));
 		p.addCard(new Card(Face.Ace, Suit.Diamonds));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
-		assertEquals(1d, num, 0.0001);
+		//num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
+		//assertEquals(1d, num, 0.0001);
 		p.getHand().remove(p.getHand().get(0));
 		p.addCard(new Card(Face.Ace, Suit.Diamonds));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
-		assertEquals(0.9989, num, 0.0001);
+		//num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
+		//assertEquals(0.9989, num, 0.0001);
 		p.getHand().remove(p.getHand().get(0));
 		p.addCard(new Card(Face.Ace, Suit.Diamonds));
-		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
-		assertEquals(0.8548, num, 0.0001);		
+		//num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.EMPTY_SET);
+		//assertEquals(0.8548, num, 0.0001);		
 
 	}
 

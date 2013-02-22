@@ -15,7 +15,7 @@ import org.junit.Test;
  */
 public class AgentTester extends PlayerTest {
 	
-	private Agent agent = new Agent("Test");
+	private Agent agent = new AgentGoofy("Test");
 
 	/**
 	 * @throws java.lang.Exception

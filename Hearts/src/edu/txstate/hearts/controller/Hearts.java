@@ -93,10 +93,10 @@ public class Hearts {
 		if(this.passing == Passing.Stay)
 			return;
 		
-		List<Card> p0CardsToPass = this.players.get(0).getCardsToPass();
-		List<Card> p1CardsToPass = this.players.get(1).getCardsToPass();
-		List<Card> p2CardsToPass = this.players.get(2).getCardsToPass();
-		List<Card> p3CardsToPass = this.players.get(3).getCardsToPass();
+		List<Card> p0CardsToPass = this.players.get(0).getCardsToPass(this.passing);
+		List<Card> p1CardsToPass = this.players.get(1).getCardsToPass(this.passing);
+		List<Card> p2CardsToPass = this.players.get(2).getCardsToPass(this.passing);
+		List<Card> p3CardsToPass = this.players.get(3).getCardsToPass(this.passing);
 		
 		if(this.passing == Passing.Left)
 		{
@@ -248,7 +248,12 @@ public class Hearts {
 		  num++;
 		  num%=4;
 		}
-			
+		
+		//also add to the played cards
+		//add that card to each player's list of played cards
+		for(int i = 0; i < players.size(); i++)
+			players.get(i).addPlayedCards(cardsPlayed);
+		  
 		//add cards to the player with highest value
 		for(int i = 0; i < cardsPlayed.size(); i++)
 		{

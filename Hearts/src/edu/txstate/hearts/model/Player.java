@@ -4,6 +4,7 @@
 package edu.txstate.hearts.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import edu.txstate.hearts.controller.Hearts.Passing;
+import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
 
 /**
@@ -26,6 +29,8 @@ public abstract class Player {
 	private List<Card> inPlayCards; //keep track cards that are being played on the table
 	private Set<Card> playedCards; //keep track cards that have been played in the past
 	private List<Card> takenCards; //keep track cards that the player took
+	private boolean qosPlayed = false;
+	private List<Set<Card>> knownCards = new ArrayList<Set<Card>>(3);
 
 	public Player(String playerName) {
 		hand = new ArrayList<Card>();
@@ -33,6 +38,8 @@ public abstract class Player {
 		playedCards = new HashSet<Card>();
 		takenCards = new ArrayList<Card>();
 		this.name = playerName;
+		for(int i = 0; i < 3; i++)
+			knownCards.add(new HashSet<Card>());
 	}
 
 	public String getName() {
@@ -78,7 +85,7 @@ public abstract class Player {
 	public abstract Card playCard(List<Card> cardsPlayed, boolean heartsBroken,
 			boolean veryFirstTurn);
 
-	public abstract List<Card> getCardsToPass();
+	public abstract List<Card> getCardsToPass(Passing passing);
 
 	public List<Card> getHand() {
 		return hand;
@@ -150,8 +157,6 @@ public abstract class Player {
 	public void addInPlayCards(Card card)
 	{
 		this.inPlayCards.add(card);
-		//also add to the played cards
-		addPlayedCards(card);
 	}
 
 	public void clearInPlayCards()
@@ -164,10 +169,25 @@ public abstract class Player {
 		return this.inPlayCards;
 	}
 	
-
-	public void addPlayedCards(Card card)
+	protected List<Set<Card>> getKnownCards()
 	{
-		this.playedCards.add(card);
+		return knownCards;
+	}
+	
+
+	public void addPlayedCards(Collection<Card> cards)
+	{
+		this.playedCards.addAll(cards);
+		if(!qosPlayed)
+		{
+			Iterator<Card> iterator = cards.iterator();
+			while(iterator.hasNext())
+			{
+				Card c = iterator.next();
+				if(c.getFace() == Face.Queen && c.getSuit() == Suit.Clubs)
+					qosPlayed = true;
+			}
+		}
 	}
 
 	public void clearPlayedCards()

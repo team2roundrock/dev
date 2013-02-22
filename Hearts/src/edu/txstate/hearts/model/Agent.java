@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.txstate.hearts.controller.Hearts.Passing;
+
 /**
  * @author Neil Stickels, I Gede Sutapa
  *
  */
-public class Agent extends Player 
+public abstract class Agent extends Player 
 {
 	public Agent(String playerName) 
 	{
@@ -19,16 +21,15 @@ public class Agent extends Player
 	}
 
 	@Override
-	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn) 
-	{
-		return null;
-	}
+	public abstract Card playCard(List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn);
 
 	@Override
-	public List<Card> getCardsToPass() 
+	public List<Card> getCardsToPass(Passing passing)
 	{
-		return null;
+		return getCardsToPass();
 	}
+	
+	public abstract List<Card> getCardsToPass();
 
 	public Card playTwoOfClub()
 	{
