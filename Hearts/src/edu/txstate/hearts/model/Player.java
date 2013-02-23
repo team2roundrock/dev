@@ -11,9 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-//import java.util.Map;		//Added for storing probabilities
-import java.util.SortedMap;	//Added for storing probabilities
-import java.util.TreeMap;	//Added for storing probabilities
 
 import edu.txstate.hearts.controller.Hearts.Passing;
 import edu.txstate.hearts.model.Card.Face;
@@ -230,43 +227,7 @@ public abstract class Player {
 		clearInPlayCards();
 		clearPlayedCards();
 		clearTakenCards();
-	}
-	
-	/**
-	 * After determining probability, AI can pass the probability to
-	 * this method to compare against threshold. This will allow the AI
-	 * to determine if a particular card is good enough to be played.
-	 * 
-	 * @param threshold Holds current risk threshold for agent
-	 * @param totalProbability Passed in from agent
-	 * @param cardValue Placeholder for whatever holds value of the card agent 
-	 * is evaluating for safe play
-	 */
-	public void evaluateRisk(float threshold, float totalProbability, int cardValue)
-	{
-		/**
-		 * probability = key
-		 * card = value
-		 * 
-		 * note: threshold & totalProbability may not stay as type float.
-		 */
-		float riskyProb = 0, safeProb = 0;
-		if(totalProbability <= threshold)
-		{
-			safeProb = totalProbability; //holds probabilities deemed to be "safe"
-		}
-		else
-		{
-			riskyProb = totalProbability; //holds probabilities deemed to be "risky", may collect heart(s)
-		}
-		
-		SortedMap<Float,Integer> safeMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
-		SortedMap<Float,Integer> riskyMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
-
-        safeMap.put(safeProb, cardValue); //safe probabilities in their own map
-        riskyMap.put(riskyProb, cardValue); //risky probabilities in their own map
-	}
-	
+	}	
 
 }
 
