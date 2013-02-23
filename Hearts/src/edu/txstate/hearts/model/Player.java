@@ -9,10 +9,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
-import java.util.Map;		//Added for storing probabilities
+//import java.util.Map;		//Added for storing probabilities
 import java.util.SortedMap;	//Added for storing probabilities
 import java.util.TreeMap;	//Added for storing probabilities
 
