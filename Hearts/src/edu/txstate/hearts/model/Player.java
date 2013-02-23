@@ -173,11 +173,16 @@ public abstract class Player {
 		return this.inPlayCards;
 	}
 	
-	protected List<Set<Card>> getKnownCards()
+	public List<Set<Card>> getKnownCards()
 	{
 		return knownCards;
 	}
 	
+	public Set<Card> getPlayedCards()
+	{
+		return playedCards;
+	}
+
 
 	public void addPlayedCards(Collection<Card> cards)
 	{
