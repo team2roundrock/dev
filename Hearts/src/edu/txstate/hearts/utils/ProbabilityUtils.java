@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.math3.util.ArithmeticUtils;
 
@@ -254,7 +256,7 @@ public abstract class ProbabilityUtils {
 		// suit are not in the calling players hand or in the muck.
 		// but we also want to subtract off any known clubs we know in either
 		// player 2's or player 3's hands.  
-		// we want the mimimum because let's say that the size of the hand is
+		// we want the minimum because let's say that the size of the hand is
 		// 5, in theory, this player could have up to 5 clubs.  Unless there
 		// are fewer than 5 clubs left, in which case this player can't have
 		// more than the number of clubs available.  But if there were still
@@ -421,6 +423,51 @@ public abstract class ProbabilityUtils {
 			return true;
 		return false;
 	}
+	
+	/**
+	 * After determining probability, AI can pass the probability to
+	 * this method to compare against threshold. This will allow the AI
+	 * to determine if a particular card is good enough to be played.
+	 * 
+	 * @param threshold Holds current risk threshold for agent
+	 * @param totalProbability Passed in from agent
+	 * @param cardValue Placeholder for whatever holds value of the card agent 
+	 * is evaluating for safe play
+	 * @author Jonathan Shelton
+	 */
+	public void evaluateRisk(float threshold, float totalProbability, int cardValue)
+	{
+		/**
+		 * probability = key
+		 * card = value
+		 * 
+		 * note: threshold & totalProbability may not stay as type float.
+		 */
+		float riskyProb = 0, safeProb = 0;
+		if(totalProbability <= threshold)
+		{
+			safeProb = totalProbability; //holds probabilities deemed to be "safe"
+		}
+		else
+		{
+			riskyProb = totalProbability; //holds probabilities deemed to be "risky", may collect heart(s)
+		}
+		
+		SortedMap<Float,Integer> safeMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
+		SortedMap<Float,Integer> riskyMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
+
+        safeMap.put(safeProb, cardValue); //safe probabilities in their own map
+        riskyMap.put(riskyProb, cardValue); //risky probabilities in their own map
+        
+//        Possible Implementation:
+//        	Display Highest Key: map.lastKey()
+//        	Display Lowest Key: map.firstKey()
+//        	Can also iterate through entire set by setting an Iterator object to map.keySet().iterator():
+//        		key is the key
+//        		map.get(key) is the value
+        
+
+	}
 } 	
 
 /**
@@ -459,4 +506,7 @@ class CounterObject
 	public long getWithHeartsNoSuitCombos() {
 		return withHeartsNoSuitCombos;
 	}
+	
 }
+
+

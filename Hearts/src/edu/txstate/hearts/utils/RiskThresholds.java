@@ -12,7 +12,7 @@ import java.util.Random;
 public class RiskThresholds {
 
 	Random rand = new Random();
-	private float threshold = rand.nextFloat();
+	float threshold = rand.nextFloat(); //should it be private? Force getRisk() to be used?
 	/**
 	 * 
 	 *  This is a threshold which can be used for AI to determine 
@@ -42,7 +42,7 @@ public class RiskThresholds {
 		return threshold;
 	}
 	
-	public float getRisk(float threshold)
+	public float getRisk(float threshold) //needed?
 	{
 		//threshold = calculateRisk();
 		return threshold;

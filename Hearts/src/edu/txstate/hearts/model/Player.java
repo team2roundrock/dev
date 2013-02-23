@@ -237,49 +237,34 @@ public abstract class Player {
 	 * this method to compare against threshold. This will allow the AI
 	 * to determine if a particular card is good enough to be played.
 	 * 
-	 * @param threshold
-	 * @param totalProbability
-	 * @return The boolean value goodPlay. This value is designed to
-	 * tell an AI if it should play whichever card it has a probability
-	 * for (is it a "good play"?).
-	 * 
+	 * @param threshold Holds current risk threshold for agent
+	 * @param totalProbability Passed in from agent
+	 * @param cardValue Placeholder for whatever holds value of the card agent 
+	 * is evaluating for safe play
 	 */
-	public void compareThreshold(float threshold, float totalProbability, int cardValue)
+	public void evaluateRisk(float threshold, float totalProbability, int cardValue)
 	{
-//		boolean goodPlay = false;
-//		if(totalProbability >= threshold) // if the probability is high enough...
-//			goodPlay = true;
-//		return goodPlay;
-		
 		/**
 		 * probability = key
 		 * card = value
+		 * 
+		 * note: threshold & totalProbability may not stay as type float.
 		 */
 		float riskyProb = 0, safeProb = 0;
 		if(totalProbability <= threshold)
 		{
-			safeProb = totalProbability;
+			safeProb = totalProbability; //holds probabilities deemed to be "safe"
 		}
 		else
 		{
-			riskyProb = totalProbability;
+			riskyProb = totalProbability; //holds probabilities deemed to be "risky", may collect heart(s)
 		}
 		
-		SortedMap<Float,Integer> safeMap = new TreeMap<Float,Integer>(); //Assuming card val as int
-		SortedMap<Float,Integer> riskyMap = new TreeMap<Float,Integer>(); //Assuming card val as int
+		SortedMap<Float,Integer> safeMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
+		SortedMap<Float,Integer> riskyMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
 
-        safeMap.put(safeProb, cardValue);
-        riskyMap.put(riskyProb, cardValue);
-        
-
-		
-/*
- * TODO: A return value should somehow be linked to whichever
- * play was passed in (i.e. If the AI has a higher probability of not getting a
- * heart if it plays card X than card Y, the return value of the higher probability
- * should be linked with "card X". Whether this should be tracked by this method
- * or in the AI itself is TBD.
- */
+        safeMap.put(safeProb, cardValue); //safe probabilities in their own map
+        riskyMap.put(riskyProb, cardValue); //risky probabilities in their own map
 	}
 	
 
