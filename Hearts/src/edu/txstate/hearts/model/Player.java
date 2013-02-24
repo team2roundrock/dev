@@ -196,7 +196,7 @@ public abstract class Player {
 			while(iterator.hasNext())
 			{
 				Card c = iterator.next();
-				if(c.getFace() == Face.Queen && c.getSuit() == Suit.Clubs)
+				if(c.getFace() == Face.Queen && c.getSuit() == Suit.Spades) //Was set to Suit.Clubs -Jonathan
 					qosPlayed = true;
 			}
 		}

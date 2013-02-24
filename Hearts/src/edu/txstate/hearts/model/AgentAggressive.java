@@ -11,6 +11,12 @@ import edu.txstate.hearts.model.Card.Suit;
 import edu.txstate.hearts.utils.ProbabilityUtils;
 import edu.txstate.hearts.utils.RiskThresholds;
 
+/**
+ * Contains rules & strategies for the most difficult AI agent
+ * 
+ * @author Neil Stickels, Jonathan Shelton
+ *
+ */
 public class AgentAggressive extends Agent{
 	
 	RiskThresholds thresholds = new RiskThresholds();
@@ -72,7 +78,7 @@ public class AgentAggressive extends Agent{
 			if (cardsPlayed.size() > 0)
 			{
 				Suit suitLed = cardsPlayed.get(0).getSuit();
-				if (!hasAnyOfSuit(suitLed))
+				if (!hasAnyOfSuit(suitLed)) // doesn't have suit played on table
 				{
 					if (hasQueenOfSpades)
 					{
@@ -88,7 +94,7 @@ public class AgentAggressive extends Agent{
 							}
 						}
 					} 
-					else
+					else //no queen of spades, no suit on table
 					{
 						List<Card> hearts = getAllOfSuit(Suit.Hearts);
 						List<Card> spades = getAllOfSuit(Suit.Spades);
@@ -97,49 +103,47 @@ public class AgentAggressive extends Agent{
 						if (hearts.size() > 0)
 						{
 							Collections.sort(hearts, new CardComparator());
+							Collections.reverse(hearts); //Every call to reverse ensures '0' is the highest card
 							cardToPlay = hearts.get(0);
 						}
-						else
+						else //doesn't have any hearts
 						{
 							List<Card> fewestCards = getCardsFromSuitWithFewest(
 									spades, diamonds, clubs);
 							cardToPlay = fewestCards.get(0);
-							
-							
 						}
 					}
 						
 				}
-				else //do have card of suit on table
+				else //does have suit played on table
 				{
 					List<Card> playableCards = getAllOfSuit(suitLed);
 					Collections.sort(playableCards, new CardComparator());
+					Collections.reverse(playableCards);
 					boolean searching = true;
 					int counter = 0;
 					double canPlayHearts = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(getHand(), suitLed, getPlayedCards(), getInPlayCards(), getKnownCards(), isQosPlayed());
-					while (searching)
+					while (searching) //search all cards
 					{
 						Card test = playableCards.get(counter++);
 						double cardWins = getProbCardWins(test);
 						double risk = canPlayHearts*cardWins;
-						System.out.println(test + "risk is " + risk + " and threshold is " + thresholds.getThreshold());
+						System.out.println("EVALUATING..." + test + ": risk is " + risk + " and threshold is " + thresholds.getThreshold());
 						if (risk < thresholds.getThreshold())
 						{
 							searching = false;
 							cardToPlay = test;
 						}
-						else
+						else //there is a risk of getting hearts
 						{
-							if (counter == playableCards.size())
+							if (counter == playableCards.size()) //all cards of smallest suite have been analyzed
 							{
-								cardToPlay = playableCards.get(0);
 								searching = false;
+								cardToPlay = playableCards.get(0); //just play the highest if at risk
 							}
 						}
 							
 					}
-					//playableCards.get(0);
-					
 				}
 			}
 			else //no cards played
@@ -156,58 +160,60 @@ public class AgentAggressive extends Agent{
 					fewestCards = hearts;
 				
 				Collections.sort(fewestCards, new CardComparator());
+				Collections.reverse(fewestCards);
 				boolean searching = true;
 				int counter = 0;
 				double canPlayHearts = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(getHand(), fewestCards.get(0).getSuit(), getPlayedCards(), getInPlayCards(), getKnownCards(), isQosPlayed());
-				while (searching)
+				while (searching) //search all cards
 				{
 					Card test = fewestCards.get(counter++);
 					double cardWins = getProbCardWins(test);
 					double risk = canPlayHearts*cardWins;
-					System.out.println(test + "risk is " + risk + " and threshold is " + thresholds.getThreshold());
+					System.out.println("EVALUATING..." + test + ": risk is " + risk + " and threshold is " + thresholds.getThreshold());
 					if (risk < thresholds.getThreshold())
 					{
-						searching = false;
 						cardToPlay = test;
+						searching = false;
 					}
-					else
+					else //there is a risk of getting hearts
 					{
-						if (counter == fewestCards.size())
+						if (counter == fewestCards.size()) //all cards of smallest suite have been analyzed
 						{
-							cardToPlay = fewestCards.get(0);
+							cardToPlay = fewestCards.get(0); //just play the highest if at risk
 							searching = false;
 						}
-					}
-						
+					}		
 				}		
-				
-				
 			}
 		}
 		getHand().remove(cardToPlay);
 		
-		if ((cardToPlay.getSuit() == Card.Suit.Spades)
-				&& (cardToPlay.getFace() == Card.Face.Queen))
-		{
+		if ((cardToPlay.getSuit() == Card.Suit.Spades) && (cardToPlay.getFace() == Card.Face.Queen))
 			hasQueenOfSpades = false;
-		}
 		
 		return cardToPlay;
 	}
 
 	/**
+	 * This method will find the suit with the lowest number of cards,
+	 * aligning with a strategy of removing as many suits as possible.
+	 * 
 	 * @param spades
 	 * @param diamonds
 	 * @param clubs
-	 * @return
+	 * @return fewestCards, which is populated with the suit that has the
+	 * least cards
 	 */
 	private List<Card> getCardsFromSuitWithFewest(List<Card> spades,
 			List<Card> diamonds, List<Card> clubs) {
 		List<Card> fewestCards = null;
 		int fewest = 14;
 		Collections.sort(clubs, new CardComparator());
+		Collections.reverse(clubs);
 		Collections.sort(diamonds, new CardComparator());
+		Collections.reverse(diamonds);
 		Collections.sort(spades, new CardComparator());
+		Collections.reverse(spades);
 		if (clubs.size() > 0 && clubs.size() < fewest)
 		{
 			fewest = clubs.size();
@@ -228,7 +234,6 @@ public class AgentAggressive extends Agent{
 				fewest = spades.size();
 				fewestCards = spades;
 			}
-			//fewestCards = spades;
 		}
 		if (diamonds.size() > 0 && diamonds.size() <= fewest)
 		{
@@ -250,6 +255,12 @@ public class AgentAggressive extends Agent{
 		return fewestCards;
 	}
 
+	/**
+	 * Get the probability that a card will win
+	 * @param test
+	 * @return probability that the passed in card will win all
+	 * cards played on the table
+	 */
 	private double getProbCardWins(Card test) {
 		List<Integer> availableCards = new ArrayList<Integer>();
 		for (int i = 0; i < 13; i++)
@@ -293,6 +304,12 @@ public class AgentAggressive extends Agent{
 		return 1-(counter/availableCards.size());
 	}
 
+	/**
+	 * Obtain all cards within a suit
+	 * @param suit
+	 * @return cardsOfSuit, a list of cards that contains every
+	 * card of a suit in current hand
+	 */
 	private List<Card> getAllOfSuit(Suit suit) {
 		
 		List<Card> cardsOfSuit = new ArrayList<Card>();
@@ -306,6 +323,12 @@ public class AgentAggressive extends Agent{
 		return cardsOfSuit;
 	}
 
+	/**
+	 * Compare current cards against first card played on the table
+	 * @param suitLed
+	 * @return true or false. If true, at least one card in current hand
+	 * matches the first card played
+	 */
 	private boolean hasAnyOfSuit(Suit suitLed) {
 		Iterator<Card> iterator = getHand().iterator();
 		while (iterator.hasNext())

@@ -30,6 +30,7 @@ public class Hearts {
 	private boolean heartsBroken;
 	private Passing passing;
 	private int endScore;
+//	int heartsCounter = 0; //Attempting to implement notification "Hearts has been broken"
 	
 	/**
 	 * @param args
@@ -240,6 +241,13 @@ public class Hearts {
 		  
 		  first = false;
 		  System.out.println("Player "+p.getName()+" played "+c);
+			
+		  //one-time notification that hearts has been broken - Jonathan
+//		  if (heartsBroken == true && heartsCounter != 1)
+//		  {
+//			  System.out.println("---Hearts have been broken by " +p.getName());
+//			  heartsCounter = 1;
+//		  }
 		  
 		  //add that card to each player's in play cards
 		  for(int i = 0; i < players.size(); i++)
