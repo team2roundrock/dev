@@ -82,6 +82,13 @@ public abstract class Player {
 		return false;
 	}
 
+	/**
+	 * @return the qosPlayed
+	 */
+	protected boolean isQosPlayed() {
+		return qosPlayed;
+	}
+
 	public abstract Card playCard(List<Card> cardsPlayed, boolean heartsBroken,
 			boolean veryFirstTurn);
 

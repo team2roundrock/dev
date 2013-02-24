@@ -11,6 +11,15 @@ import java.util.Comparator;
  */
 public class Card
 {
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		Card card = (Card)obj;
+		return card.getFace() == getFace() && card.getSuit() == getSuit();
+	}
+
 	public static enum Face { Deuce, Three, Four, Five, Six
 		, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
 		

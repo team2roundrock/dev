@@ -26,26 +26,34 @@ public class RiskThresholds {
 	 *  value between 0.0 and 1.0 from the random number generator.
 	 */
 	
-	private float calculateRisk()
-	{		
-		if (this.Player == player1){ //Placeholder until I figure out how to get player numbers
-			threshold = rand.nextFloat();
-		} else if (this.Player == player2) {
-			threshold = rand.nextFloat();
-		} else if (this.Player == player3) {
-			threshold = rand.nextFloat();
-		} else if (this.Player == player4) {
-			threshold = rand.nextFloat();
-		} else
-			threshold = rand.nextFloat();
-		
+//	private float calculateRisk()
+//	{		
+//		if (this.Player == player1){ //Placeholder until I figure out how to get player numbers
+//			threshold = rand.nextFloat();
+//		} else if (this.Player == player2) {
+//			threshold = rand.nextFloat();
+//		} else if (this.Player == player3) {
+//			threshold = rand.nextFloat();
+//		} else if (this.Player == player4) {
+//			threshold = rand.nextFloat();
+//		} else
+//			threshold = rand.nextFloat();
+//		
+//		return threshold;
+//	}
+	
+	/**
+	 * @return the threshold
+	 */
+	public float getThreshold() {
 		return threshold;
 	}
-	
-	public float getRisk(float threshold) //needed?
-	{
-		//threshold = calculateRisk();
-		return threshold;
+
+	/**
+	 * @param threshold the threshold to set
+	 */
+	public void setThreshold(float threshold) {
+		this.threshold = threshold;
 	}
 		
 }
