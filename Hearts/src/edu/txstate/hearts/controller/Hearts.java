@@ -27,10 +27,10 @@ public class Hearts {
 	private Deck deck;
 	private List<Player> players;
 	private int turnsPlayed;
-	private boolean heartsBroken;
+	private boolean heartsBroken; //flag when hearts broken to allow a heart as first card played
+	private boolean notifyHeartsBroken; //implement notification "Hearts has been broken"
 	private Passing passing;
 	private int endScore;
-//	int heartsCounter = 0; //Attempting to implement notification "Hearts has been broken"
 	
 	/**
 	 * @param args
@@ -155,6 +155,7 @@ public class Hearts {
 			//initialize game properties
 			turnsPlayed = 0;
 			heartsBroken = false;
+			notifyHeartsBroken = false;
 			
 			//new round, find player to start round
 			int playerToStartRound = findPlayerToStart();
@@ -168,7 +169,9 @@ public class Hearts {
 					  players.get(i).clearInPlayCards();
 				 
 				playerToStartRound = runTurn(playerToStartRound);
-				System.out.println("=============== round "+(turnsPlayed+1)+" done ================");
+				System.out.println("=============== trick "+(turnsPlayed+1)+" done ================");
+				//every 4 cards played is a "trick", a round is when all cards have been exhausted.
+				//changed "round <number> done" to "trick <number> done"
 				turnsPlayed++;
 			}
 			
@@ -241,13 +244,9 @@ public class Hearts {
 		  
 		  first = false;
 		  System.out.println("Player "+p.getName()+" played "+c);
-			
-		  //one-time notification that hearts has been broken - Jonathan
-//		  if (heartsBroken == true && heartsCounter != 1)
-//		  {
-//			  System.out.println("---Hearts have been broken by " +p.getName());
-//			  heartsCounter = 1;
-//		  }
+		
+		  //notify that hearts has been broken (once per round)
+		  notifyHeartsBroken(cardsPlayed, p);
 		  
 		  //add that card to each player's in play cards
 		  for(int i = 0; i < players.size(); i++)
@@ -274,6 +273,29 @@ public class Hearts {
 		}
 		
 		return this.players.indexOf(playerWithHighestValue);
+	}
+
+	/**
+	 * This displays an instant notification when hearts have been broken during a round.
+	 * The notification also includes the name of the player who broke hearts.
+	 * 
+	 * @param cardsPlayed To monitor the cards on the table
+	 * @param p Player object. Enables passing in of player name.
+	 * @author Jonathan Shelton
+	 */
+	private void notifyHeartsBroken(List<Card> cardsPlayed, Player p) 
+	{
+		  if (notifyHeartsBroken == false)
+		  {
+			  for (int i = 0; i < cardsPlayed.size(); i++)
+			  {
+				  if (cardsPlayed.get(i).getSuit() == Suit.Hearts)
+				  {
+					  System.out.println("*****Hearts have been broken by " +p.getName()+"*****");
+					  notifyHeartsBroken = true;
+				  }
+			  }
+		  }
 	}
 
 	private int findPlayerToStart() 

@@ -14,7 +14,7 @@ import java.util.TreeMap;
 public class RiskThresholds {
 
 	Random rand = new Random();
-	float threshold = rand.nextFloat(); //should it be private? Force getRisk() to be used?
+	float threshold = rand.nextFloat();
 	/**
 	 * 
 	 *  This is a threshold which can be used for AI to determine 
@@ -47,7 +47,7 @@ public class RiskThresholds {
 	/**
 	 * @return the threshold
 	 */
-	public float getThreshold() {
+	public float getThresholds() {
 		return threshold;
 	}
 

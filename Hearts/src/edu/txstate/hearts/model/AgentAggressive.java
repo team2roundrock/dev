@@ -65,6 +65,9 @@ public class AgentAggressive extends Agent{
 		return cardsToPass;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.txstate.hearts.model.Agent#playCard(java.util.List, boolean, boolean)
+	 */
 	@Override
 	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken,
 			boolean veryFirstTurn) {
@@ -100,7 +103,7 @@ public class AgentAggressive extends Agent{
 						List<Card> spades = getAllOfSuit(Suit.Spades);
 						List<Card> diamonds = getAllOfSuit(Suit.Diamonds);
 						List<Card> clubs = getAllOfSuit(Suit.Clubs);
-						if (hearts.size() > 0)
+						if (hearts.size() > 0) //has hearts in hand
 						{
 							Collections.sort(hearts, new CardComparator());
 							Collections.reverse(hearts); //Every call to reverse ensures '0' is the highest card
@@ -128,13 +131,17 @@ public class AgentAggressive extends Agent{
 						Card test = playableCards.get(counter++);
 						double cardWins = getProbCardWins(test);
 						double risk = canPlayHearts*cardWins;
-						System.out.println("EVALUATING..." + test + ": risk is " + risk + " and threshold is " + thresholds.getThreshold());
-						if (risk < thresholds.getThreshold())
+						System.out.println("EVALUATING..." + test + ": risk is " + risk + " and threshold is " + thresholds.getThresholds());
+						if (risk < thresholds.getThresholds())
 						{
 							searching = false;
 							cardToPlay = test;
 						}
 						else //there is a risk of getting hearts
+						/* TODO: We may want to re-look at this. What about choosing the lowest risk that is above the threshold, after hearts is broken?
+								Scenario: 1st player plays 3 of clubs. Aggressive has 4, 8, jack of clubs. If aggressive plays jack, it is taking on
+										  substantially more risk than if it played the 4. Unless it is able to determine that at least one remaining player
+										  has no remaining clubs. */
 						{
 							if (counter == playableCards.size()) //all cards of smallest suite have been analyzed
 							{
@@ -146,6 +153,9 @@ public class AgentAggressive extends Agent{
 					}
 				}
 			}
+			/* TODO Ensure agent doesn't always default to playing highest card when going first. Especially after hearts broken.
+			        Particularly in this case, the highest card in a suit does not HAVE to be played if there is high risk.
+			        Might want to consider evaluating all suits as well, not necessarily suit with the fewest */
 			else //no cards played
 			{
 				List<Card> hearts = getAllOfSuit(Suit.Hearts);
@@ -169,8 +179,8 @@ public class AgentAggressive extends Agent{
 					Card test = fewestCards.get(counter++);
 					double cardWins = getProbCardWins(test);
 					double risk = canPlayHearts*cardWins;
-					System.out.println("EVALUATING..." + test + ": risk is " + risk + " and threshold is " + thresholds.getThreshold());
-					if (risk < thresholds.getThreshold())
+					System.out.println("EVALUATING..." + test + ": risk is " + risk + " and threshold is " + thresholds.getThresholds());
+					if (risk < thresholds.getThresholds())
 					{
 						cardToPlay = test;
 						searching = false;
@@ -345,7 +355,6 @@ public class AgentAggressive extends Agent{
 	 */
 	@Override
 	public void addCard(Card card) {
-		// TODO Auto-generated method stub
 		super.addCard(card);
 		if ((card.getSuit() == Card.Suit.Spades)
 				&& (card.getFace() == Card.Face.Queen))
