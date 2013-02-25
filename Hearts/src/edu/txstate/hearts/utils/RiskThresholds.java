@@ -1,33 +1,31 @@
 package edu.txstate.hearts.utils;
 
+//import java.util.List;
 import java.util.Random;
 import java.util.SortedMap;
-import java.util.TreeMap;
+//import java.util.TreeMap;
+
+import edu.txstate.hearts.model.Card;
 
 /**
  * Class is designed to house risk thresholds and make it easier 
  * to track and store them for use between sessions.
  * 
  * @author Jonathan Shelton
- *
  */
 public class RiskThresholds {
 
 	Random rand = new Random();
 	float threshold = rand.nextFloat();
-	/**
-	 * 
-	 *  This is a threshold which can be used for AI to determine 
-	 *  what hand to play (based on probabilities the AI has calculated)
-	 * 
-	 *  Note: For now, this will be a randomly generated value.
-	 *  Threshold will ideally/eventually be adjusted based on 
-	 *  various gameplay factors in the future.
-	 *  
-	 *  @return The next pseudorandom, uniformly distributed float 
-	 *  value between 0.0 and 1.0 from the random number generator.
-	 */
 	
+//	/**
+//	 *  Risk thresholds are generated in the this method. These
+//	 *  thresholds indicate the level of "risk tolerance" that
+//	 *  is acceptable.
+//	 *  
+//	 *  @return The next pseudorandom, uniformly distributed float 
+//	 *  value between 0.0 and 1.0 from the random number generator.
+//	 */
 //	private float calculateRisk()
 //	{		
 //		if (this.Player == player1){ //Placeholder until I figure out how to get player numbers
@@ -45,7 +43,7 @@ public class RiskThresholds {
 //	}
 	
 	/**
-	 * @return the threshold
+	 * @return threshold
 	 */
 	public float getThresholds() {
 		return threshold;
@@ -54,53 +52,51 @@ public class RiskThresholds {
 	/**
 	 * @param threshold the threshold to set
 	 */
-	public void setThreshold(float threshold) {
+	public void setThresholds(float threshold) {
 		this.threshold = threshold;
 	}
 	
 	/**
-	 * After determining probability, AI can pass the probability to
-	 * this method to compare against threshold. This will allow the AI
-	 * to determine if a particular card is good enough to be played.
+	 * After passing in risk, this method will compare risk against the established 
+	 * threshold and determine if a play is low or high risk. It also places safe or 
+	 * risky probabilities (and their associated cards) in separate maps for use if needed.
 	 * 
-	 * @param threshold Holds current risk threshold for agent
-	 * @param totalProbability Passed in from agent
-	 * @param cardValue Placeholder for whatever holds value of the card agent 
-	 * is evaluating for safe play
-	 * @author Jonathan Shelton
+	 * @param test Card that probability was created with
+	 * @param threshold The currently set threshold
+	 * @param risk A double which contains probability of a card to win
+	 * @param safeMap A SortedMap for safe probabilities
+	 * @param riskyMap A SortedMap for risky probabilities
+	 * @param lowRisk A boolean that's true if risk is low
 	 */
-	public void evaluateRisk(float threshold, float totalProbability, int cardValue)
+	//TODO Determine if this is a viable starter method to compare risk and if it appropriately passed all arguments back to the caller.
+	//SortedMaps can be used in the caller for more advanced probability searching
+	public void evaluateRisk(Card test, float threshold, double risk, SortedMap<Double,Card> safeMap, SortedMap<Double,Card> riskyMap, boolean lowRisk)
 	{
-		/**
-		 * probability = key
-		 * card = value
-		 * 
-		 * note: threshold & totalProbability may not stay as type float.
-		 */
-		float riskyProb = 0, safeProb = 0;
-		if(totalProbability <= threshold)
+		
+		 // key = probability (risk)
+		 // value = card (test)
+		if (risk < getThresholds())
 		{
-			safeProb = totalProbability; //holds probabilities deemed to be "safe"
+			safeMap.put(risk, test); //safe probabilities in their own map
+			lowRisk = true;
 		}
-		else
+		else //there is a risk of getting hearts
 		{
-			riskyProb = totalProbability; //holds probabilities deemed to be "risky", may collect heart(s)
+			riskyMap.put(risk, test); //risky probabilities in their own map
+			lowRisk = false;
 		}
 		
-		SortedMap<Float,Integer> safeMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
-		SortedMap<Float,Integer> riskyMap = new TreeMap<Float,Integer>(); //Assuming card val as an int
-
-        safeMap.put(safeProb, cardValue); //safe probabilities in their own map
-        riskyMap.put(riskyProb, cardValue); //risky probabilities in their own map
+		/* Creating the map in the caller
+		SortedMap<Double,Card> safeMap = new TreeMap<Double,Card>();
+		SortedMap<Double,Card> riskyMap = new TreeMap<Double,Card>();
+		*/
         
-//        Possible Implementation:
-//        	Display Highest Key: map.lastKey()
-//        	Display Lowest Key: map.firstKey()
-//        	Can also iterate through entire set by setting an Iterator object to map.keySet().iterator():
-//        		key is the key
-//        		map.get(key) is the value
-        
-
+        /* Possible Implementation:
+        	Display Highest Key: map.lastKey()
+        	Display Lowest Key: map.firstKey()
+        	Can also iterate through entire set by setting an Iterator object to map.keySet().iterator():
+        		key is the key
+        		map.get(key) is the value */
 	}
 		
 }
