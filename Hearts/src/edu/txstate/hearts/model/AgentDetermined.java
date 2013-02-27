@@ -14,6 +14,13 @@ public class AgentDetermined extends Agent {
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * This method implements the logic for the way AgentDetermine plays, which corresponds to a medium
+	 * difficulty level: AgentDeterming will try to play the highest card it has on his hand while the Hearts haven't 
+	 * been broken. After the Hearts have been broken, it is going to play the lowest card it has on its hand, except,
+	 * when the suit being played is Hearts. In this case it is going to look at the highest heart being played and try
+	 * to find in its hand the next lowest. By doing this, AgentDetermine does not waste its lowest heart card. 
+	 */
 	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn) 
 	{
 		Card cardToPlay = null;
@@ -87,7 +94,11 @@ public class AgentDetermined extends Agent {
 		getHand().remove(cardToPlay);
 		return cardToPlay;
 	}
-
+/**
+ * This method determines how AgentDetermine passes cards at the beginning of a turn. If the Queen of Spades or
+ *  the Ace, Ten, Jack, King and Queen of Hearts are in its hand, it is going to pass those cards. Otherwise, it will
+ *  pass the highest cards it has. 
+ */
 	public List<Card> getCardsToPass() 
 	{
 		int numCardsToPass = 3;
