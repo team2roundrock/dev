@@ -141,7 +141,7 @@ public class ProbabilityUtilsTest {
 		  else if(c.getSuit() == Suit.Clubs)
 			  p.addCard(c);
 		}
-		p.addPlayedCards(muck);
+		p.addPlayedCards(muck, false);
 		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), p.getInPlayCards(), p.getKnownCards(), true);
 		assertEquals(1d, num, 0.0001);
 		// trying that again, but this time, giving everyone two cards, aces
@@ -162,7 +162,7 @@ public class ProbabilityUtilsTest {
 		  else if(c.getFace() == Face.King && c.getSuit() == Suit.Hearts)
 			  p.addCard(c);
 		}
-		p.addPlayedCards(muck);
+		p.addPlayedCards(muck, false);
 		num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, p.getPlayedCards(), p.getInPlayCards(), p.getKnownCards(), true);
 		assertEquals(0.5070, num, 0.0001);
 		// now let's say that the first person has played the King of Clubs,
