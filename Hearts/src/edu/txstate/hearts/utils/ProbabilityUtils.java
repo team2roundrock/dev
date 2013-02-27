@@ -198,21 +198,25 @@ public abstract class ProbabilityUtils {
 		{
 			if(cardsPlayedThisTurn.size() == 3)
 			{
-				if(cardsPlayedThisTurn.get(1).getSuit() == Suit.Hearts ||
+				if(cardsPlayedThisTurn.get(0).getSuit() == Suit.Hearts ||
+						cardsPlayedThisTurn.get(1).getSuit() == Suit.Hearts ||
 						cardsPlayedThisTurn.get(2).getSuit() == Suit.Hearts)
 					return 1d;
 				return 0d;
 			}
 			else if(cardsPlayedThisTurn.size() == 2)
 			{
-				Card c = cardsPlayedThisTurn.get(1);
-				if(c.getSuit() == Suit.Hearts)
+				if(cardsPlayedThisTurn.get(0).getSuit() == Suit.Hearts ||
+						cardsPlayedThisTurn.get(1).getSuit() == Suit.Hearts)
 					return 1d;
 				knownCards.get(1).add(cardsPlayedThisTurn.get(0));
-				knownCards.get(2).add(c);
+				knownCards.get(2).add(cardsPlayedThisTurn.get(1));
 			} else if(cardsPlayedThisTurn.size() == 1)
+			{
+				if(cardsPlayedThisTurn.get(0).getSuit() == Suit.Hearts)
+					return 1d;
 				knownCards.get(2).add(cardsPlayedThisTurn.get(0));
-			else
+			} else
 				throw new RuntimeException("how i get here? cards played this turn - "+cardsPlayedThisTurn.size());
 		}
 		Map<Card.Suit, Integer> suitCounter = new HashMap<Card.Suit, Integer>();
@@ -236,11 +240,17 @@ public abstract class ProbabilityUtils {
 		}
 		if(suitCounter.get(Suit.Hearts) == 0)
 			return 0d;
-		if(suitCounter.get(suit) == 0)
+		if(suitCounter.get(suit) == 0 && suitCounter.get(Suit.Hearts) > 0)
 		{
 			//System.out.println("no one else has that suit, and there are hearts, returning 1");
 			return 1d;
 		}
+		if(suit == Suit.Hearts)
+			if(suitCounter.get(Suit.Hearts) > 0)
+				return 1d;
+			else
+				return 0d;
+			
 		//System.out.println("suitCounter: "+suitCounter);
 		CounterObject co = new CounterObject();
 		int[] knownCounterArray = createKnownCounter(knownCards);
@@ -303,6 +313,13 @@ public abstract class ProbabilityUtils {
 		//System.out.println("combosWithHeartsNoSuit - "+co.getWithHeartsNoSuitCombos());
 		double heartCombos = co.getWithHeartsNoSuitCombos();
 		//System.out.println("probability - "+(heartCombos/totalCombos));
+		if(heartCombos > totalCombos)
+		{
+			System.out.println("got more heartCombos than totalCombos?");
+			System.out.println("hand - "+hand+" suit - "+suit+" cardsPlayedThisTurn - "+cardsPlayedThisTurn);
+			System.out.println("knownCards - "+knownCards+" qosPlayed - "+qosPlayed);
+			System.out.println("muck - "+muck);
+		}
 		return heartCombos/totalCombos;
 	}
 
@@ -350,6 +367,38 @@ public abstract class ProbabilityUtils {
 						if((c+d+h+s) == handSize)
 						{
 							//System.out.println("Using P2 has "+c+"C "+d+"D "+s+"S "+h+"H");
+							if(suitCounter.get(Suit.Clubs) < c)
+							{
+								System.out.println("suitCounter for clubs is "+suitCounter.get(Suit.Clubs));
+								System.out.println("c is "+c);
+								System.out.println("p1c is "+p1c);
+								System.out.println("from for loop, checking for c <= "+Math.max(Math.min(handSize, suitCounter.get(Suit.Clubs)-p1c-knownCounterArray[8]), knownCounterArray[4]));
+								System.out.println("by breakign this down, it was from Math.max(Math.min("+handSize+", "+suitCounter.get(Suit.Clubs)+"-"+p1c+"-"+knownCounterArray[8]+"), "+knownCounterArray[4]+")");							
+							}
+							if(suitCounter.get(Suit.Diamonds) < d)
+							{
+								System.out.println("suitCounter for diamonds is "+suitCounter.get(Suit.Diamonds));
+								System.out.println("d is "+d);
+								System.out.println("p1d is "+p1d);
+								System.out.println("from for loop, checking for d <= "+Math.max(Math.min(handSize-c, suitCounter.get(Suit.Diamonds)-p1d-knownCounterArray[9]), knownCounterArray[5]));
+								System.out.println("by breakign this down, it was from Math.max(Math.min("+handSize+"-"+c+", "+suitCounter.get(Suit.Diamonds)+"-"+p1d+"-"+knownCounterArray[9]+"), "+knownCounterArray[5]+")");							
+							}
+							if(suitCounter.get(Suit.Hearts) < h)
+							{
+								System.out.println("suitCounter for hearts is "+suitCounter.get(Suit.Hearts));
+								System.out.println("h is "+h);
+								System.out.println("p1h is "+p1h);
+								System.out.println("from for loop, checking for h <= "+Math.max(Math.min(handSize-c-d, suitCounter.get(Suit.Hearts)-p1h-knownCounterArray[10]), knownCounterArray[6]));
+								System.out.println("by breakign this down, it was from Math.max(Math.min("+handSize+"-"+c+"-"+d+", "+suitCounter.get(Suit.Hearts)+"-"+p1h+"-"+knownCounterArray[10]+"), "+knownCounterArray[6]+")");							
+							}
+							if(suitCounter.get(Suit.Spades) < s)
+							{
+								System.out.println("suitCounter for spades is "+suitCounter.get(Suit.Spades));
+								System.out.println("s is "+s);
+								System.out.println("p1s is "+p1s);
+								System.out.println("from for loop, checking for s <= "+Math.max(Math.min(handSize-c-d-h, suitCounter.get(Suit.Spades)-p1s-knownCounterArray[11]), knownCounterArray[7]));
+								System.out.println("by breakign this down, it was from Math.max(Math.min("+handSize+"-"+c+"-"+d+"-"+h+", "+suitCounter.get(Suit.Spades)+"-"+p1s+"-"+knownCounterArray[11]+"), "+knownCounterArray[7]+")");							
+							}
 							long p2Count = ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Clubs), c);
 							p2Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Diamonds), d);
 							p2Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Hearts), h);

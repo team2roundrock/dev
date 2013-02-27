@@ -187,7 +187,7 @@ public abstract class Player {
 	}
 
 
-	public void addPlayedCards(Collection<Card> cards)
+	public void addPlayedCards(Collection<Card> cards, boolean tookCards)
 	{
 		this.playedCards.addAll(cards);
 		if(!qosPlayed)
@@ -207,10 +207,11 @@ public abstract class Player {
 		this.playedCards.clear();
 	}
 
-	public void addTakenCard(Card card)
+	public void addTakenCard(Card card, boolean print)
 	{
 		this.takenCards.add(card);
-		System.out.println("Add " + card.toString() + " to " + this.getName());
+		if(print)
+			System.out.println("Add " + card.toString() + " to " + this.getName());
 	}
 
 	public void clearTakenCards()

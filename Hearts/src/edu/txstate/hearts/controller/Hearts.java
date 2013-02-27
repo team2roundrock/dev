@@ -31,7 +31,7 @@ public class Hearts {
 	private boolean notifyHeartsBroken; //implement notification "Hearts has been broken"
 	private Passing passing;
 	private int endScore;
-	
+	private final static boolean silent = false;
 	/**
 	 * @param args
 	 */
@@ -48,9 +48,9 @@ public class Hearts {
 		endScore = 100; //default
 		
 		players = new ArrayList<Player>(4);
-		Player player1 = new AgentGoofy("Gede");
-		Player player2 = new AgentGoofy("Neil");
-		Player player3 = new AgentGoofy("Jonathan");
+		Player player1 = new AgentDetermined("Gede");
+		Player player2 = new AgentAggressive("Neil");
+		Player player3 = new AgentDetermined("Jonathan");
 		Player player4 = new AgentDetermined("Maria");
 		
 		players.add(player1);
@@ -62,8 +62,12 @@ public class Hearts {
 	private void shuffleCards()
 	{
 		deck.shuffleCards();
-		deck.printCards();
-		System.out.println("");
+		
+		if(!silent)
+		{
+			deck.printCards();
+			System.out.println("");
+		}
 	}
 	
 	private void dealCards()
@@ -82,10 +86,13 @@ public class Hearts {
 		{
 			Player player = players.get(i);
 			player.sortCards();
-			System.out.println(player.getName());
-			player.printHand();
-			System.out.println("");
-			System.out.println("");
+			if(!silent)
+			{
+				System.out.println(player.getName());
+				player.printHand();
+				System.out.println("");
+				System.out.println("");
+			}
 		}
 	}
 	
@@ -120,91 +127,122 @@ public class Hearts {
 			this.players.get(2).addCards(p0CardsToPass);
 			this.players.get(3).addCards(p1CardsToPass);
 		}
-		
-		System.out.println("=====After passing cards to the "  + this.passing.toString() + "=====");
+		if(!silent)
+			System.out.println("=====After passing cards to the "  + this.passing.toString() + "=====");
 		//print each player cards
 		for(int i = 0; i < players.size(); i++)
 		{
 			Player player = players.get(i);
 			player.sortCards();
-			System.out.println(player.getName());
-			player.printHand();
-			System.out.println("");
-			System.out.println("");
+			if(!silent)
+			{
+				System.out.println(player.getName());
+				player.printHand();
+				System.out.println("");
+				System.out.println("");
+			}
 		}
 	}
 	
-	private void runGame()
-	{
-		//while we still playing the game
-		while(true)
-		{
+	private void runGame() {
+		long start = System.nanoTime();
+		int myLossCount = 0;
+		for (int n = 0; n < 1; n++) {
+			// while we still playing the game
 			for(int i = 0; i < players.size(); i++)
 			{
 				Player p = players.get(i);
-				//clear each player cards
-				p.clearCards();
+				int score = (-1)*p.getScore();
+				p.addScore(score);
 			}
-			
-			//initialize deck for the game
-			deck = new Deck();		
-			shuffleCards();
-			dealCards();
-			passingCards();
-			
-			//initialize game properties
-			turnsPlayed = 0;
-			heartsBroken = false;
-			notifyHeartsBroken = false;
-			
-			//new round, find player to start round
-			int playerToStartRound = findPlayerToStart();
-			System.out.println("Player " + players.get(playerToStartRound).getName() + " goes first");
-			
-			//while we still have cards
-			while(turnsPlayed < 13)
-			{
-				//clear player's in play cards
-				 for(int i = 0; i < players.size(); i++)
-					  players.get(i).clearInPlayCards();
-				 
-				playerToStartRound = runTurn(playerToStartRound);
-				System.out.println("=============== trick "+(turnsPlayed+1)+" done ================");
-				//every 4 cards played is a "trick", a round is when all cards have been exhausted.
-				//changed "round <number> done" to "trick <number> done"
-				turnsPlayed++;
+			while (true) {
+				for (int i = 0; i < players.size(); i++) {
+					Player p = players.get(i);
+					// clear each player cards
+					p.clearCards();
+				}
+
+				// initialize deck for the game
+				deck = new Deck();
+				shuffleCards();
+				dealCards();
+				passingCards();
+
+				// initialize game properties
+				turnsPlayed = 0;
+				heartsBroken = false;
+				notifyHeartsBroken = false;
+
+				// new round, find player to start round
+				int playerToStartRound = findPlayerToStart();
+				if(!silent)
+					System.out.println("Player "
+						+ players.get(playerToStartRound).getName()
+						+ " goes first");
+
+				// while we still have cards
+				while (turnsPlayed < 13) {
+					// clear player's in play cards
+					for (int i = 0; i < players.size(); i++)
+						players.get(i).clearInPlayCards();
+
+					playerToStartRound = runTurn(playerToStartRound);
+					if(!silent)
+						System.out.println("=============== trick "
+							+ (turnsPlayed + 1) + " done ================");
+					// every 4 cards played is a "trick", a round is when all
+					// cards have been exhausted.
+					// changed "round <number> done" to "trick <number> done"
+					turnsPlayed++;
+				}
+
+				// add scores to each player
+				assignScoresToPlayers();
+
+				// check for highest point
+				Player playerWithHighestTotalPoint = null;
+				for (int i = 0; i < players.size(); i++) {
+					Player p = players.get(i);
+					if (playerWithHighestTotalPoint == null)
+						playerWithHighestTotalPoint = p;
+					else if (playerWithHighestTotalPoint.getScore() < p
+							.getScore())
+						playerWithHighestTotalPoint = p;
+				}
+
+				// determine if the game ends
+				if (playerWithHighestTotalPoint.getScore() >= this.endScore) {
+					if(playerWithHighestTotalPoint.equals(players.get(1)))
+						myLossCount++;
+					System.out.println("Player "
+							+ playerWithHighestTotalPoint.getName()
+							+ " lose with total score of "
+							+ playerWithHighestTotalPoint.getScore());
+					break;
+				}
+
+				// figure out next passing
+				if (this.passing == Passing.Left)
+					this.passing = Passing.Right;
+				else if (this.passing == Passing.Right)
+					this.passing = Passing.Front;
+				else if (this.passing == Passing.Front)
+					this.passing = Passing.Stay;
+				else if (this.passing == Passing.Stay)
+					this.passing = Passing.Left;
 			}
-			
-			//add scores to each player
-			assignScoresToPlayers();
-			
-			//check for highest point
-			Player playerWithHighestTotalPoint = null;
-			for(int i = 0; i < players.size(); i++)
-			{
-				Player p = players.get(i);
-				if(playerWithHighestTotalPoint == null)
-					playerWithHighestTotalPoint = p;
-				else if(playerWithHighestTotalPoint.getScore() < p.getScore())
-					playerWithHighestTotalPoint = p;
+		}
+		long done = System.nanoTime();
+		System.out.println("time to run was " + (done - start) / 1000000);
+		System.out.println("My loss count was "+myLossCount);
+		for (int i = 0; i < players.size(); i++) {
+			Player p = players.get(i);
+			if (p instanceof AgentAggressive) {
+				AgentAggressive aa = (AgentAggressive) p;
+				// System.out.println("expected wins "+aa.getExpectedWins());
+				// System.out.println("actual wins "+aa.getActualWins());
+				aa.serializeThresholds();
 			}
-			
-			//determine if the game ends
-			if(playerWithHighestTotalPoint.getScore() >= this.endScore)
-			{
-				System.out.println("Player " + playerWithHighestTotalPoint.getName() + " lose with total score of " + playerWithHighestTotalPoint.getScore());
-				break;
-			}
-		
-			//figure out next passing
-			if(this.passing == Passing.Left)
-				this.passing = Passing.Right;
-			else if(this.passing == Passing.Right)
-				this.passing = Passing.Front;
-			else if(this.passing == Passing.Front)
-				this.passing = Passing.Stay;
-			else if(this.passing == Passing.Stay)
-				this.passing = Passing.Left;
 		}
 	}
 	
@@ -243,7 +281,8 @@ public class Hearts {
 		  }
 		  
 		  first = false;
-		  System.out.println("Player "+p.getName()+" played "+c);
+		  if(!silent)
+			  System.out.println("Player "+p.getName()+" played "+c);
 		
 		  //notify that hearts has been broken (once per round)
 		  notifyHeartsBroken(cardsPlayed, p);
@@ -259,18 +298,25 @@ public class Hearts {
 		//also add to the played cards
 		//add that card to each player's list of played cards
 		for(int i = 0; i < players.size(); i++)
-			players.get(i).addPlayedCards(cardsPlayed);
-		  
-		//add cards to the player with highest value
-		for(int i = 0; i < cardsPlayed.size(); i++)
 		{
-			playerWithHighestValue.addTakenCard(cardsPlayed.get(i));
-			
-			//figure out if hearts already broken
-			if(!this.heartsBroken && cardsPlayed.get(i).getSuit() == Suit.Hearts)
-				this.heartsBroken = true;
-				
+			boolean tookCards = players.get(i).equals(playerWithHighestValue);
+			players.get(i).addPlayedCards(cardsPlayed, tookCards);
+			if(tookCards)
+			{
+				//add cards to the player with highest value
+				for(int j = 0; j < cardsPlayed.size(); j++)
+				{
+					playerWithHighestValue.addTakenCard(cardsPlayed.get(j), !silent);
+					
+					//figure out if hearts already broken
+					if(!this.heartsBroken && cardsPlayed.get(j).getSuit() == Suit.Hearts)
+						this.heartsBroken = true;
+						
+				}				
+			}
 		}
+		  
+
 		
 		return this.players.indexOf(playerWithHighestValue);
 	}
@@ -291,7 +337,8 @@ public class Hearts {
 			  {
 				  if (cardsPlayed.get(i).getSuit() == Suit.Hearts)
 				  {
-					  System.out.println("*****Hearts have been broken by " +p.getName()+"*****");
+					  if(!silent)
+						  System.out.println("*****Hearts have been broken by " +p.getName()+"*****");
 					  notifyHeartsBroken = true;
 				  }
 			  }
@@ -357,9 +404,12 @@ public class Hearts {
 		{
 			Player player = players.get(i);
 			player.addScore(scores.get(i));
-			System.out.println("This round, " + player.getName() + " collected " + scores.get(i) + " points ");
-			System.out.println("Total points for " + player.getName() + " is " + player.getScore() + " points ");
-			System.out.println("=======================================");
+			if(!silent)
+			{
+				System.out.println("This round, " + player.getName() + " collected " + scores.get(i) + " points ");
+				System.out.println("Total points for " + player.getName() + " is " + player.getScore() + " points ");
+				System.out.println("=======================================");
+			}
 		}
 	}
 }
