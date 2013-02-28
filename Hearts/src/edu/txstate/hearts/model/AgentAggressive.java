@@ -72,7 +72,7 @@ public class AgentAggressive extends Agent {
 			OutputStream buffer = new BufferedOutputStream(file);
 			ObjectOutput output = new ObjectOutputStream(buffer);
 			try {
-				System.out.println("saving "+thresholds);
+				//System.out.println("saving "+thresholds);
 				output.writeObject(thresholds);
 			} finally {
 				output.close();
@@ -288,10 +288,10 @@ public class AgentAggressive extends Agent {
 				lastThreshold = t;
 			}
 
-			System.out.println("EVALUATING..." + test + ": cardWins is "
-					+ cardWins + " canPlayHearts is " + canPlayHearts
-					+ " total risk is " + risk + " and threshold is "
-					+ threshold);
+			//System.out.println("EVALUATING..." + test + ": cardWins is "
+			//		+ cardWins + " canPlayHearts is " + canPlayHearts
+			//		+ " total risk is " + risk + " and threshold is "
+			//		+ threshold);
 			if (risk < threshold) {
 				cardToPlay = test;
 				searching = false;

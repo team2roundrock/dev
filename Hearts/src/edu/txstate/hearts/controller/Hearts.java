@@ -200,24 +200,34 @@ public class Hearts {
 				assignScoresToPlayers();
 
 				// check for highest point
-				Player playerWithHighestTotalPoint = null;
+				Player playerWithHighestTotalPoints = null;
+				Player playerWithLowestTotalPoints = null;
 				for (int i = 0; i < players.size(); i++) {
 					Player p = players.get(i);
-					if (playerWithHighestTotalPoint == null)
-						playerWithHighestTotalPoint = p;
-					else if (playerWithHighestTotalPoint.getScore() < p
+					if (playerWithHighestTotalPoints == null)
+					{
+						playerWithHighestTotalPoints = p;
+						playerWithLowestTotalPoints = p;
+					}
+					else if (playerWithHighestTotalPoints.getScore() < p
 							.getScore())
-						playerWithHighestTotalPoint = p;
+						playerWithHighestTotalPoints = p;
+					else if (playerWithLowestTotalPoints.getScore() > p.getScore())
+						playerWithLowestTotalPoints = p;
 				}
 
 				// determine if the game ends
-				if (playerWithHighestTotalPoint.getScore() >= this.endScore) {
-					if(playerWithHighestTotalPoint.equals(players.get(1)))
+				if (playerWithHighestTotalPoints.getScore() >= this.endScore) {
+					if(playerWithHighestTotalPoints.equals(players.get(1)))
 						myLossCount++;
 					System.out.println("Player "
-							+ playerWithHighestTotalPoint.getName()
-							+ " lose with total score of "
-							+ playerWithHighestTotalPoint.getScore());
+							+ playerWithHighestTotalPoints.getName()
+							+ " loses with total score of "
+							+ playerWithHighestTotalPoints.getScore());
+					System.out.println("Player "
+							+ playerWithLowestTotalPoints.getName()
+							+ " wins with total score of "
+							+ playerWithLowestTotalPoints.getScore());
 					break;
 				}
 
@@ -233,8 +243,8 @@ public class Hearts {
 			}
 		}
 		long done = System.nanoTime();
-		System.out.println("time to run was " + (done - start) / 1000000);
-		System.out.println("My loss count was "+myLossCount);
+		//System.out.println("time to run was " + (done - start) / 1000000);
+		//System.out.println("My loss count was "+myLossCount);
 		for (int i = 0; i < players.size(); i++) {
 			Player p = players.get(i);
 			if (p instanceof AgentAggressive) {
