@@ -34,8 +34,12 @@ public class AgentDetermined extends Agent {
 			Collections.sort(playable, new CardComparator());
 			
 			//if heart has not been broken
-			if(!heartsBroken)
-				cardToPlay = playable.get(playable.size() - 1);
+			if(!heartsBroken){
+				if(this.getInPlayCards().size() == 0)
+					cardToPlay = playable.get(0);
+				else
+					cardToPlay = playable.get(playable.size() - 1);
+			}
 			else //heart is broken
 			{
 				//start logic to do 'smart' move when heart has been broken and the play is heart
