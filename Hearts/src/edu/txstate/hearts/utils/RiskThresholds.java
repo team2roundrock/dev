@@ -139,8 +139,8 @@ public class RiskThresholds implements Serializable {
 	private void increaseThreshold(Threshold t, double adjustAmount) {
 		double oldValue = t.getThreshold();
 		double newValue = adjustAmount * oldValue;
-		System.out.println("doing increase oldValue is " + oldValue
-				+ " newValue is " + newValue);
+		//System.out.println("doing increase oldValue is " + oldValue
+		//		+ " newValue is " + newValue);
 		t.setThreshold(newValue);
 	}
 
@@ -152,8 +152,8 @@ public class RiskThresholds implements Serializable {
 		else {
 			double oldValue = t.getThreshold();
 			double newValue = Math.pow(0.99, points)*oldValue;
-			System.out.println("doing decrease oldValue is " + oldValue
-					+ " newValue is " + newValue);
+			//System.out.println("doing decrease oldValue is " + oldValue
+			//		+ " newValue is " + newValue);
 			t.setThreshold(newValue);
 		}
 		// System.out.println("logisticFunction("+(newValue*10d)+") of newValue is "+logisticFunction(newValue*10d));
