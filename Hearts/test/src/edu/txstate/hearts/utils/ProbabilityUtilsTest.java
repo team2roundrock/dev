@@ -195,6 +195,46 @@ public class ProbabilityUtilsTest {
 		
 		
 	}
+	
+	@Test
+	public void testBadGetProbabilityNoneOfSuitHasHearts()
+	{
+		//hand - [Deuce of Spades, Six of Spades, Six of Hearts, Seven of Spades, 
+		//        Eight of Hearts, Eight of Diamonds, Nine of Diamonds, Nine of Spades, 
+		//        Jack of Clubs, Jack of Diamonds, King of Diamonds, King of Clubs, 
+		//        Ace of Diamonds] 
+		//suit - Clubs 
+		//cardsPlayedThisTurn - [Deuce of Clubs]
+		//knownCards - [[King of Spades, Queen of Spades, Queen of Diamonds], [], [Deuce of Clubs]] 
+		//qosPlayed - false
+		//muck - []
+		Player p = new AgentAggressive("Test");
+		p.addCard(new Card(Face.Deuce, Suit.Spades));
+		p.addCard(new Card(Face.Six, Suit.Spades));
+		p.addCard(new Card(Face.Six, Suit.Hearts));
+		p.addCard(new Card(Face.Seven, Suit.Spades));
+		p.addCard(new Card(Face.Eight, Suit.Hearts));
+		p.addCard(new Card(Face.Eight, Suit.Diamonds));
+		p.addCard(new Card(Face.Nine, Suit.Diamonds));
+		p.addCard(new Card(Face.Nine, Suit.Spades));
+		p.addCard(new Card(Face.Jack, Suit.Clubs));
+		p.addCard(new Card(Face.Jack, Suit.Diamonds));
+		p.addCard(new Card(Face.King, Suit.Diamonds));
+		p.addCard(new Card(Face.King, Suit.Clubs));
+		p.addCard(new Card(Face.Ace, Suit.Diamonds));
+		List<Set<Card>> knownCards = new ArrayList<Set<Card>>();
+		Set<Card> set1 = new HashSet<Card>();
+		set1.add(new Card(Face.King, Suit.Spades));
+		set1.add(new Card(Face.Queen, Suit.Spades));
+		set1.add(new Card(Face.Queen, Suit.Diamonds));
+		knownCards.add(set1);
+		knownCards.add(new HashSet<Card>());
+		knownCards.add(new HashSet<Card>());
+		List<Card> playedCards = new ArrayList<Card>();
+		playedCards.add(new Card(Face.Deuce, Suit.Clubs));
+		double num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Clubs, Collections.<Card> emptySet(), playedCards, knownCards, false);
+		System.out.println("num is "+num);
+	}
 
 
 

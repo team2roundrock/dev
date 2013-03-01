@@ -147,6 +147,7 @@ public class Hearts {
 	private void runGame() {
 		long start = System.nanoTime();
 		int myLossCount = 0;
+		int myWinCount = 0;
 		for (int n = 0; n < 1; n++) {
 			// while we still playing the game
 			for(int i = 0; i < players.size(); i++)
@@ -218,12 +219,16 @@ public class Hearts {
 
 				// determine if the game ends
 				if (playerWithHighestTotalPoints.getScore() >= this.endScore) {
-					if(playerWithHighestTotalPoints.equals(players.get(1)))
+					if(playerWithHighestTotalPoints instanceof AgentAggressive)
 						myLossCount++;
+					if(playerWithLowestTotalPoints instanceof AgentAggressive)
+						myWinCount++;
+					if(!silent)
 					System.out.println("Player "
 							+ playerWithHighestTotalPoints.getName()
 							+ " loses with total score of "
 							+ playerWithHighestTotalPoints.getScore());
+					if(!silent)
 					System.out.println("Player "
 							+ playerWithLowestTotalPoints.getName()
 							+ " wins with total score of "
@@ -245,12 +250,14 @@ public class Hearts {
 		long done = System.nanoTime();
 		//System.out.println("time to run was " + (done - start) / 1000000);
 		//System.out.println("My loss count was "+myLossCount);
+		//System.out.println("My win count was "+myWinCount);
+
 		for (int i = 0; i < players.size(); i++) {
 			Player p = players.get(i);
 			if (p instanceof AgentAggressive) {
 				AgentAggressive aa = (AgentAggressive) p;
-				// System.out.println("expected wins "+aa.getExpectedWins());
-				// System.out.println("actual wins "+aa.getActualWins());
+				//System.out.println("expected wins "+aa.getExpectedWins());
+				//System.out.println("actual wins "+aa.getActualWins());
 				aa.serializeThresholds();
 			}
 		}
