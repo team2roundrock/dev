@@ -239,6 +239,7 @@ public class AgentAggressive extends Agent {
 								// risk threshold, so just play the highest
 								// card from the smallest suit
 								cardToPlay = first.get(0);
+								//System.out.println("adding to expectedWins");
 								expectedWins += getProbCardWins(cardToPlay);
 							}
 						}
@@ -295,6 +296,7 @@ public class AgentAggressive extends Agent {
 			if (risk < threshold) {
 				cardToPlay = test;
 				searching = false;
+				//System.out.println("adding to expectedWins");
 				expectedWins += cardWins;
 			} else // there is a risk of getting hearts
 			{
@@ -305,6 +307,7 @@ public class AgentAggressive extends Agent {
 						cardToPlay = fewestCards.get(0); // just play the
 															// highest if at
 															// risk
+						//System.out.println("adding to expectedWins");
 						expectedWins += getProbCardWins(cardToPlay);
 					}
 					searching = false;
@@ -375,22 +378,33 @@ public class AgentAggressive extends Agent {
 	 */
 	private double getProbCardWins(Card test) {
 		List<Integer> availableCards = new ArrayList<Integer>();
-		// if there are already three cards played, the strategy to know if
+		// if there are already cards played, the strategy to know if
 		// you will win is different
-		if (this.getInPlayCards().size() == 3) {
-			int biggest = getInPlayCards().get(0).getFace().ordinal();
-			if (getInPlayCards().get(1).getSuit() == test.getSuit())
-				if (getInPlayCards().get(1).getFace().ordinal() > biggest)
-					biggest = getInPlayCards().get(1).getFace().ordinal();
-			if (getInPlayCards().get(1).getSuit() == test.getSuit())
-				if (getInPlayCards().get(1).getFace().ordinal() > biggest)
-					biggest = getInPlayCards().get(1).getFace().ordinal();
-			// System.out.println("testing "+test+" I am using special case, biggest is "+biggest+" and my card is "+test.getFace().ordinal());
+		if (this.getInPlayCards().size() > 0) {
+			// if test suit doesn't match suit led, then there is no chance of winning
+			if(test.getSuit() != getInPlayCards().get(0).getSuit())
+				return 0d;
+			int biggest = -1;
+			for(int i = 0; i < getInPlayCards().size(); i++)
+			{
+				Card c = getInPlayCards().get(i);
+				if(c.getSuit() == test.getSuit())
+				{
+					if(c.getFace().ordinal() > biggest)
+						biggest = c.getFace().ordinal();
+				}
+			}
+			// if the biggest card play is bigger than mine, I can't win
 			if (biggest > test.getFace().ordinal())
 				return 0d;
-			else
+			// if all three cards have been played, and my card is bigger
+			// than the biggest, I am guaranteed to win
+			else if(getInPlayCards().size() == 3)
 				return 1d;
 		}
+		// not everyone has played, so figure out how many cards out there
+		// are bigger than mine, and assume that I will win:
+		//      #CardsSmallerThanMine / #CardsAvailableCardsOfSuit 
 		for (int i = 0; i < 13; i++) {
 			availableCards.add(i);
 		}

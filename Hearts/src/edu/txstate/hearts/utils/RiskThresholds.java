@@ -122,7 +122,7 @@ public class RiskThresholds implements Serializable {
 	 */
 	public Threshold getThreshold(int numPlayed, boolean qos) {
 		int num = numPlayed;
-		if (!qos)
+		if (qos)
 			num += 3;
 		Threshold t = thresholdMap.get(num);
 		// return thresholdMap.get(num).getThreshold();
@@ -132,13 +132,19 @@ public class RiskThresholds implements Serializable {
 	public void increaseThreshold(Threshold t) {
 		if (t == null)
 			return;
-		increaseThreshold(t, 1.001);
+		//System.out.println("old risk threshold "+t.getRiskThreshold());
+		//System.out.println("logisticFunction2 returned "+logisticFunction2(t.getRiskThreshold()*10d));
+		double factor = logisticFunction2(t.getRiskThreshold()*10d)/100d;
+		increaseThreshold(t, factor);
+		//System.out.println("new risk threshold "+t.getRiskThreshold());
 		// System.out.println("logisticFunction("+(newValue*10d)+") of newValue is "+logisticFunction(newValue*10d));
 	}
 
-	private void increaseThreshold(Threshold t, double adjustAmount) {
+	private void increaseThreshold(Threshold t, double offset) {
 		double oldValue = t.getThreshold();
-		double newValue = adjustAmount * oldValue;
+		double factor = 1d+offset;
+		double newValue = factor * oldValue;
+		//System.out.println("factor is "+factor);
 		//System.out.println("doing increase oldValue is " + oldValue
 		//		+ " newValue is " + newValue);
 		t.setThreshold(newValue);
@@ -148,22 +154,40 @@ public class RiskThresholds implements Serializable {
 		if (t == null)
 			return;
 		if (points == 0)
-			increaseThreshold(t, 1.0005);
+		{
+			//System.out.println("old risk threshold "+t.getRiskThreshold());
+			double factor = logisticFunction2(t.getRiskThreshold()*10d)/100d;
+			//System.out.println("logisticFunction2 returned "+logisticFunction2(t.getRiskThreshold()*10d));
+			increaseThreshold(t, factor/2d);
+			//System.out.println("new risk threshold "+t.getRiskThreshold());
+		}
 		else {
 			double oldValue = t.getThreshold();
-			double newValue = Math.pow(0.99, points)*oldValue;
+			//System.out.println("old risk threshold "+t.getRiskThreshold());
+			double factor = 1d-(logisticFunction(t.getRiskThreshold()*10d)/100d);
+			//System.out.println("factor is "+factor);
+			double newValue = Math.pow(factor, points)*oldValue;
 			//System.out.println("doing decrease oldValue is " + oldValue
 			//		+ " newValue is " + newValue);
 			t.setThreshold(newValue);
+			//System.out.println("new risk threshold "+t.getRiskThreshold());
 		}
 		// System.out.println("logisticFunction("+(newValue*10d)+") of newValue is "+logisticFunction(newValue*10d));
 	}
 
 	private double logisticFunction(double x) {
-		// 1/(1+e^-(x-5))
+		// 1/(1+e^(5-x))
 		double e = Math.E;
 		double denominator = 1d + Math.pow(e, (5 - x));
 		return 1d / denominator;
+	}
+	
+	private double logisticFunction2(double x) 
+	{
+		// 1/(1+e^-(x-5))
+		double e = Math.E;
+		double denominator = 1d + Math.pow(e, (x - 5));
+		return 1d / denominator;		
 	}
 
 	// /**

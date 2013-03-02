@@ -310,8 +310,14 @@ public abstract class ProbabilityUtils {
 		}
 		//System.out.println("totalCombos - "+co.getTotalCombos());
 		double totalCombos = co.getTotalCombos();
-		//System.out.println("combosWithHeartsNoSuit - "+co.getWithHeartsNoSuitCombos());
 		double heartCombos = co.getWithHeartsNoSuitCombos();
+		
+		if(co.getTotalCombosExceedCounter() > 0)
+		{
+			totalCombos = (double)(co.getTotalCombosExceedCounter()) + totalCombos/Long.MAX_VALUE;
+			heartCombos = (double)(co.getWithHeartsExceedCounter()) + heartCombos/Long.MAX_VALUE;
+		}
+		//System.out.println("combosWithHeartsNoSuit - "+co.getWithHeartsNoSuitCombos());
 		//System.out.println("probability - "+(heartCombos/totalCombos));
 		if(heartCombos > totalCombos)
 		{
@@ -415,7 +421,7 @@ public abstract class ProbabilityUtils {
 								countHeartsPlayableCombos = determineHeartsPlayable(suit, c, d, s);
 							if(!countHeartsPlayableCombos && p1h > 0)
 								countHeartsPlayableCombos = determineHeartsPlayable(suit, p1c, p1d, p1s);
-							if(!countHeartsPlayableCombos && p3h > 0 && cardsAlreadyPlayed == 1)
+							if(!countHeartsPlayableCombos && p3h > 0 && cardsAlreadyPlayed == 0)
 								countHeartsPlayableCombos = determineHeartsPlayable(suit, p3c, p3d, p3s);
 							co.addTotalCombos(p1Count*p2Count);
 							if(countHeartsPlayableCombos)
@@ -485,8 +491,11 @@ public abstract class ProbabilityUtils {
  */
 class CounterObject 
 {
-	private long totalCombos;
-	private long withHeartsNoSuitCombos;
+	private long totalCombos = 0;
+	private long withHeartsNoSuitCombos = 0;
+	
+	private int totalCombosExceedCounter = 0;
+	private int withHeartsExceedCounter = 0;
 	/**
 	 * @return the totalCombos
 	 */
@@ -496,17 +505,42 @@ class CounterObject
 	
 	public void addWithHeartsNoSuitCombos(long l) {
 		withHeartsNoSuitCombos+=l;
-		
+		if(withHeartsNoSuitCombos < 0)
+		{
+			withHeartsNoSuitCombos = withHeartsNoSuitCombos + Long.MAX_VALUE + 2;
+			withHeartsExceedCounter++;
+		}
+
 	}
 	
 	public void addTotalCombos(long l) {
-		totalCombos+=l;	
+		totalCombos+=l;
+		if(totalCombos < 0)
+		{
+			totalCombos = totalCombos + Long.MAX_VALUE + 2;
+			totalCombosExceedCounter++;
+		}
 	}
+	
 	/**
 	 * @return the withHeartsNoSuitCombo
 	 */
 	public long getWithHeartsNoSuitCombos() {
 		return withHeartsNoSuitCombos;
+	}
+
+	/**
+	 * @return the totalCombosExceedCounter
+	 */
+	public int getTotalCombosExceedCounter() {
+		return totalCombosExceedCounter;
+	}
+
+	/**
+	 * @return the withHeartsExceedCounter
+	 */
+	public int getWithHeartsExceedCounter() {
+		return withHeartsExceedCounter;
 	}
 	
 }
