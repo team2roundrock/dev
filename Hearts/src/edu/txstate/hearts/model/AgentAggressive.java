@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -92,27 +93,194 @@ public class AgentAggressive extends Agent {
 		int numCardsToPass = 3;
 		List<Card> cardsToPass = new ArrayList<Card>();
 
-		// TODO: improve logic to select cards to pass
-		// for now, just pick the top 3 highest cards
 		List<Card> myHand = this.getHand();
 		Collections.sort(myHand, new CardComparator());
-		// if(hasTwoOfClubs())
-		// {
-		// Card c = new Card(Face.Deuce, Suit.Clubs);
-		// cardsToPass.add(c);
-		// getHand().remove(c);
-		// numCardsToPass = 2;
-		// }
-
-		for (int i = myHand.size() - 1; i >= 13 - numCardsToPass; i--) {
-			cardsToPass.add(myHand.get(i));
-			Card card = myHand.get(i);
-			if ((card.getSuit() == Card.Suit.Spades)
-					&& (card.getFace() == Card.Face.Queen)) {
-				hasQueenOfSpades = false;
+		List<Card> spades = getAllOfSuit(Suit.Spades);
+		List<Card> diamonds = getAllOfSuit(Suit.Diamonds);
+		List<Card> clubs = getAllOfSuit(Suit.Clubs);
+		List<Card> fewest = getCardsFromSuitWithFewest(spades, diamonds, clubs);
+		List<Card> oldFewest = null;
+		
+		while(numCardsToPass > 0)
+		{
+			if(fewest == null)
+			{
+				if(spades.size() > 5)
+				{
+					Collections.sort(spades, new CardComparator());
+					Collections.reverse(spades);
+					int counter = 0;
+					while(numCardsToPass > 0)
+					{
+						Card c = spades.get(counter++);
+						if(c.getFace() == Face.Queen)
+							continue;
+						cardsToPass.add(c);
+						spades.remove(c);
+						counter--;
+						myHand.remove(c);
+						numCardsToPass--;
+					}
+				} else
+				{
+					List<Card> hearts = getAllOfSuit(Suit.Hearts);
+					Collections.sort(hearts, new CardComparator());
+					Collections.reverse(hearts);
+					while(numCardsToPass > 0)
+					{
+						Card c = hearts.get(0);
+						cardsToPass.add(c);
+						hearts.remove(c);
+						numCardsToPass--;
+						myHand.remove(c);
+					}
+				}
 			}
-			getHand().remove(myHand.get(i));
+
+			if(numCardsToPass > 0 && fewest.size() > numCardsToPass)
+			{
+				if(hasTwoOfClubs())
+				{
+					Card c = new Card(Face.Deuce, Suit.Clubs);
+					cardsToPass.add(c);
+					myHand.remove(c);
+					numCardsToPass--;
+					clubs.remove(c);
+					fewest = getCardsFromSuitWithFewest(spades, diamonds, clubs);
+				}
+				if(spades.size() > 4 && fewest.size() > numCardsToPass)
+				{
+					Set<Card> cardsToRemove = new HashSet<Card>();
+					int counter = 0;
+					for(Card c: spades)
+					{
+						if((numCardsToPass-counter) > 0 && (spades.size()-counter) > 4 && c.getFace().ordinal() > 10)
+						{
+							cardsToPass.add(c);
+							myHand.remove(c);
+							counter++;
+							cardsToRemove.add(c);
+							fewest = getCardsFromSuitWithFewest(spades, diamonds, clubs);
+						}
+					}
+					numCardsToPass -= counter;
+					spades.removeAll(cardsToRemove);
+				}
+			} 
+		
+			if(fewest == clubs)
+			{	
+				if(clubs.size() <= numCardsToPass)
+				{
+					cardsToPass.addAll(clubs);
+					myHand.removeAll(clubs);
+					numCardsToPass -= clubs.size();
+					clubs.clear();
+				} else
+				{
+					if(hasTwoOfClubs() && numCardsToPass > 0)
+					{
+						Card c = new Card(Face.Deuce, Suit.Clubs);
+						cardsToPass.add(c);
+						myHand.remove(c);
+						numCardsToPass--;
+						clubs.remove(c);
+					}
+					Collections.sort(clubs, new CardComparator());
+					Collections.reverse(clubs);
+					while(numCardsToPass > 0)
+					{
+						Card c = clubs.remove(0);
+						cardsToPass.add(c);
+						myHand.remove(c);
+						numCardsToPass--;
+					}
+				}
+			} else if(fewest == diamonds)
+			{
+				if(diamonds.size() <= numCardsToPass)
+				{
+					cardsToPass.addAll(diamonds);
+					myHand.removeAll(diamonds);
+					numCardsToPass -= diamonds.size();
+					diamonds.clear();
+				} else
+				{
+					if(hasTwoOfClubs() && numCardsToPass > 0)
+					{
+						Card c = new Card(Face.Deuce, Suit.Clubs);
+						cardsToPass.add(c);
+						myHand.remove(c);
+						numCardsToPass--;
+						clubs.remove(c);
+					}
+					Collections.sort(diamonds, new CardComparator());
+					Collections.reverse(diamonds);
+					while(numCardsToPass > 0)
+					{
+						Card c = diamonds.remove(0);
+						cardsToPass.add(c);
+						myHand.remove(c);
+						numCardsToPass--;
+					}
+				}
+			
+			} else if(fewest == spades)
+			{
+				if(hasQueenOfSpades && spades.size() == 1 && numCardsToPass > 0)
+				{
+					Card c = new Card(Face.Queen, Suit.Spades);
+					cardsToPass.add(c);
+					myHand.remove(c);
+					spades.remove(c);
+					numCardsToPass--;
+					hasQueenOfSpades = false;
+				}
+			}
+			oldFewest = fewest;
+			fewest = getCardsFromSuitWithFewest(spades, diamonds, clubs);
+			if(numCardsToPass > 0 && oldFewest == fewest)
+			{
+				if(fewest == spades)
+				{
+					fewest = getCardsFromSuitWithFewest(Collections.<Card> emptyList(), diamonds, clubs);
+				} else
+				{
+					System.out.println("I am here");
+					try
+					{
+						Thread.sleep(5000);
+					} catch (Exception e)
+					{
+						
+					}
+					}
+			}
 		}
+		if(cardsToPass.size() > 3)
+		{
+			//wtf?
+			System.out.println("oh nos");
+			System.out.println("passing "+cardsToPass);
+			System.out.println("hand is "+myHand);
+			try
+			{
+				Thread.sleep(5000);
+			} catch (Exception e)
+			{
+				
+			}
+		}
+
+//		for (int i = myHand.size() - 1; i >= 13 - numCardsToPass; i--) {
+//			cardsToPass.add(myHand.get(i));
+//			Card card = myHand.get(i);
+//			if ((card.getSuit() == Card.Suit.Spades)
+//					&& (card.getFace() == Card.Face.Queen)) {
+//				hasQueenOfSpades = false;
+//			}
+//			getHand().remove(myHand.get(i));
+//		}
 		Set<Card> p1Set = getKnownCards().get(0);
 		Set<Card> p2Set = getKnownCards().get(1);
 		Set<Card> p3Set = getKnownCards().get(2);
@@ -137,14 +305,18 @@ public class AgentAggressive extends Agent {
 	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken,
 			boolean veryFirstTurn) {
 		Card cardToPlay = null;
+		String debugStr = "";
 		if (veryFirstTurn) {
 			cardToPlay = super.playTwoOfClub();
 		} else {
 			if (cardsPlayed.size() > 0) {
 				Suit suitLed = cardsPlayed.get(0).getSuit();
+				debugStr+=suitLed+" was led... ";
 				if (!hasAnyOfSuit(suitLed)) // doesn't have suit played on table
 				{
+					debugStr+="I don't have that suit... ";
 					if (hasQueenOfSpades) {
+						debugStr+="I have the queen of spades... ";
 						Iterator<Card> iterator = getHand().iterator();
 						while (iterator.hasNext()) {
 							Card card = iterator.next();
@@ -157,34 +329,41 @@ public class AgentAggressive extends Agent {
 						}
 					} else // no queen of spades, no suit on table
 					{
+						debugStr+="No queen of spades... ";
 						List<Card> hearts = getAllOfSuit(Suit.Hearts);
 						List<Card> spades = getAllOfSuit(Suit.Spades);
 						List<Card> diamonds = getAllOfSuit(Suit.Diamonds);
 						List<Card> clubs = getAllOfSuit(Suit.Clubs);
 						if (hearts.size() > 0) // has hearts in hand
 						{
+							debugStr+="But I do have hearts... ";
 							Collections.sort(hearts, new CardComparator());
 							Collections.reverse(hearts); // Every call to
 															// reverse ensures
 															// '0' is the
 															// highest card
 							cardToPlay = hearts.get(0);
+							debugStr+="I want to play "+cardToPlay;
 							lastThreshold = null;
 						} else // doesn't have any hearts
 						{
+							debugStr+="No hearts either... ";
 							List<Card> fewestCards = getCardsFromSuitWithFewest(
 									spades, diamonds, clubs);
 							cardToPlay = fewestCards.get(0);
+							debugStr="I guess I will play "+cardToPlay;
 							lastThreshold = null;
 						}
 					}
 
 				} else // does have suit played on table
 				{
+					debugStr+="I have that suit... ";
 					List<Card> playableCards = getAllOfSuit(suitLed);
 					Collections.sort(playableCards, new CardComparator());
 					Collections.reverse(playableCards);
 					cardToPlay = determineBestCard(playableCards, true);
+					debugStr+="So I will play "+cardToPlay;
 				}
 			}
 			/*
@@ -196,6 +375,7 @@ public class AgentAggressive extends Agent {
 			 */
 			else // no cards played
 			{
+				debugStr+="No cards played yet... ";
 				List<Card> hearts = getAllOfSuit(Suit.Hearts);
 				List<Card> spades = getAllOfSuit(Suit.Spades);
 				List<Card> diamonds = getAllOfSuit(Suit.Diamonds);
@@ -247,6 +427,20 @@ public class AgentAggressive extends Agent {
 				}
 			}
 		}
+		if(cardToPlay == null)
+		{
+			System.out.println("card is null?");
+			System.out.println("hand is "+getHand());
+			System.out.println("cardsPlayed is "+cardsPlayed);
+			System.out.println(debugStr);
+			try
+			{
+				Thread.sleep(5000);
+			} catch (Exception e)
+			{
+				
+			}
+		}
 		getHand().remove(cardToPlay);
 
 		if ((cardToPlay.getSuit() == Card.Suit.Spades)
@@ -276,6 +470,17 @@ public class AgentAggressive extends Agent {
 		{
 			Card test = fewestCards.get(counter++);
 			double cardWins = getProbCardWins(test);
+			if(hasQueenOfSpades && test.getSuit()==Suit.Spades)
+			{
+				if(!force && test.getFace().equals(Face.Queen))
+				{
+					if(cardWins != 0d)
+					{
+						canPlayHearts = 1d;
+						cardWins = 1d;
+					}
+				}
+			}
 			double risk = canPlayHearts * cardWins;
 			double threshold;
 			if (getInPlayCards().size() == 3) {
