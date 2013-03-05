@@ -93,6 +93,7 @@ public class AgentDetermined extends Agent {
 				//if we can't find any 'smart' move card
 				if(cardToPlay == null)
 					cardToPlay = playable.get(0);
+				
 			}//end heart is broken	
 		}
 		getHand().remove(cardToPlay);
