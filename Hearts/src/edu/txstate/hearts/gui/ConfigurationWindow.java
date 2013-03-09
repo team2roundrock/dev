@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
+
+import javax.swing.ComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextPane;
@@ -64,7 +66,8 @@ public class ConfigurationWindow {
 		lblSetEndScore.setBounds(10, 95, 93, 14);
 		frmConfigurationWindow.getContentPane().add(lblSetEndScore);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		String[] defaultEndScore = {"100"};
+		JComboBox comboBox_1 = new JComboBox(defaultEndScore);
 		comboBox_1.setEditable(true);
 		comboBox_1.setBounds(138, 94, 139, 23);
 		frmConfigurationWindow.getContentPane().add(comboBox_1);
