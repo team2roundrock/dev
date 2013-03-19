@@ -248,9 +248,9 @@ public class Hearts {
 			}
 		}
 		long done = System.nanoTime();
-		//System.out.println("time to run was " + (done - start) / 1000000);
-		//System.out.println("My loss count was "+myLossCount);
-		//System.out.println("My win count was "+myWinCount);
+		System.out.println("time to run was " + (done - start) / 1000000);
+		System.out.println("My loss count was "+myLossCount);
+		System.out.println("My win count was "+myWinCount);
 
 		for (int i = 0; i < players.size(); i++) {
 			Player p = players.get(i);
