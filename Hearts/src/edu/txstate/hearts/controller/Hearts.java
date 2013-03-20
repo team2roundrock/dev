@@ -31,7 +31,9 @@ public class Hearts {
 	private boolean notifyHeartsBroken; //implement notification "Hearts has been broken"
 	private Passing passing;
 	private int endScore;
-	private final static boolean silent = false;
+	public final static boolean silent = false;
+	private final static int GAMES_TO_RUN = 1;
+	
 	/**
 	 * @param args
 	 */
@@ -48,10 +50,10 @@ public class Hearts {
 		endScore = 100; //default
 		
 		players = new ArrayList<Player>(4);
-		Player player1 = new AgentDetermined("Gede");
-		Player player2 = new AgentAggressive("Neil");
-		Player player3 = new AgentDetermined("Jonathan");
-		Player player4 = new AgentDetermined("Maria");
+		Player player1 = new AgentDetermined("Gede", 0);
+		Player player2 = new AgentAggressive("Neil", 1);
+		Player player3 = new AgentDetermined("Jonathan", 2);
+		Player player4 = new AgentDetermined("Maria", 3);
 		
 		players.add(player1);
 		players.add(player2);
@@ -148,7 +150,7 @@ public class Hearts {
 		long start = System.nanoTime();
 		int myLossCount = 0;
 		int myWinCount = 0;
-		for (int n = 0; n < 1; n++) {
+		for (int n = 0; n < GAMES_TO_RUN; n++) {
 			// while we still playing the game
 			for(int i = 0; i < players.size(); i++)
 			{
@@ -317,7 +319,7 @@ public class Hearts {
 		for(int i = 0; i < players.size(); i++)
 		{
 			boolean tookCards = players.get(i).equals(playerWithHighestValue);
-			players.get(i).addPlayedCards(cardsPlayed, tookCards);
+			players.get(i).addPlayedCards(cardsPlayed, tookCards, num);
 			if(tookCards)
 			{
 				//add cards to the player with highest value
