@@ -3,13 +3,24 @@
  */
 package edu.txstate.hearts.controller;
 
+import java.awt.EventQueue;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import edu.txstate.hearts.gui.ConfigurationWindow;
 import edu.txstate.hearts.model.*;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
+import edu.txstate.hearts.utils.RiskThresholds;
 
 /**
  * @author Neil Stickels, I Gede Sutapa
@@ -32,23 +43,69 @@ public class Hearts {
 	private Passing passing;
 	private int endScore;
 	private final static boolean silent = false;
+	private Set setofusers;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Set getSetofusers() {
+		return setofusers;
+	}
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) 
 	{	
-		Hearts game = new Hearts();
-		game.initialize();
-		game.runGame();
+		final Hearts game = new Hearts();
+		
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ConfigurationWindow window = new ConfigurationWindow(game, game.getSetofusers());
+					window.getFrmConfigurationWindow().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		//game.initialize();
+		//game.runGame();
 	}
 	
-	private void initialize() 
+	public Hearts(){
+		try {
+			// use buffering
+			InputStream file = new FileInputStream("Users.bin");
+			InputStream buffer = new BufferedInputStream(file);
+			ObjectInput input = new ObjectInputStream(buffer);
+			try {
+				// deserialize the RiskThreshold
+				setofusers = (Set) input.readObject();
+
+			} finally {
+				input.close();
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("problem reading in file Users.bin: "
+					+ e.getMessage());
+			setofusers = new HashSet();
+		}
+	}
+	
+	public void initialize(String playerName, int endScore2, String levelOfDifficulty) 
 	{
 		passing = Passing.Left; //initial
-		endScore = 100; //default
+		endScore = endScore2; //default
 		
 		players = new ArrayList<Player>(4);
-		Player player1 = new AgentDetermined("Gede");
+		Player player1 = new User(playerName);
 		Player player2 = new AgentAggressive("Neil");
 		Player player3 = new AgentDetermined("Jonathan");
 		Player player4 = new AgentDetermined("Maria");
@@ -57,6 +114,8 @@ public class Hearts {
 		players.add(player2);
 		players.add(player3);
 		players.add(player4);
+		
+		runGame();
 	}
 	
 	private void shuffleCards()

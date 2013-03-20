@@ -15,38 +15,57 @@ import javax.swing.JLabel;
 import java.awt.Font;
 
 import java.awt.event.*;
+import java.util.Set;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+
+import org.apache.commons.math3.util.MultidimensionalCounter.Iterator;
+
+import edu.txstate.hearts.controller.Hearts;
+import edu.txstate.hearts.model.User;
 
 public class ConfigurationWindow {
 
 	private JFrame frmConfigurationWindow;
+	public JFrame getFrmConfigurationWindow() {
+		return frmConfigurationWindow;
+	}
+
+
 	private final Action action = new SwingAction();
 	private int endScore = 100;
 	private String levelOfDifficulty = "Easy";
 	private String playerName;
+	private Set theUsers;
+	private JComboBox comboBox;
+	private Hearts obj;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ConfigurationWindow window = new ConfigurationWindow();
-					window.frmConfigurationWindow.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ConfigurationWindow window = new ConfigurationWindow();
+//					window.frmConfigurationWindow.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
+	 * @param set 
 	 */
-	public ConfigurationWindow() {
+	public ConfigurationWindow(Hearts obj, Set set) {
+		theUsers = set;
+		this.obj = obj;
 		initialize();
+		
 	}
 
 	/**
@@ -60,13 +79,20 @@ public class ConfigurationWindow {
 		frmConfigurationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmConfigurationWindow.getContentPane().setLayout(null);
 		
-		JComboBox comboBox = new JComboBox();
+		String [] userName = new String [theUsers.size()];
+		java.util.Iterator goThroughUsers = theUsers.iterator();
+		int count = 0;
+		while(goThroughUsers.hasNext()){
+			User user = (User) goThroughUsers.next();
+			userName [count++]= user.getName();
+		}
+		comboBox = new JComboBox(userName);
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
-				String newSelection = (String)cb.getSelectedItem();
-				if(newSelection != (String)cb.getItemAt(0))
-				cb.addItem(newSelection);
+				playerName = (String)cb.getSelectedItem();
+				//if(newSelection != (String)cb.getItemAt(0))
+				//cb.addItem(newSelection);
 			}
 		});
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -135,6 +161,12 @@ public class ConfigurationWindow {
 		frmConfigurationWindow.getContentPane().add(comboBox_2);
 		
 		JButton btnOk = new JButton("OK");
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frmConfigurationWindow.setVisible(false);
+				obj.initialize(playerName, endScore, levelOfDifficulty);
+			}
+		});
 		btnOk.setBounds(119, 206, 93, 29);
 		frmConfigurationWindow.getContentPane().add(btnOk);
 		
@@ -160,5 +192,11 @@ public class ConfigurationWindow {
 		public void actionPerformed(ActionEvent e) {
 			//System.exit(0);
 		}
+	}
+
+
+	public void setUsers(Set setofusers) {
+		theUsers = setofusers;
+		
 	} 
 }//end of configuration window class
