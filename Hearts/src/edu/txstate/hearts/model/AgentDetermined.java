@@ -9,8 +9,8 @@ import edu.txstate.hearts.model.Card.Suit;
 
 public class AgentDetermined extends Agent {
 
-	public AgentDetermined(String playerName) {
-		super(playerName);
+	public AgentDetermined(String playerName, int num) {
+		super(playerName, num);
 		// TODO Auto-generated constructor stub
 	}
 	

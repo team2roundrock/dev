@@ -31,15 +31,21 @@ public abstract class Player {
 	private List<Card> takenCards; //keep track cards that the player took
 	private boolean qosPlayed = false;
 	private List<Set<Card>> knownCards = new ArrayList<Set<Card>>(3);
+	private List<Set<Suit>> knownEmpties = new ArrayList<Set<Suit>>(3);
+	private int myNum;
 
-	public Player(String playerName) {
+	public Player(String playerName, int num) {
+		myNum = num;
 		hand = new ArrayList<Card>();
 		inPlayCards = new ArrayList<Card>();
 		playedCards = new HashSet<Card>();
 		takenCards = new ArrayList<Card>();
 		this.name = playerName;
 		for(int i = 0; i < 3; i++)
+		{
 			knownCards.add(new HashSet<Card>());
+			knownEmpties.add(new HashSet<Suit>());
+		}
 	}
 
 	public String getName() {
@@ -181,13 +187,18 @@ public abstract class Player {
 		return knownCards;
 	}
 	
+	public List<Set<Suit>> getKnownEmpties()
+	{
+		return knownEmpties;
+	}
+	
 	public Set<Card> getPlayedCards()
 	{
 		return playedCards;
 	}
 
 
-	public void addPlayedCards(Collection<Card> cards, boolean tookCards)
+	public void addPlayedCards(Collection<Card> cards, boolean tookCards, int num)
 	{
 		this.playedCards.addAll(cards);
 		if(!qosPlayed)
@@ -235,7 +246,15 @@ public abstract class Player {
 		clearInPlayCards();
 		clearPlayedCards();
 		clearTakenCards();
+	}
+
+	/**
+	 * @return the myNum
+	 */
+	public int getMyNum() {
+		return myNum;
 	}	
 
+	
 }
 

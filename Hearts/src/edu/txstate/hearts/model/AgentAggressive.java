@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.controller.Hearts.Passing;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
@@ -40,9 +41,10 @@ public class AgentAggressive extends Agent {
 	private double expectedWins;
 	private int actualWins;
 	private Threshold lastThreshold;
+	private final static boolean silent = Hearts.silent;
 
-	public AgentAggressive(String playerName) {
-		super(playerName);
+	public AgentAggressive(String playerName, int num) {
+		super(playerName, num);
 		try {
 			// use buffering
 			InputStream file = new FileInputStream("thresholds.bin");
@@ -73,7 +75,8 @@ public class AgentAggressive extends Agent {
 			OutputStream buffer = new BufferedOutputStream(file);
 			ObjectOutput output = new ObjectOutputStream(buffer);
 			try {
-				//System.out.println("saving "+thresholds);
+				if(silent)
+					System.out.println("saving "+thresholds);
 				output.writeObject(thresholds);
 			} finally {
 				output.close();
@@ -393,6 +396,7 @@ public class AgentAggressive extends Agent {
 				if (cardToPlay == null) {
 					//System.out.println("no good card to play from "+ fewestCards);
 					List<Card> first = fewestCards;
+					List<Card> second = null;
 					if (fewestCards == spades)
 						spades = Collections.EMPTY_LIST;
 					if (fewestCards == diamonds)
@@ -401,6 +405,7 @@ public class AgentAggressive extends Agent {
 						clubs = Collections.EMPTY_LIST;
 					fewestCards = getCardsFromSuitWithFewest(spades, diamonds,
 							clubs);
+					second = fewestCards;
 					cardToPlay = determineBestCard(fewestCards, false);
 					if (cardToPlay == null) {
 						if (fewestCards == spades)
@@ -417,8 +422,29 @@ public class AgentAggressive extends Agent {
 							if (cardToPlay == null) {
 								// means we couldn't find a single card under
 								// risk threshold, so just play the highest
-								// card from the smallest suit
-								cardToPlay = first.get(0);
+								// card from the smallest suit 
+								// unless that suit is spades, and it would 
+								// force us to play the ace, king or queen of
+								// spades and the queen of spades is still out
+								// there
+								int counter = 0;
+								while(first.size() > counter && cardToPlay == null)
+								{
+									cardToPlay = first.get(counter++);
+									if(!isQosPlayed() && cardToPlay.getSuit() == Suit.Spades)
+										if(cardToPlay.getFace().ordinal() >= 10)
+											cardToPlay = null;
+								}
+								// means there isn't a spade we can play so get
+								// the highest card from the second highest suit
+								if(cardToPlay == null)
+								{
+									if(second == null)
+										// means we don't have another suit
+										cardToPlay = first.get(0);
+									else
+										cardToPlay = second.get(0);
+								}
 								//System.out.println("adding to expectedWins");
 								expectedWins += getProbCardWins(cardToPlay);
 							}
@@ -441,12 +467,18 @@ public class AgentAggressive extends Agent {
 				
 			}
 		}
+		if(!silent)
+		{
+			System.out.println("current hand - "+getHand());
+			System.out.println("picked to played - "+cardToPlay);
+		}
+		
 		getHand().remove(cardToPlay);
 
 		if ((cardToPlay.getSuit() == Card.Suit.Spades)
 				&& (cardToPlay.getFace() == Card.Face.Queen))
 			hasQueenOfSpades = false;
-
+		
 		return cardToPlay;
 	}
 
@@ -465,16 +497,26 @@ public class AgentAggressive extends Agent {
 		double canPlayHearts = ProbabilityUtils
 				.getProbabilityNoneOfSuitAndHasHearts(getHand(), fewestCards
 						.get(0).getSuit(), getPlayedCards(), getInPlayCards(),
-						getKnownCards(), isQosPlayed());
+						getKnownCards(), getKnownEmpties(), isQosPlayed());
 		while (searching) // search all cards
 		{
 			Card test = fewestCards.get(counter++);
 			double cardWins = getProbCardWins(test);
-			if(hasQueenOfSpades && test.getSuit()==Suit.Spades)
+			if(!isQosPlayed() && test.getSuit()==Suit.Spades)
 			{
-				if(!force && test.getFace().equals(Face.Queen))
+				if(hasQueenOfSpades)
 				{
-					if(cardWins != 0d)
+					if(test.getFace().equals(Face.Queen))
+					{
+						if(cardWins != 0d && (!force || (force && fewestCards.size() > 1)))
+						{
+							canPlayHearts = 1d;
+							cardWins = 1d;
+						}
+					}
+				} else
+				{
+					if(cardWins != 0d && (test.getFace().ordinal() > 10) && (!force || (force && fewestCards.size() > 1)))
 					{
 						canPlayHearts = 1d;
 						cardWins = 1d;
@@ -713,14 +755,29 @@ public class AgentAggressive extends Agent {
 	 * boolean)
 	 */
 	@Override
-	public void addPlayedCards(Collection<Card> cards, boolean tookCards) {
+	public void addPlayedCards(Collection<Card> cards, boolean tookCards, int num) {
 		// TODO Auto-generated method stub
-		super.addPlayedCards(cards, tookCards);
+		super.addPlayedCards(cards, tookCards, num);
 		int numHearts = 0;
 		boolean hasQos;
+		Suit suitLed = null;
 		Iterator<Card> cardIterator = cards.iterator();
+		int counter = 0;
 		while (cardIterator.hasNext()) {
 			Card c = cardIterator.next();
+			if(suitLed == null)
+				suitLed = c.getSuit();
+			if(c.getSuit() != suitLed)
+			{
+				int playerNum = num+counter-getMyNum();
+				playerNum %= 4;
+				playerNum-=1;
+				if(playerNum >= 0)
+				{
+					getKnownEmpties().get(playerNum).add(suitLed);
+					//System.out.println("adding "+suitLed+" to "+playerNum+"'s empties");
+				}
+			}
 			if (c.getSuit() == Suit.Hearts)
 				numHearts++;
 			if (c.getSuit() == Suit.Spades && c.getFace() == Face.Queen)
@@ -732,6 +789,7 @@ public class AgentAggressive extends Agent {
 			p1Set.remove(c);
 			p2Set.remove(c);
 			p3Set.remove(c);
+			counter++;
 		}
 		if (tookCards) {
 			actualWins++;

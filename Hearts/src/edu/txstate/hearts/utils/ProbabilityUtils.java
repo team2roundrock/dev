@@ -185,6 +185,7 @@ public abstract class ProbabilityUtils {
 	 * @param muck the Cards that have already been played in the entire game
 	 * @param cardsPlayedThisTurn a List of Cards that have already been played this turn
 	 * @param knownCards a list of three Sets of known cards for opponents
+	 * @param list 
 	 * @param qosPlayed a boolean indicator of whether or not the Queen of Spades
 	 * 			has already been played in this game, if not, this algorithm
 	 * 			will count the Queen of Spades as a heart
@@ -192,7 +193,7 @@ public abstract class ProbabilityUtils {
 	 */
 	public static double getProbabilityNoneOfSuitAndHasHearts(List<Card> hand, 
 			Suit suit, Set<Card> muck, List<Card> cardsPlayedThisTurn, 
-			List<Set<Card>> knownCards, boolean qosPlayed)
+			List<Set<Card>> knownCards, List<Set<Suit>> knownEmpties, boolean qosPlayed)
 	{
 		if(cardsPlayedThisTurn.size() > 0)
 		{
@@ -283,15 +284,23 @@ public abstract class ProbabilityUtils {
 
 		for(int c = knownCounterArray[0]; c <= Math.max(Math.min(hand.size(), suitCounter.get(Suit.Clubs)-knownCounterArray[4]-knownCounterArray[8]), knownCounterArray[0]); c++)
 		{
+			if(knownEmpties.get(0).contains(Suit.Clubs) && c > 0)
+				continue;
 			//System.out.println("max diamonds should be "+(Math.max(Math.min(hand.size(), suitCounter.get(Suit.Diamonds)-c), 0)));
 			for(int d = knownCounterArray[1]; d <= Math.max(Math.min(hand.size()-c, suitCounter.get(Suit.Diamonds)-knownCounterArray[5]-knownCounterArray[9]), knownCounterArray[1]); d++)
 			{
+				if(knownEmpties.get(0).contains(Suit.Diamonds) && d > 0)
+					continue;
 				//System.out.println("max hearts should be "+(Math.max(Math.min(hand.size(), suitCounter.get(Suit.Hearts)-c-d), 0)));
 				for(int h = knownCounterArray[2]; h <= Math.max(Math.min(hand.size()-c-d, suitCounter.get(Suit.Hearts)-knownCounterArray[6]-knownCounterArray[10]), knownCounterArray[2]); h++)
 				{
+					if(knownEmpties.get(0).contains(Suit.Hearts) && h > 0)
+						continue;
 					//System.out.println("max spades should be "+(Math.max(Math.min(hand.size(), suitCounter.get(Suit.Spades)-c-d-h), 0)));
 					for(int s = knownCounterArray[3]; s <= Math.max(Math.min(hand.size()-c-d-h, suitCounter.get(Suit.Spades)-knownCounterArray[7]-knownCounterArray[11]), knownCounterArray[3]); s++)
 					{
+						if(knownEmpties.get(0).contains(Suit.Spades) && s > 0)
+							continue;
 						//System.out.println("Testing P1 has "+c+"C "+d+"D "+s+"S "+h+"H");
 						//System.out.println("c+d+h+s is "+(c+d+h+s));
 						if((c+d+h+s) == hand.size())
@@ -302,7 +311,7 @@ public abstract class ProbabilityUtils {
 							p1Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Hearts), h);
 							p1Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), s);
 
-							doP2Counts(p1Count, co, c, d, h, s, suitCounter, suit, knownCounterArray, cardsPlayedThisTurn.size(), qosPlayed, hand, muck);
+							doP2Counts(p1Count, co, c, d, h, s, suitCounter, suit, knownCounterArray, knownEmpties, cardsPlayedThisTurn.size(), qosPlayed, hand, muck);
 						}
 					}
 				}
@@ -358,18 +367,38 @@ public abstract class ProbabilityUtils {
 
 	private static void doP2Counts(long p1Count, CounterObject co, int p1c,
 			int p1d, int p1h, int p1s, Map<Suit, Integer> suitCounter, Suit suit, 
-			int[] knownCounterArray, int cardsAlreadyPlayed, boolean qosPlayed,
+			int[] knownCounterArray, List<Set<Suit>> knownEmpties, int cardsAlreadyPlayed, boolean qosPlayed,
 			List<Card> hand, Set<Card> muck) 
 	{
 		int handSize = hand.size();
 		for(int c = knownCounterArray[4]; c <= Math.max(Math.min(handSize, suitCounter.get(Suit.Clubs)-p1c-knownCounterArray[8]), knownCounterArray[4]); c++)
 		{
+			if(knownEmpties.get(1).contains(Suit.Clubs) && c > 0)
+				continue;
+			int p3c = suitCounter.get(Suit.Clubs)-c-p1c;
+			if(knownEmpties.get(2).contains(Suit.Clubs) && p3c > 0)
+				continue;
 			for(int d = knownCounterArray[5]; d <= Math.max(Math.min(handSize-c, suitCounter.get(Suit.Diamonds)-p1d-knownCounterArray[9]), knownCounterArray[5]); d++)
 			{
+				if(knownEmpties.get(1).contains(Suit.Diamonds) && d > 0)
+					continue;
+				int p3d = suitCounter.get(Suit.Diamonds)-d-p1d;
+				if(knownEmpties.get(2).contains(Suit.Diamonds) && p3d > 0)
+					continue;
 				for(int h = knownCounterArray[6]; h <= Math.max(Math.min(handSize-c-d, suitCounter.get(Suit.Hearts)-p1h-knownCounterArray[10]), knownCounterArray[6]); h++)
 				{
+					if(knownEmpties.get(1).contains(Suit.Hearts) && h > 0)
+						continue;
+					int p3h = suitCounter.get(Suit.Hearts)-h-p1h;
+					if(knownEmpties.get(2).contains(Suit.Hearts) && p3h > 0)
+						continue;
 					for(int s = knownCounterArray[7]; s <= Math.max(Math.min(handSize-c-d-h, suitCounter.get(Suit.Spades)-p1s-knownCounterArray[11]), knownCounterArray[7]); s++)
 					{
+						if(knownEmpties.get(1).contains(Suit.Spades) && s > 0)
+							continue;
+						int p3s = suitCounter.get(Suit.Spades)-s-p1s;
+						if(knownEmpties.get(2).contains(Suit.Spades) && p3s > 0)
+							continue;
 						if((c+d+h+s) == handSize)
 						{
 							//System.out.println("Using P2 has "+c+"C "+d+"D "+s+"S "+h+"H");
@@ -409,10 +438,7 @@ public abstract class ProbabilityUtils {
 							p2Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Diamonds), d);
 							p2Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Hearts), h);
 							p2Count *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), s);
-							int p3c = suitCounter.get(Suit.Clubs)-c-p1c;
-							int p3d = suitCounter.get(Suit.Diamonds)-d-p1d;
-							int p3h = suitCounter.get(Suit.Hearts)-h-p1h;
-							int p3s = suitCounter.get(Suit.Spades)-s-p1s;
+							
 							//System.out.println("Using P3 has "+p3c+"C "+p3d+"D "+p3s+"S "+p3h+"H");
 							//System.out.println("this adds "+p1Count*p2Count+" combos");
 

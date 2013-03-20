@@ -6,8 +6,8 @@ import java.util.List;
 
 public class AgentGoofy extends Agent {
 
-	public AgentGoofy(String playerName) {
-		super(playerName);
+	public AgentGoofy(String playerName, int num) {
+		super(playerName, num);
 		// TODO Auto-generated constructor stub
 	}
 	

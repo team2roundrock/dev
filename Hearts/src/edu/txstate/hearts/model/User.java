@@ -25,9 +25,9 @@ public class User extends Player
 {
 	private Achievements achievements;
 	
-	public User(String playerName) 
+	public User(String playerName, int num) 
 	{
-		super(playerName);
+		super(playerName, num);
 		this.achievements = new Achievements();
 	}
 	/**

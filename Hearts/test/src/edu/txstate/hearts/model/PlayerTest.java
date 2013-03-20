@@ -30,7 +30,7 @@ public class PlayerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		p = new AgentGoofy(playerName);
+		p = new AgentGoofy(playerName, 0);
 		deck = new Deck();
 		deck.shuffleCards();
 	}

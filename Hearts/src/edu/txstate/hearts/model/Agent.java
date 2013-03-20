@@ -15,9 +15,9 @@ import edu.txstate.hearts.controller.Hearts.Passing;
  */
 public abstract class Agent extends Player 
 {
-	public Agent(String playerName) 
+	protected Agent(String playerName, int num) 
 	{
-		super(playerName);
+		super(playerName, num);
 	}
 
 	@Override
