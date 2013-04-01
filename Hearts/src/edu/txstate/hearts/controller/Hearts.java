@@ -20,7 +20,6 @@ import edu.txstate.hearts.gui.ConfigurationWindow;
 import edu.txstate.hearts.model.*;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
-import edu.txstate.hearts.utils.RiskThresholds;
 
 /**
  * @author Neil Stickels, I Gede Sutapa
@@ -135,9 +134,26 @@ public class Hearts {
 		players = new ArrayList<Player>(4);
 		//Player player1 = new AgentDetermined("Gede", 0);
 		Player player1 = new User(playerName, 0);
-		Player player2 = new AgentAggressive("Neil", 1);
-		Player player3 = new AgentDetermined("Jonathan", 2);
-		Player player4 = new AgentDetermined("Maria", 3);
+		Player player2;
+		Player player3;
+		Player player4;
+		
+		if(levelOfDifficulty.equalsIgnoreCase("Easy")){
+			 player2 = new AgentGoofy("GoofyNeil", 1);
+			 player3 = new AgentGoofy("GoofyJonathan", 2);
+			 player4 = new AgentDetermined("DetermineMaria", 3);
+			}
+			else if(levelOfDifficulty.equalsIgnoreCase("Medium")){
+				player2 = new AgentGoofy("Neil", 1);
+				player3 = new AgentAggressive("Jonathan", 2);
+				player4 = new AgentDetermined("Maria", 3);
+				
+			}
+			else{
+				player2 = new AgentAggressive("Neil", 1);
+				player3 = new AgentAggressive("Jonathan", 2);
+				player4 = new AgentDetermined("Maria", 3);
+			}
 		
 		players.add(player1);
 		players.add(player2);
