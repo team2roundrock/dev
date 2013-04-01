@@ -236,6 +236,85 @@ public class ProbabilityUtilsTest {
 		System.out.println("num is "+num);
 	}
 
+	@Test
+	public void testBadGetProbabilityNoneOfSuitHasHearts2()
+	{
+		//hand - [[Deuce of Hearts, Deuce of Diamonds, Three of Diamonds, 
+		//         Nine of Diamonds, Nine of Hearts]] 
+		//suit - Diamonds 
+		//cardsPlayedThisTurn - []
+		//knownCards - [[Ten of Clubs, Queen of Clubs], [], []] 
+		//qosPlayed - false
+		//muck - [Jack of Diamonds, Ten of Diamonds, Queen of Hearts, 
+		//        Nine of Spades, Ace of Clubs, Three of Clubs, Three of Spades, 
+		//        King of Clubs, Six of Clubs, Eight of Spades, 
+		//        Five of Diamonds, Three of Hearts, Ten of Hearts, 
+		//        Deuce of Spades, Jack of Hearts, Four of Spades, 
+		//        Six of Hearts, Ace of Diamonds, Deuce of Clubs, 
+		//        Eight of Clubs, Four of Diamonds, Five of Hearts, 
+		//        Eight of Diamonds, Four of Clubs, Nine of Clubs, 
+		//        Five of Clubs, King of Diamonds, King of Hearts, 
+		//        Six of Diamonds, Six of Spades, Five of Spades, 
+		//        Four of Hearts]
+		//knownEmpties - [[], [Clubs], []]
+		Set<Card> muck = new HashSet<Card>();
+		muck.add(new Card(Face.Jack, Suit.Diamonds));
+		muck.add(new Card(Face.Ten, Suit.Diamonds));
+		muck.add(new Card(Face.Queen, Suit.Hearts));
+		muck.add(new Card(Face.Nine, Suit.Spades));
+		muck.add(new Card(Face.Ace, Suit.Clubs));
+		muck.add(new Card(Face.Three, Suit.Clubs));
+		muck.add(new Card(Face.Three, Suit.Spades));
+		muck.add(new Card(Face.King, Suit.Clubs));
+		muck.add(new Card(Face.Six, Suit.Clubs));
+		muck.add(new Card(Face.Eight, Suit.Spades));
+		muck.add(new Card(Face.Five, Suit.Diamonds));
+		muck.add(new Card(Face.Three, Suit.Hearts));
+		muck.add(new Card(Face.Ten, Suit.Hearts));
+		muck.add(new Card(Face.Deuce, Suit.Spades));
+		muck.add(new Card(Face.Jack, Suit.Hearts));
+		muck.add(new Card(Face.Four, Suit.Spades));
+		muck.add(new Card(Face.Six, Suit.Hearts));
+		muck.add(new Card(Face.Ace, Suit.Diamonds));
+		muck.add(new Card(Face.Deuce, Suit.Clubs));
+		muck.add(new Card(Face.Eight, Suit.Clubs));
+		muck.add(new Card(Face.Four, Suit.Diamonds));
+		muck.add(new Card(Face.Five, Suit.Hearts));
+		muck.add(new Card(Face.Eight, Suit.Diamonds));
+		muck.add(new Card(Face.Four, Suit.Clubs));
+		muck.add(new Card(Face.Nine, Suit.Clubs));
+		muck.add(new Card(Face.Five, Suit.Clubs));
+		muck.add(new Card(Face.King, Suit.Diamonds));
+		muck.add(new Card(Face.King, Suit.Hearts));
+		muck.add(new Card(Face.Six, Suit.Diamonds));
+		muck.add(new Card(Face.Six, Suit.Spades));
+		muck.add(new Card(Face.Five, Suit.Spades));
+		muck.add(new Card(Face.Four, Suit.Hearts));
+		Player p = new AgentAggressive("Test", 0);
+		p.addCard(new Card(Face.Deuce, Suit.Hearts));
+		p.addCard(new Card(Face.Deuce, Suit.Diamonds));
+		p.addCard(new Card(Face.Three, Suit.Diamonds));
+		p.addCard(new Card(Face.Nine, Suit.Diamonds));
+		p.addCard(new Card(Face.Nine, Suit.Hearts));
+		List<Set<Card>> knownCards = new ArrayList<Set<Card>>();
+		Set<Card> set1 = new HashSet<Card>();
+		set1.add(new Card(Face.Ten, Suit.Clubs));
+		set1.add(new Card(Face.Queen, Suit.Clubs));
+		knownCards.add(set1);
+		knownCards.add(new HashSet<Card>());
+		knownCards.add(new HashSet<Card>());
+		List<Card> playedCards = new ArrayList<Card>();
+		List<Set<Suit>> knownEmpties = new ArrayList<Set<Suit>>();
+		Set<Suit> set = new HashSet<Suit>();
+		set.add(Suit.Clubs);
+		knownEmpties.add(new HashSet<Suit>());
+		knownEmpties.add(set);
+		knownEmpties.add(new HashSet<Suit>());
+
+		
+		double num = ProbabilityUtils.getProbabilityNoneOfSuitAndHasHearts(p.getHand(), Suit.Diamonds, muck, playedCards, knownCards, knownEmpties, false);
+		System.out.println("num is "+num);
+	}
 
 
 }

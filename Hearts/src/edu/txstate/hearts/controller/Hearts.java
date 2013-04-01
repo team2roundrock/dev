@@ -45,6 +45,7 @@ public class Hearts {
 	public final static boolean silent = false;
 	private final static int GAMES_TO_RUN = 1;
 	private Set setofusers;
+	private final static boolean runUI = true;
 	
 	/**
 	 * 
@@ -61,7 +62,8 @@ public class Hearts {
 	{	
 		final Hearts game = new Hearts();
 		
-		
+		if(runUI)
+		{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -72,6 +74,11 @@ public class Hearts {
 				}
 			}
 		});
+		} else
+		{
+			game.oldInitialize();
+			game.runGame();
+		}
 		
 		//game.initialize();
 		//game.runGame();
@@ -99,6 +106,26 @@ public class Hearts {
 			setofusers = new HashSet();
 		}
 	}
+	
+	public void oldInitialize() 
+	{
+		passing = Passing.Left; //initial
+		endScore = 100; //default
+		
+		players = new ArrayList<Player>(4);
+		Player player1 = new AgentDetermined("Gede", 0);
+		//Player player1 = new User(playerName, 0);
+		Player player2 = new AgentAggressive("Neil", 1);
+		Player player3 = new AgentDetermined("Jonathan", 2);
+		Player player4 = new AgentDetermined("Maria", 3);
+		
+		players.add(player1);
+		players.add(player2);
+		players.add(player3);
+		players.add(player4);
+
+	}
+	
 	
 	public void initialize(String playerName, int endScore2, String levelOfDifficulty) 
 	{
@@ -317,8 +344,8 @@ public class Hearts {
 			Player p = players.get(i);
 			if (p instanceof AgentAggressive) {
 				AgentAggressive aa = (AgentAggressive) p;
-				//System.out.println("expected wins "+aa.getExpectedWins());
-				//System.out.println("actual wins "+aa.getActualWins());
+				System.out.println("expected wins "+aa.getExpectedWins());
+				System.out.println("actual wins "+aa.getActualWins());
 				aa.serializeThresholds();
 			}
 		}

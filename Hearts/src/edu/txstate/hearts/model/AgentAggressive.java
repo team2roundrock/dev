@@ -684,8 +684,21 @@ public class AgentAggressive extends Agent {
 			if (availableCards.get(i) < test.getFace().ordinal())
 				counter++;
 		}
+		int numToPlay = 3;
+		numToPlay -= getInPlayCards().size();
+		for(int i = numToPlay-1; i >= 0; i--)
+		{
+			if(getKnownEmpties().get(i).contains(test.getSuit()))
+				numToPlay--;
+		}
+		int bigger = availableCards.size()-counter;
+		if(numToPlay > counter && bigger > 0)
+			return 0d;
+		//double factor = (double) numToPlay/3d;
+		double factor = 1d;
 		// System.out.println("there are "+counter+" cards less than yours out of "+availableCards.size());
-		return (double) counter / (double) availableCards.size();
+		double theyWin = (1d-((double) counter / (double) availableCards.size()))*factor;
+		return 1d-theyWin;
 
 	}
 

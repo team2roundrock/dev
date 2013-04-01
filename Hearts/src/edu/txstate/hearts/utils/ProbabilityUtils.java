@@ -333,7 +333,9 @@ public abstract class ProbabilityUtils {
 			System.out.println("got more heartCombos than totalCombos?");
 			System.out.println("hand - "+hand+" suit - "+suit+" cardsPlayedThisTurn - "+cardsPlayedThisTurn);
 			System.out.println("knownCards - "+knownCards+" qosPlayed - "+qosPlayed);
+			System.out.println("knownEmpties - "+knownEmpties);
 			System.out.println("muck - "+muck);
+			
 		}
 		return heartCombos/totalCombos;
 	}
@@ -464,14 +466,14 @@ public abstract class ProbabilityUtils {
 								if(doQosCount)
 								{
 									long qosVariations = 1;
-									long totalSpadeVariations = getTotalCardCombinationsForSuit(suit, hand, muck);
+									long totalSpadeVariations = getTotalCardCombinationsForSuit(Suit.Spades, hand, muck);
 									if(determineQosPlayable(suit, p1c, p1d))
 										qosVariations *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), p1s);
 									if(cardsAlreadyPlayed < 2 && determineQosPlayable(suit, c, d))
 										qosVariations *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), s);
 									if(cardsAlreadyPlayed < 3 && determineQosPlayable(suit, p3c, p3d))
 										qosVariations *= ArithmeticUtils.binomialCoefficient(suitCounter.get(Suit.Spades), p3s);
-									co.addWithHeartsNoSuitCombos(p1Count*p2Count*qosVariations/totalSpadeVariations);
+									co.addWithHeartsNoSuitCombos(p1Count*p2Count*(qosVariations/totalSpadeVariations));
 								}
 
 							}
