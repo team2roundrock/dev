@@ -21,7 +21,7 @@ public class Achievements
 {
 
 	boolean notifyAchievementEarned = false; //should this be moved into the while loop?
-	public static enum Achievement { BrokenHeart, ShootingTheMoon,
+	public enum Achievement { BrokenHeart, ShootingTheMoon,
 		PassingTheBuck, StartTheParty, HatTrick, OvershootingTheMoon1, 
 		OvershootingTheMoon2, OvershootingTheMoon3 };
 		// TODO There are three Overshooting The Moon entries. Each indicates the 
@@ -79,7 +79,7 @@ public class Achievements
 			for(Achievements.Achievement achievement : Achievements.Achievement.values())
 			{
 				//if the value contains BrokenHeart key...
-				if (listOfAchievements.containsKey(Achievement.BrokenHeart)) 
+				if (listOfAchievements.containsKey(achievement.BrokenHeart)) 
 				{
 					//get the value (true or false). null if key not found
 					if (listOfAchievements.get(Achievement.BrokenHeart) != null)
