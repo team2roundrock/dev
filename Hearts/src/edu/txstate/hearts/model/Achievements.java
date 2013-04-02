@@ -22,16 +22,19 @@ public class Achievements
 
 	boolean notifyAchievementEarned = false; //should this be moved into the while loop?
 	public static enum Achievement { BrokenHeart, ShootingTheMoon,
-		PassingTheBuck, OvershootingTheMoon, StartTheParty, HatTrick };
-		//TODO Should there be three OvershootingTheMoon entries, two hidden and one final?
-		//     This method may not be needed if counter can be implemented correctly
+		PassingTheBuck, StartTheParty, HatTrick, OvershootingTheMoon1, 
+		OvershootingTheMoon2, OvershootingTheMoon3 };
+		// TODO There are three Overshooting The Moon entries. Each indicates the 
+		// progress toward the achievement (i.e. 1 out of 3, 2 out of 3, 3 out of 3)
 	private int counterOvershootingTheMoon;
+	boolean achievedOrNot;
 	//private final Achievement achievement;
 	Hashtable<Achievement, Boolean> listOfAchievements;
 	
 	public Achievements()
 	{
-		counterOvershootingTheMoon = 0; //once counter hits 3, achievement can be set
+		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
+		//TODO counter may need to be read in from file each time
 		//this.achievement = achievement;
 		listOfAchievements = new Hashtable<Achievement, Boolean>();
 		
@@ -44,8 +47,6 @@ public class Achievements
 		{
 			listOfAchievements.put(achievement, false);
 		}
-		
-		
 	}
 	
 	/**
@@ -64,19 +65,54 @@ public class Achievements
 
 	//TODO Read array from file using separate UserData class. Check if file exists first.
 	
-	private boolean BrokenHeart() {
+	private void endGameAchievement(int score, boolean notifyAchievementEarned){
+		BrokenHeart(score, notifyAchievementEarned);
+		ShootingTheMoon(score);
+		OvershootingTheMoon(score);
+	}
+	
+	private boolean BrokenHeart(int score, boolean notifyAchievementEarned) {
 		// "end game" usage
 		// Score: (Full_score)-(QoS)
-		return notifyAchievementEarned;
+		if (score == 13) //26 full - 13 queen
+		{
+			for(Achievements.Achievement achievement : Achievements.Achievement.values())
+			{
+				//if the value contains BrokenHeart key...
+				if (listOfAchievements.containsKey(Achievement.BrokenHeart)) 
+				{
+					//get the value (true or false). null if key not found
+					if (listOfAchievements.get(Achievement.BrokenHeart) != null)
+					{
+						//place value in a boolean container
+						achievedOrNot = listOfAchievements.get(Achievement.BrokenHeart);
+						if (!achievedOrNot) //if it's false
+						{
+							notifyAchievementEarned = true; //notify user of earned achievement
+							listOfAchievements.put(Achievement.BrokenHeart, true);
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
-	private boolean ShootingTheMoon() {
+	private boolean ShootingTheMoon(int score) {
 		// "end game" usage
 		// Score: (Full_score)
-		return notifyAchievementEarned;
+		if (score == 26) //26 full score
+		{
+			notifyAchievementEarned = true;
+			
+			return true;
+			
+		}
+		return false;
 	}
 	
-	private boolean OvershootingTheMoon() {
+	private boolean OvershootingTheMoon(int score) {
 		// "end game" usage
 		// Score: (Full_score)
 		// Score must be obtained three times (meaning three different rounds)

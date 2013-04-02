@@ -18,12 +18,12 @@ import edu.txstate.hearts.model.Card.Suit;
 
 /**
  * User class holds implementation for human player input
- * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton
+ * @author Jonathan Shelton
  *
  */
 public class User extends Player 
 {
-	private Achievements achievements;
+	private Achievements achievements; //this may not be needed
 	
 	public User(String playerName, int num) 
 	{
