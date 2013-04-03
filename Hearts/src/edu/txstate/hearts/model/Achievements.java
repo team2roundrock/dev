@@ -6,6 +6,7 @@ package edu.txstate.hearts.model;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import edu.txstate.hearts.model.Achievements.Achievement;
 import edu.txstate.hearts.model.Card.Face;
@@ -21,7 +22,7 @@ public class Achievements
 {
 
 	boolean notifyAchievementEarned = false; //should this be moved into the while loop?
-	public enum Achievement { BrokenHeart, ShootingTheMoon,
+	public static enum Achievement { BrokenHeart, ShootingTheMoon,
 		PassingTheBuck, StartTheParty, HatTrick, OvershootingTheMoon1, 
 		OvershootingTheMoon2, OvershootingTheMoon3 };
 		// TODO There are three Overshooting The Moon entries. Each indicates the 
@@ -43,10 +44,11 @@ public class Achievements
 		// array values to file only when they have changed. Array does NOT
 		// necessarily reflect earned achievements; only the user's file
 		// will hold saved achievement data throughout each game
-		for(Achievements.Achievement achievement : Achievements.Achievement.values())
+		for(Achievements.Achievement achievement : Achievements.Achievement.values()) //steps through the enum
 		{
 			listOfAchievements.put(achievement, false);
 		}
+		
 	}
 	
 	/**
@@ -65,7 +67,7 @@ public class Achievements
 
 	//TODO Read array from file using separate UserData class. Check if file exists first.
 	
-	private void endGameAchievement(int score, boolean notifyAchievementEarned){
+	public void endGameAchievement(int score, boolean notifyAchievementEarned){
 		BrokenHeart(score, notifyAchievementEarned);
 		ShootingTheMoon(score);
 		OvershootingTheMoon(score);
@@ -76,10 +78,10 @@ public class Achievements
 		// Score: (Full_score)-(QoS)
 		if (score == 13) //26 full - 13 queen
 		{
-			for(Achievements.Achievement achievement : Achievements.Achievement.values())
-			{
+			//for(Achievements.Achievement achievement : Achievements.Achievement.values())
+			//{
 				//if the value contains BrokenHeart key...
-				if (listOfAchievements.containsKey(achievement.BrokenHeart)) 
+				if (listOfAchievements.containsKey(Achievement.BrokenHeart)) 
 				{
 					//get the value (true or false). null if key not found
 					if (listOfAchievements.get(Achievement.BrokenHeart) != null)
@@ -89,12 +91,13 @@ public class Achievements
 						if (!achievedOrNot) //if it's false
 						{
 							notifyAchievementEarned = true; //notify user of earned achievement
+							listOfAchievements.remove(Achievement.BrokenHeart);
 							listOfAchievements.put(Achievement.BrokenHeart, true);
 							return true;
 						}
 					}
 				}
-			}
+			//}
 		}
 		return false;
 	}
@@ -104,9 +107,25 @@ public class Achievements
 		// Score: (Full_score)
 		if (score == 26) //26 full score
 		{
-			notifyAchievementEarned = true;
-			
-			return true;
+			//for(Achievements.Achievement achievement : Achievements.Achievement.values())
+			//{
+				//if the value contains BrokenHeart key...
+				if (listOfAchievements.containsKey(Achievement.ShootingTheMoon)) 
+				{
+					//get the value (true or false). null if key not found
+					if (listOfAchievements.get(Achievement.ShootingTheMoon) != null)
+					{
+						//place value in a boolean container
+						achievedOrNot = listOfAchievements.get(Achievement.ShootingTheMoon);
+						if (!achievedOrNot) //if it's false
+						{
+							notifyAchievementEarned = true; //notify user of earned achievement
+							listOfAchievements.put(Achievement.ShootingTheMoon, true);
+							return true;
+						}
+					}
+				}
+			//}
 			
 		}
 		return false;
@@ -119,22 +138,32 @@ public class Achievements
 		return notifyAchievementEarned;
 	}
 	
-	private boolean PassingTheBuck() {
+	public boolean PassingTheBuck() {
 		// tracked in "real time" - only when passing cards 
 		// Passed: QoS
 		return notifyAchievementEarned;
 	}
 	
-	private boolean StartTheParty() {
+	public boolean StartTheParty() {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
 		return notifyAchievementEarned;
 	}
 	
-	private boolean HatTrick() {
+	public boolean HatTrick() {
 		// tracked in "real time" - after 4 cards have been played
 		// Collect all 4 cards on table (suit doesn't matter)
 		return notifyAchievementEarned;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Achievements [counterOvershootingTheMoon="
+				+ counterOvershootingTheMoon + ", listOfAchievements="
+				+ listOfAchievements + "]";
 	}
 
 	
