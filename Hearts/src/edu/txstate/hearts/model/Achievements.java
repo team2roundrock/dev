@@ -4,8 +4,10 @@
 package edu.txstate.hearts.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import edu.txstate.hearts.model.Achievements.Achievement;
@@ -30,14 +32,17 @@ public class Achievements
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
 	//private final Achievement achievement;
-	Hashtable<Achievement, Boolean> listOfAchievements;
+	Map<Achievement, Boolean> listOfAchievements;
+	UserData user = new UserData();
+	ReadFiles files = new ReadFiles();
+	Player player;
 	
 	public Achievements()
 	{
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
 		//TODO counter may need to be read in from file each time
 		//this.achievement = achievement;
-		listOfAchievements = new Hashtable<Achievement, Boolean>();
+		listOfAchievements = new HashMap<Achievement, Boolean>();
 		
 		// Create an array, populate each index with achievement name and
 		// a default boolean of false, meaning it hasn't been earned. Will save 
@@ -68,102 +73,152 @@ public class Achievements
 	//TODO Read array from file using separate UserData class. Check if file exists first.
 	
 	public void endGameAchievement(int score, boolean notifyAchievementEarned){
-		BrokenHeart(score, notifyAchievementEarned);
-		ShootingTheMoon(score);
-		OvershootingTheMoon(score);
+		BrokenHeart(score, notifyAchievementEarned, counterOvershootingTheMoon);
+		ShootingTheMoon(score, notifyAchievementEarned);
+		OvershootingTheMoon(score, notifyAchievementEarned);
 	}
 	
-	private boolean BrokenHeart(int score, boolean notifyAchievementEarned) {
+	//writeAchievement(counter,table)
+	
+	private boolean BrokenHeart(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
 		// "end game" usage
 		// Score: (Full_score)-(QoS)
 		if (score == 13) //26 full - 13 queen
 		{
-			//for(Achievements.Achievement achievement : Achievements.Achievement.values())
-			//{
-				//if the value contains BrokenHeart key...
-				if (listOfAchievements.containsKey(Achievement.BrokenHeart)) 
-				{
-					//get the value (true or false). null if key not found
-					if (listOfAchievements.get(Achievement.BrokenHeart) != null)
+			// if the value contains BrokenHeart key...
+			if (listOfAchievements.containsKey(Achievement.BrokenHeart)) {
+				// get the value (true or false). null if key not found
+				if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+					// place value in a boolean container
+					achievedOrNot = listOfAchievements.get(Achievement.BrokenHeart);
+					if (!achievedOrNot) // if it's false
 					{
-						//place value in a boolean container
-						achievedOrNot = listOfAchievements.get(Achievement.BrokenHeart);
-						if (!achievedOrNot) //if it's false
-						{
-							notifyAchievementEarned = true; //notify user of earned achievement
-							listOfAchievements.remove(Achievement.BrokenHeart);
-							listOfAchievements.put(Achievement.BrokenHeart, true);
-							return true;
-						}
+						notifyAchievementEarned = true; // notify user of earned achievement
+						listOfAchievements.remove(Achievement.BrokenHeart);
+						listOfAchievements.put(Achievement.BrokenHeart, true);
+						user.writeAchievement(counterOvershootingTheMoon, listOfAchievements);
+						return true;
 					}
 				}
-			//}
+			}
 		}
 		return false;
 	}
 	
-	private boolean ShootingTheMoon(int score) {
+	private boolean ShootingTheMoon(int score, boolean notifyAchievementEarned) {
 		// "end game" usage
 		// Score: (Full_score)
 		if (score == 26) //26 full score
 		{
-			//for(Achievements.Achievement achievement : Achievements.Achievement.values())
-			//{
-				//if the value contains BrokenHeart key...
-				if (listOfAchievements.containsKey(Achievement.ShootingTheMoon)) 
-				{
-					//get the value (true or false). null if key not found
-					if (listOfAchievements.get(Achievement.ShootingTheMoon) != null)
+			// if the value contains BrokenHeart key...
+			if (listOfAchievements.containsKey(Achievement.ShootingTheMoon)) {
+				// get the value (true or false). null if key not found
+				if (listOfAchievements.get(Achievement.ShootingTheMoon) != null) {
+					// place value in a boolean container
+					achievedOrNot = listOfAchievements.get(Achievement.ShootingTheMoon);
+					if (!achievedOrNot) // if it's false
 					{
-						//place value in a boolean container
-						achievedOrNot = listOfAchievements.get(Achievement.ShootingTheMoon);
-						if (!achievedOrNot) //if it's false
-						{
-							notifyAchievementEarned = true; //notify user of earned achievement
-							listOfAchievements.put(Achievement.ShootingTheMoon, true);
-							return true;
-						}
+						notifyAchievementEarned = true; // notify user of earned achievement
+						listOfAchievements.remove(Achievement.ShootingTheMoon);
+						listOfAchievements.put(Achievement.ShootingTheMoon,true);
+						return true;
 					}
 				}
-			//}
+			}
 			
 		}
 		return false;
 	}
 	
-	private boolean OvershootingTheMoon(int score) {
+	private boolean OvershootingTheMoon(int score, boolean notifyAchievementEarned) {
 		// "end game" usage
 		// Score: (Full_score)
 		// Score must be obtained three times (meaning three different rounds)
-		return notifyAchievementEarned;
-	}
+		int counter = getCounterOvershootingTheMoon();
+		
+		if (score == 26) {
+			
+			if (counter == 1) {
+
+				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon1)) {
+					// get the value (true or false). null if key not found
+					if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+						// place value in a boolean container
+						achievedOrNot = listOfAchievements.get(Achievement.OvershootingTheMoon1);
+						if (!achievedOrNot) // if it's false
+						{
+							notifyAchievementEarned = true; // notify user of earned achievement
+							listOfAchievements.remove(Achievement.OvershootingTheMoon1);
+							listOfAchievements.put(Achievement.OvershootingTheMoon1,true);
+							return true;
+						}
+					}
+				}
+			}
+			
+			if (counter == 2) {
+				
+				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon2)) {
+					// get the value (true or false). null if key not found
+					if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+						// place value in a boolean container
+						achievedOrNot = listOfAchievements.get(Achievement.OvershootingTheMoon2);
+						if (!achievedOrNot) // if it's false
+						{
+							notifyAchievementEarned = true; // notify user of earned achievement
+							listOfAchievements.remove(Achievement.OvershootingTheMoon2);
+							listOfAchievements.put(Achievement.OvershootingTheMoon2,true);
+							return true;
+						}
+					}
+				}
+			}
+			
+			if (counter == 3) {
+				
+				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon3)) {
+					// get the value (true or false). null if key not found
+					if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+						// place value in a boolean container
+						achievedOrNot = listOfAchievements.get(Achievement.OvershootingTheMoon3);
+						if (!achievedOrNot) // if it's false
+						{
+							notifyAchievementEarned = true; // notify user of earned achievement
+							listOfAchievements.remove(Achievement.OvershootingTheMoon3);
+							listOfAchievements.put(Achievement.OvershootingTheMoon3,true);
+							return true;
+						}
+					}
+				}
+			}
+		
+		}
+		return false;
+}
 	
-	public boolean PassingTheBuck() {
+	public boolean PassingTheBuck(int score, boolean notifyAchievementEarned) {
 		// tracked in "real time" - only when passing cards 
 		// Passed: QoS
 		return notifyAchievementEarned;
 	}
 	
-	public boolean StartTheParty() {
+	public boolean StartTheParty(int score, boolean notifyAchievementEarned) {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
 		return notifyAchievementEarned;
 	}
 	
-	public boolean HatTrick() {
+	public boolean HatTrick(int score, boolean notifyAchievementEarned) {
 		// tracked in "real time" - after 4 cards have been played
 		// Collect all 4 cards on table (suit doesn't matter)
 		return notifyAchievementEarned;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Achievements [counterOvershootingTheMoon="
-				+ counterOvershootingTheMoon + ", listOfAchievements="
-				+ listOfAchievements + "]";
+	public Map<Achievement, Boolean> returnList(Map<Achievement, Boolean> listOfAchievements)
+	{
+		String name = this.player.getName();
+		user.CreateUserData(name);
+		return listOfAchievements;
 	}
 
 	
