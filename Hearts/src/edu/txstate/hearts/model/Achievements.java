@@ -31,11 +31,11 @@ public class Achievements
 		// progress toward the achievement (i.e. 1 out of 3, 2 out of 3, 3 out of 3)
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
-	//private final Achievement achievement;
+	private UserData user = new UserData();
+	private ReadFiles files = new ReadFiles();
+	private Player player;
 	Map<Achievement, Boolean> listOfAchievements;
-	UserData user = new UserData();
-	ReadFiles files = new ReadFiles();
-	Player player;
+	
 	
 	public Achievements()
 	{
@@ -74,8 +74,9 @@ public class Achievements
 	
 	public void endGameAchievement(int score, boolean notifyAchievementEarned){
 		BrokenHeart(score, notifyAchievementEarned, counterOvershootingTheMoon);
-		ShootingTheMoon(score, notifyAchievementEarned);
-		OvershootingTheMoon(score, notifyAchievementEarned);
+		ShootingTheMoon(score, notifyAchievementEarned, counterOvershootingTheMoon);
+		OvershootingTheMoon(score, notifyAchievementEarned, counterOvershootingTheMoon);
+		notifyAchievementEarned = true;
 	}
 	
 	//writeAchievement(counter,table)
@@ -96,7 +97,7 @@ public class Achievements
 						notifyAchievementEarned = true; // notify user of earned achievement
 						listOfAchievements.remove(Achievement.BrokenHeart);
 						listOfAchievements.put(Achievement.BrokenHeart, true);
-						user.writeAchievement(counterOvershootingTheMoon, listOfAchievements);
+						//user.writeAchievement(counterOvershootingTheMoon, listOfAchievements);
 						return true;
 					}
 				}
@@ -105,7 +106,7 @@ public class Achievements
 		return false;
 	}
 	
-	private boolean ShootingTheMoon(int score, boolean notifyAchievementEarned) {
+	private boolean ShootingTheMoon(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
 		// "end game" usage
 		// Score: (Full_score)
 		if (score == 26) //26 full score
@@ -130,15 +131,15 @@ public class Achievements
 		return false;
 	}
 	
-	private boolean OvershootingTheMoon(int score, boolean notifyAchievementEarned) {
+	private boolean OvershootingTheMoon(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
 		// "end game" usage
 		// Score: (Full_score)
 		// Score must be obtained three times (meaning three different rounds)
 		int counter = getCounterOvershootingTheMoon();
 		
-		if (score == 26) {
-			
-			if (counter == 1) {
+		if (score == 26) 
+		{
+			if (counter == 0) {
 
 				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon1)) {
 					// get the value (true or false). null if key not found
@@ -150,13 +151,14 @@ public class Achievements
 							notifyAchievementEarned = true; // notify user of earned achievement
 							listOfAchievements.remove(Achievement.OvershootingTheMoon1);
 							listOfAchievements.put(Achievement.OvershootingTheMoon1,true);
+							setCounterOvershootingTheMoon(1);
 							return true;
 						}
 					}
 				}
 			}
 			
-			if (counter == 2) {
+			if (counter == 1) {
 				
 				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon2)) {
 					// get the value (true or false). null if key not found
@@ -168,13 +170,14 @@ public class Achievements
 							notifyAchievementEarned = true; // notify user of earned achievement
 							listOfAchievements.remove(Achievement.OvershootingTheMoon2);
 							listOfAchievements.put(Achievement.OvershootingTheMoon2,true);
+							setCounterOvershootingTheMoon(2);
 							return true;
 						}
 					}
 				}
 			}
 			
-			if (counter == 3) {
+			if (counter == 2) {
 				
 				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon3)) {
 					// get the value (true or false). null if key not found
@@ -186,6 +189,7 @@ public class Achievements
 							notifyAchievementEarned = true; // notify user of earned achievement
 							listOfAchievements.remove(Achievement.OvershootingTheMoon3);
 							listOfAchievements.put(Achievement.OvershootingTheMoon3,true);
+							setCounterOvershootingTheMoon(3);
 							return true;
 						}
 					}
@@ -196,19 +200,19 @@ public class Achievements
 		return false;
 }
 	
-	public boolean PassingTheBuck(int score, boolean notifyAchievementEarned) {
+	public boolean PassingTheBuck(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
 		// tracked in "real time" - only when passing cards 
 		// Passed: QoS
 		return notifyAchievementEarned;
 	}
 	
-	public boolean StartTheParty(int score, boolean notifyAchievementEarned) {
+	public boolean StartTheParty(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
 		return notifyAchievementEarned;
 	}
 	
-	public boolean HatTrick(int score, boolean notifyAchievementEarned) {
+	public boolean HatTrick(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
 		// tracked in "real time" - after 4 cards have been played
 		// Collect all 4 cards on table (suit doesn't matter)
 		return notifyAchievementEarned;
