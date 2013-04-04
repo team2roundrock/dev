@@ -4,11 +4,9 @@
 package edu.txstate.hearts.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Formatter;
-import java.util.FormatterClosedException;
-import java.util.Map;
-import java.util.Set;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 
 /**
@@ -19,45 +17,62 @@ import java.util.Set;
  */
 public class UserData 
 {
-	private Player player;
-	private Formatter output;
-		
-	
+	private FileWriter output;
+	private boolean found = false;	
+	private File name;
+	private String userName;
 			
 	public void CreateUserData(String userFileName)
-	{
-		
+	{		
+			userName = userFileName;
+			name = new File(userFileName + ".txt");
+			if(name.exists())
+				found = true;
 			try
 			{
-				output = new Formatter(userFileName + ".txt");//open/create file
+				output = new FileWriter(name, true);//open/create file
 				
 			}
-			catch(FileNotFoundException fileNotFoundException)
+			catch(IOException ioe)
 			{
-				System.err.println("Error opening or creating file.");
-				System.exit(1);
-			}//End of FileNotFoundException
-			catch(FormatterClosedException formatterClosedException)
-			{
-				System.err.println("Error writing to file.");
-				return;
+			    System.err.println("IOException: " + ioe.getMessage());
 			}
-		
-		
+					
 	}//end of function
 	
-	public void writeAchievement(int count, Map<Achievements.Achievement, Boolean> table){
-		output.format("%d%n", count);
-		Set<Achievements.Achievement> keys = table.keySet();
-		for(Achievements.Achievement key : keys){
-			output.format(key + "   " + table.get(key));
-			output.format("%n");
+	public void addUserNameToFile(){
+		if(found){
+			try
+			{
+			    String filename= "Users.txt";
+			    FileWriter fw = new FileWriter(filename,true); //the true will append the new data
+			    fw.write(userName);//appends the string to the file
+			    fw.close();
+			}
+			catch(IOException ioe)
+			{
+			    System.err.println("IOException: " + ioe.getMessage());
+			}
+		}
+	}
+	
+	public void writeAchievement(String info){
+		try{
+			output.write(info + "\n");
+		}
+		catch(IOException ioe)
+		{
+		    System.err.println("IOException: " + ioe.getMessage());
 		}
 	}
 	
 	public void closeFile(){
-		if(output != null)
+		try {
 			output.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }//end of class
