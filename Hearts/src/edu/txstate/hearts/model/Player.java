@@ -71,10 +71,21 @@ public abstract class Player {
 	}
 
 	public void printHand() {
+		int counter = 0;
+		counter = showCardsOfSuit(Suit.Clubs, counter);
+		counter = showCardsOfSuit(Suit.Diamonds, counter);
+		counter = showCardsOfSuit(Suit.Spades, counter);
+		counter = showCardsOfSuit(Suit.Hearts, counter);
+	}
+
+	private int showCardsOfSuit(Suit suit, int counter) {
 		for (int i = 0; i < hand.size(); i++) {
-			System.out.printf("%-19s%s", hand.get(i), ((i + 1) % 4 == 0) ? "\n"
+			if(hand.get(i).getSuit() == suit)
+			   System.out.printf("%-19s%s", hand.get(i), ((++counter) % 4 == 0) ? "\n"
 					: "");
 		}
+		return counter;
+		
 	}
 
 	public boolean hasTwoOfClubs() {
