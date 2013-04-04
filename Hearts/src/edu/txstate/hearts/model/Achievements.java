@@ -38,11 +38,13 @@ public class Achievements
 	private UserData user = new UserData();
 	private ReadFiles files = new ReadFiles();
 	private Player player;
+	private String userFileName;
 	Map<String, Boolean> listOfAchievements;
 	
 	
-	public Achievements()
-	{
+	public Achievements(String userName)
+	{	
+		userFileName = userName;
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
 		//TODO counter may need to be read in from file each time
 		//this.achievement = achievement;
@@ -60,6 +62,20 @@ public class Achievements
 		
 	}
 	
+	/**
+	 * @return the userFileName
+	 */
+	public String getUserFileName() {
+		return userFileName;
+	}
+
+	/**
+	 * @param userFileName the userFileName to set
+	 */
+	public void setUserFileName(String userFileName) {
+		this.userFileName = userFileName;
+	}
+
 	/**
 	 * @return counter for Overshooting The Moon achievement
 	 */
@@ -183,16 +199,16 @@ public class Achievements
 			
 			if (counter == 2) {
 				
-				if (listOfAchievements.containsKey("OvershootingTheMoon2")) {
+				if (listOfAchievements.containsKey("OvershootingTheMoon3")) {
 					// get the value (true or false). null if key not found
 					if (listOfAchievements.get("OvershootingTheMoon2") != null) {
 						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get("OvershootingTheMoon2");
+						achievedOrNot = listOfAchievements.get("OvershootingTheMoon3");
 						if (!achievedOrNot) // if it's false
 						{
 							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove("OvershootingTheMoon2");
-							listOfAchievements.put("OvershootingTheMoon2",true);
+							listOfAchievements.remove("OvershootingTheMoon3");
+							listOfAchievements.put("OvershootingTheMoon3",true);
 							setCounterOvershootingTheMoon(3);
 							return true;
 						}
@@ -224,11 +240,16 @@ public class Achievements
 	
 	public Map<String, Boolean> returnList(Map<String, Boolean> listOfAchievements)
 	{
-		String name = this.player.getName();
-		user.CreateUserData(name);
+		
+		user.CreateUserData(userFileName);
+		
+		for(String achievement : achievementNames) //steps through the enum
+		{
+			listOfAchievements.put(achievement, false);
+		}
+		
 		return listOfAchievements;
 	}
-
 	
 	
 //	while (game is playing)
