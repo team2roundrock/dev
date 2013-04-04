@@ -418,7 +418,8 @@ public class AgentAggressive extends Agent {
 								diamonds, clubs);
 						cardToPlay = determineBestCard(fewestCards, false);
 						if (cardToPlay == null) {
-							cardToPlay = determineBestCard(hearts, false);
+							if(heartsBroken)
+								cardToPlay = determineBestCard(hearts, false);
 							if (cardToPlay == null) {
 								// means we couldn't find a single card under
 								// risk threshold, so just play the highest
