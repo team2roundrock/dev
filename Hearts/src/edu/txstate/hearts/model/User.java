@@ -28,7 +28,19 @@ public class User extends Player
 	public User(String playerName, int num) 
 	{
 		super(playerName, num);
-		this.achievements = new Achievements();
+		this.achievements = new Achievements(playerName);
+	}
+	/**
+	 * @return the achievements
+	 */
+	public Achievements getAchievements() {
+		return achievements;
+	}
+	/**
+	 * @param achievements the achievements to set
+	 */
+	public void setAchievements(Achievements achievements) {
+		this.achievements = achievements;
 	}
 	/**
 	 * Human player is able to play a card
