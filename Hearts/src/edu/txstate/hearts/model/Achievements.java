@@ -3,10 +3,14 @@
  */
 package edu.txstate.hearts.model;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.txstate.hearts.utils.UserData;
 
 /**
  * @author Jonathan Shelton
@@ -24,8 +28,7 @@ public class Achievements
 			// progress toward the actual achievement, which is OvershootingTheMoon3
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
-	private UserData user = new UserData();
-	private ReadFiles files = new ReadFiles();
+	private final UserData user;
 	private Player player;
 	private String userFileName;
 	Map<String, Boolean> listOfAchievements;
@@ -33,6 +36,7 @@ public class Achievements
 	public Achievements(String userName, List<String> passedAchievements)
 	{
 		super();
+		user = new UserData(userName);
 		userFileName = userName;
 		for(String achievement: passedAchievements)
 		{
@@ -49,6 +53,7 @@ public class Achievements
 	
 	public Achievements(String userName)
 	{	
+		user = new UserData(userName);
 		userFileName = userName;
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
 		listOfAchievements = new HashMap<String, Boolean>();		
@@ -56,8 +61,14 @@ public class Achievements
 		{
 			listOfAchievements.put(achievement, false);
 		}
-		user.addUserNameToFile();
-		user.CreateUserData(userName);
+		try {
+			user.addUserNameToFile();
+			user.createUserDataFile(new ArrayList<String>());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		
 	}
@@ -243,7 +254,7 @@ public class Achievements
 	public Map<String, Boolean> returnList(Map<String, Boolean> listOfAchievements)
 	{
 		
-		user.CreateUserData(userFileName);
+		//user.createUserDataFile(userFileName);
 		
 //		for(String achievement : achievementNames) //steps through the enum
 //		{

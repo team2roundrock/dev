@@ -16,6 +16,7 @@ import java.io.IOException;
 import edu.txstate.hearts.controller.Hearts.Passing;
 import edu.txstate.hearts.model.Achievements;
 import edu.txstate.hearts.model.Card.Suit;
+import edu.txstate.hearts.utils.ReadFiles;
 
 /**
  * User class holds implementation for human player input
@@ -29,12 +30,9 @@ public class User extends Player
 	public User(String playerName, int num) 
 	{
 		super(playerName, num);
-		ReadFiles rf = new ReadFiles();
 		try {
-			rf.openFile(playerName);
-			rf.readAchievements();
-			this.achievements = new Achievements(playerName, rf.getReadAchievements());
-			rf.closeFile();
+			List<String> readAchievements = ReadFiles.readAchievements(playerName);
+			this.achievements = new Achievements(playerName, readAchievements);
 		} catch (FileNotFoundException e) {
 			this.achievements = new Achievements(playerName);
 		}
