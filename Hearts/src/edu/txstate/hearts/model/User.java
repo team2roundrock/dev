@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.io.IOException;
@@ -28,7 +29,16 @@ public class User extends Player
 	public User(String playerName, int num) 
 	{
 		super(playerName, num);
-		this.achievements = new Achievements(playerName);
+		ReadFiles rf = new ReadFiles();
+		try {
+			rf.openFile(playerName);
+			rf.readAchievements();
+			this.achievements = new Achievements(playerName, rf.getReadAchievements());
+			rf.closeFile();
+		} catch (FileNotFoundException e) {
+			this.achievements = new Achievements(playerName);
+		}
+		
 	}
 	/**
 	 * @return the achievements

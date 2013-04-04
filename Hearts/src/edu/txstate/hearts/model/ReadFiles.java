@@ -13,18 +13,17 @@ import java.util.Vector;
 public class ReadFiles {
 	private static String user;
 	private Scanner input;
-	private static int counter;
 	private static String achievement;
 	private static ArrayList<String> listOfUsers = new ArrayList<String>();
 	private static ArrayList<String> readAchievements = new ArrayList<String>();
 	
-	public void openFile(String fileName){
+	public void openFile(String fileName) throws FileNotFoundException{
 		try{
-			input = new Scanner(new File(fileName));
+			File file = new File(fileName + ".txt");
+			input = new Scanner(file);
 		}
 		catch(FileNotFoundException filenotfound){
-			System.err.println("Error opening file");
-			System.exit(1);
+			throw filenotfound;
 		}
 	}//end of open file
 	
@@ -50,8 +49,6 @@ public class ReadFiles {
 	public void readAchievements(){
 		
 		try{ 
-			while(input.hasNext())
-				counter = input.nextInt();
 			while(input.hasNext()){
 				achievement = input.nextLine();
 				readAchievements.add(achievement);
@@ -70,10 +67,7 @@ public class ReadFiles {
 	}
 	
 	public static Vector<String> getRecords(){
-		Vector<String> record = new Vector<String>();
-		for(String value : listOfUsers)
-			record.add(value);
-		return record;
+		return new Vector(listOfUsers);
 	}
 	
 	public static ArrayList<String> getReadAchievements(){

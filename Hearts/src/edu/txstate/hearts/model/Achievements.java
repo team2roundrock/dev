@@ -41,6 +41,21 @@ public class Achievements
 	private String userFileName;
 	Map<String, Boolean> listOfAchievements;
 	
+	public Achievements(String userName, List<String> passedAchievements)
+	{
+		super();
+		for(String achievement: passedAchievements)
+		{
+			listOfAchievements.put(achievement, true);
+		}
+		if(passedAchievements.contains("OvershootingTheMoon1"))
+			counterOvershootingTheMoon = 1;
+		if(passedAchievements.contains("OvershootingTheMoon2"))
+			counterOvershootingTheMoon = 2;
+		if(passedAchievements.contains("OvershootingTheMoon3"))
+			counterOvershootingTheMoon = 3;
+	}
+	
 	
 	public Achievements(String userName)
 	{	
@@ -59,6 +74,9 @@ public class Achievements
 		{
 			listOfAchievements.put(achievement, false);
 		}
+		user.addUserNameToFile();
+		user.CreateUserData(userName);
+		
 		
 	}
 	
