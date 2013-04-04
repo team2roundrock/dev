@@ -61,15 +61,7 @@ public class Achievements
 	{	
 		userFileName = userName;
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
-		//TODO counter may need to be read in from file each time
-		//this.achievement = achievement;
-		listOfAchievements = new HashMap<String, Boolean>();
-		
-		// Create an array, populate each index with achievement name and
-		// a default boolean of false, meaning it hasn't been earned. Will save 
-		// array values to file only when they have changed. Array does NOT
-		// necessarily reflect earned achievements; only the user's file
-		// will hold saved achievement data throughout each game
+		listOfAchievements = new HashMap<String, Boolean>();		
 		for(String achievement : achievementNames) //steps through the enum
 		{
 			listOfAchievements.put(achievement, false);
@@ -219,7 +211,7 @@ public class Achievements
 				
 				if (listOfAchievements.containsKey("OvershootingTheMoon3")) {
 					// get the value (true or false). null if key not found
-					if (listOfAchievements.get("OvershootingTheMoon2") != null) {
+					if (listOfAchievements.get("OvershootingTheMoon3") != null) {
 						// place value in a boolean container
 						achievedOrNot = listOfAchievements.get("OvershootingTheMoon3");
 						if (!achievedOrNot) // if it's false
@@ -238,15 +230,41 @@ public class Achievements
 		return false;
 }
 	
-	public boolean PassingTheBuck(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
+	public boolean PassingTheBuck(int score, boolean notifyAchievementEarned, List<Card> cardsToPass) {
 		// tracked in "real time" - only when passing cards 
 		// Passed: QoS
+		// Implementation: Take list of cards to pass as an argument. Iterate through to look for QoS
+		//				   Place call to function at the end of passingCards() in Hearts.java
+		for (Card card : cardsToPass)
+		{
+			if ((card.getSuit() == Card.Suit.Spades)
+					&& (card.getFace() == Card.Face.Queen))
+			{
+				if (listOfAchievements.containsKey("PassingTheBuck")) {
+					// get the value (true or false). null if key not found
+					if (listOfAchievements.get("PassingTheBuck") != null) {
+						// place value in a boolean container
+						achievedOrNot = listOfAchievements.get("PassingTheBuck");
+						if (!achievedOrNot) // if it's false
+						{
+							notifyAchievementEarned = true; // notify user of earned achievement
+							listOfAchievements.remove("PassingTheBuck");
+							listOfAchievements.put("PassingTheBuck",true);
+							setCounterOvershootingTheMoon(3);
+							return true;
+						}
+					}
+				}
+			}
+		}
+			
 		return notifyAchievementEarned;
 	}
 	
 	public boolean StartTheParty(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
+		// Implementation: If cardsPlayed for user is 2 of clubs, unlock achievement
 		return notifyAchievementEarned;
 	}
 	
@@ -261,10 +279,10 @@ public class Achievements
 		
 		user.CreateUserData(userFileName);
 		
-		for(String achievement : achievementNames) //steps through the enum
-		{
-			listOfAchievements.put(achievement, false);
-		}
+//		for(String achievement : achievementNames) //steps through the enum
+//		{
+//			listOfAchievements.put(achievement, false);
+//		}
 		
 		return listOfAchievements;
 	}
