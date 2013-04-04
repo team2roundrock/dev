@@ -90,19 +90,19 @@ public class AchievementsTest {
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#endGameAchievement(int, boolean)}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#endGameAchievements(int, boolean)}.
 	 */
 	@Test
-	public void testEndGameAchievement() {
+	public void testEndGameAchievements() {
 		
 		//Pass in a score of 25. Player is one heart short of an achievement.
-		a.endGameAchievement(25, false);
+		a.endGameAchievements(25, false);
 		assertEquals("An achievement has been earned,",false,a.listOfAchievements.containsValue(true));
 		assertEquals("Counter shouldn't be modified,",0,a.getCounterOvershootingTheMoon());
 		
 		
 		//Pass in a score of 13. Test "Broken Hearts" achievement.
-		a.endGameAchievement(13, false); 
+		a.endGameAchievements(13, false); 
 		assertEquals("Counter shouldn't be modified,",0,a.getCounterOvershootingTheMoon());
 		assertEquals("No achievement has been set,",true,a.listOfAchievements.containsValue(true));
 		assertEquals("Broken Heart hasn't been set,",true,a.listOfAchievements.get
@@ -111,7 +111,7 @@ public class AchievementsTest {
 		//assertEquals("Achievement notification not working,",true,a.notifyAchievementEarned);
 		
 		//Pass in first score of 26. Test "Overshooting The Moon1" & Shooting The M0on
-		a.endGameAchievement(26, false);
+		a.endGameAchievements(26, false);
 		assertEquals("ShootingTheMoon hasn't been set,",true,a.listOfAchievements.get
 				("ShootingTheMoon"));
 		assertEquals("OvershootingTheMoon1 hasn't been set,",true,a.listOfAchievements.get
@@ -120,7 +120,7 @@ public class AchievementsTest {
 		assertEquals("Counter is not 1,",1,a.getCounterOvershootingTheMoon());
 		
 		//Pass in a second score of 26. Test "Overshooting The Moon2" achievement
-		a.endGameAchievement(26, false);
+		a.endGameAchievements(26, false);
 		assertEquals("OvershootingTheMoon2 hasn't been set,",true,a.listOfAchievements.get
 				("OvershootingTheMoon2"));
 		assertEquals("OvershootingTheMoon3 has been set,",false,a.listOfAchievements.get
@@ -128,7 +128,7 @@ public class AchievementsTest {
 		assertEquals("Counter is not 2,",2,a.getCounterOvershootingTheMoon());
 		
 		//Pass in a third score of 26. Test "Overshooting The Moon3" achievement
-		a.endGameAchievement(26, false);
+		a.endGameAchievements(26, false);
 		assertEquals("OvershootingTheMoon2 hasn't been set,",true,a.listOfAchievements.get
 				("OvershootingTheMoon3"));
 		

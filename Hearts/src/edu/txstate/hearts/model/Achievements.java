@@ -3,36 +3,25 @@
  */
 package edu.txstate.hearts.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-//import edu.txstate.hearts.model.Achievements.Achievement;
-import edu.txstate.hearts.model.Card.Face;
-import edu.txstate.hearts.model.Card.Suit;
 
 /**
  * @author Jonathan Shelton
  *
  */
 
-
 public class Achievements 
 {
 
-	boolean notifyAchievementEarned = false; //should this be moved into the while loop?
-//	public static enum Achievement { BrokenHeart, ShootingTheMoon,
-//		PassingTheBuck, StartTheParty, HatTrick, OvershootingTheMoon1, 
-//		OvershootingTheMoon2, OvershootingTheMoon3 };
+	boolean notifyAchievementEarned = false; //TODO re-think notification system
 	List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
 			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
 			"OvershootingTheMoon3");
-		// TODO There are three Overshooting The Moon entries. Each indicates the 
-		// progress toward the achievement (i.e. 1 out of 3, 2 out of 3, 3 out of 3)
+			// There are three Overshooting The Moon entries. The first two indicate 
+			// progress toward the actual achievement, which is OvershootingTheMoon3
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
 	private UserData user = new UserData();
@@ -44,6 +33,7 @@ public class Achievements
 	public Achievements(String userName, List<String> passedAchievements)
 	{
 		super();
+		userFileName = userName;
 		for(String achievement: passedAchievements)
 		{
 			listOfAchievements.put(achievement, true);
@@ -99,179 +89,155 @@ public class Achievements
 	public void setCounterOvershootingTheMoon(int counterOvershootingTheMoon) {
 		this.counterOvershootingTheMoon = counterOvershootingTheMoon;
 	}
-
-	//TODO Read array from file using separate UserData class. Check if file exists first.
 	
-	public void endGameAchievement(int score, boolean notifyAchievementEarned){
-		BrokenHeart(score, notifyAchievementEarned, counterOvershootingTheMoon);
-		ShootingTheMoon(score, notifyAchievementEarned, counterOvershootingTheMoon);
-		OvershootingTheMoon(score, notifyAchievementEarned, counterOvershootingTheMoon);
+	/**
+	 * Check for and give the user any earned achievements at the end of each round.
+	 * The achievements to be checked are those which rely upon user score.
+	 * @param score
+	 * @param notifyAchievementEarned
+	 */
+	public void endGameAchievements(int score, boolean notifyAchievementEarned){
+		BrokenHeart(score, notifyAchievementEarned);
+		ShootingTheMoon(score, notifyAchievementEarned);
+		OvershootingTheMoon(score, notifyAchievementEarned);
 		notifyAchievementEarned = true;
 	}
 	
 	//writeAchievement(counter,table)
 	
-	private boolean BrokenHeart(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
+	private boolean BrokenHeart(int score, boolean notifyAchievementEarned) {
 		// "end game" usage
 		// Score: (Full_score)-(QoS)
+		String nameOfAchievement = "BrokenHeart";
 		if (score == 13) //26 full - 13 queen
 		{
-			// if the value contains BrokenHeart key...
-			if (listOfAchievements.containsKey("BrokenHeart")) {
-				// get the value (true or false). null if key not found
-				if (listOfAchievements.get("BrokenHeart") != null) {
-					// place value in a boolean container
-					achievedOrNot = listOfAchievements.get("BrokenHeart");
-					if (!achievedOrNot) // if it's false
-					{
-						notifyAchievementEarned = true; // notify user of earned achievement
-						listOfAchievements.remove("BrokenHeart");
-						listOfAchievements.put("BrokenHeart", true);
-						//user.writeAchievement(counterOvershootingTheMoon, listOfAchievements);
-						return true;
-					}
-				}
-			}
+			return giveAchievement(nameOfAchievement);
 		}
 		return false;
 	}
 	
-	private boolean ShootingTheMoon(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
+	private boolean ShootingTheMoon(int score, boolean notifyAchievementEarned) {
 		// "end game" usage
 		// Score: (Full_score)
+		String nameOfAchievement = "ShootingTheMoon";
 		if (score == 26) //26 full score
 		{
-			// if the value contains BrokenHeart key...
-			if (listOfAchievements.containsKey("ShootingTheMoon")) {
-				// get the value (true or false). null if key not found
-				if (listOfAchievements.get("ShootingTheMoon") != null) {
-					// place value in a boolean container
-					achievedOrNot = listOfAchievements.get("ShootingTheMoon");
-					if (!achievedOrNot) // if it's false
-					{
-						notifyAchievementEarned = true; // notify user of earned achievement
-						listOfAchievements.remove("ShootingTheMoon");
-						listOfAchievements.put("ShootingTheMoon",true);
-						return true;
-					}
-				}
-			}
-			
+			return giveAchievement(nameOfAchievement);
 		}
 		return false;
 	}
 	
-	private boolean OvershootingTheMoon(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
+	private boolean OvershootingTheMoon(int score, boolean notifyAchievementEarned) {
 		// "end game" usage
 		// Score: (Full_score)
 		// Score must be obtained three times (meaning three different rounds)
+		String nameOfAchievement1 = "OvershootingTheMoon1";
+		String nameOfAchievement2 = "OvershootingTheMoon2";
+		String nameOfAchievement3 = "OvershootingTheMoon3";
 		int counter = getCounterOvershootingTheMoon();
 		
 		if (score == 26) 
 		{
 			if (counter == 0) {
 
-				if (listOfAchievements.containsKey("OvershootingTheMoon1")) {
-					// get the value (true or false). null if key not found
-					if (listOfAchievements.get("OvershootingTheMoon1") != null) {
-						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get("OvershootingTheMoon1");
-						if (!achievedOrNot) // if it's false
-						{
-							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove("OvershootingTheMoon1");
-							listOfAchievements.put("OvershootingTheMoon1",true);
-							setCounterOvershootingTheMoon(1);
-							return true;
-						}
-					}
+				if (giveAchievement(nameOfAchievement1))
+				{
+					setCounterOvershootingTheMoon(1);
+					//no need to notify achievement earned
+					return true;
 				}
 			}
 			
 			if (counter == 1) {
 				
-				if (listOfAchievements.containsKey("OvershootingTheMoon2")) {
-					// get the value (true or false). null if key not found
-					if (listOfAchievements.get("OvershootingTheMoon2") != null) {
-						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get("OvershootingTheMoon2");
-						if (!achievedOrNot) // if it's false
-						{
-							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove("OvershootingTheMoon2");
-							listOfAchievements.put("OvershootingTheMoon2",true);
-							setCounterOvershootingTheMoon(2);
-							return true;
-						}
-					}
+				if (giveAchievement(nameOfAchievement2))
+				{
+					setCounterOvershootingTheMoon(2);
+					//no need to notify achievement earned
+					return true;
 				}
 			}
 			
 			if (counter == 2) {
 				
-				if (listOfAchievements.containsKey("OvershootingTheMoon3")) {
-					// get the value (true or false). null if key not found
-					if (listOfAchievements.get("OvershootingTheMoon3") != null) {
-						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get("OvershootingTheMoon3");
-						if (!achievedOrNot) // if it's false
-						{
-							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove("OvershootingTheMoon3");
-							listOfAchievements.put("OvershootingTheMoon3",true);
-							setCounterOvershootingTheMoon(3);
-							return true;
-						}
-					}
+				if (giveAchievement(nameOfAchievement3))
+				{
+					setCounterOvershootingTheMoon(3);
+					//notify achievement earned
+					return true;
 				}
 			}
 		
 		}
 		return false;
 }
-	
+	/**
+	 * Takes in the user's list of cards to pass from the passing mechanism and checks for
+	 * the requirement to earn this particular achievement (Queen of Spades)
+	 * @param score
+	 * @param notifyAchievementEarned
+	 * @param cardsToPass
+	 * @return
+	 */
 	public boolean PassingTheBuck(int score, boolean notifyAchievementEarned, List<Card> cardsToPass) {
 		// tracked in "real time" - only when passing cards 
 		// Passed: QoS
 		// Implementation: Take list of cards to pass as an argument. Iterate through to look for QoS
 		//				   Place call to function at the end of passingCards() in Hearts.java
+		String nameOfAchievement = "PassingTheBuck";
 		for (Card card : cardsToPass)
 		{
 			if ((card.getSuit() == Card.Suit.Spades)
 					&& (card.getFace() == Card.Face.Queen))
 			{
-				if (listOfAchievements.containsKey("PassingTheBuck")) {
-					// get the value (true or false). null if key not found
-					if (listOfAchievements.get("PassingTheBuck") != null) {
-						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get("PassingTheBuck");
-						if (!achievedOrNot) // if it's false
-						{
-							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove("PassingTheBuck");
-							listOfAchievements.put("PassingTheBuck",true);
-							setCounterOvershootingTheMoon(3);
-							return true;
-						}
-					}
+				if (giveAchievement(nameOfAchievement))
+				{
+					//notify achievement earned
+					return true;
 				}
 			}
-		}
-			
-		return notifyAchievementEarned;
+		}	
+		return false;
 	}
 	
-	public boolean StartTheParty(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
+	public boolean StartTheParty(int score, boolean notifyAchievementEarned) {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
 		// Implementation: If cardsPlayed for user is 2 of clubs, unlock achievement
 		return notifyAchievementEarned;
 	}
 	
-	public boolean HatTrick(int score, boolean notifyAchievementEarned, int counterOvershootingTheMoon) {
+	public boolean HatTrick(int score, boolean notifyAchievementEarned) {
 		// tracked in "real time" - after 4 cards have been played
 		// Collect all 4 cards on table (suit doesn't matter)
 		return notifyAchievementEarned;
+	}
+	
+	/**
+	 * @param nameOfAchievement
+	 * @return
+	 */
+	private boolean giveAchievement(String nameOfAchievement)
+	{
+		//boolean notifyAchievementEarned; //not needed?
+		
+		// if the value contains the named achievement key...
+		if (listOfAchievements.containsKey(nameOfAchievement)) {
+			// get the value (true or false). null if key not found
+			if (listOfAchievements.get(nameOfAchievement) != null) {
+				// place value in a boolean container
+				achievedOrNot = listOfAchievements.get(nameOfAchievement);
+				if (!achievedOrNot) // if it's false (not achieved yet)
+				{
+					notifyAchievementEarned = true; // notify user of earned achievement. Not needed?
+					listOfAchievements.remove(nameOfAchievement);
+					listOfAchievements.put(nameOfAchievement, true);
+					//user.writeAchievement(currentAchievement);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public Map<String, Boolean> returnList(Map<String, Boolean> listOfAchievements)
