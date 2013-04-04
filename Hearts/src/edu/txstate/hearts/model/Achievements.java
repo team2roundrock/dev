@@ -4,13 +4,14 @@
 package edu.txstate.hearts.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.txstate.hearts.model.Achievements.Achievement;
+//import edu.txstate.hearts.model.Achievements.Achievement;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
 
@@ -24,9 +25,12 @@ public class Achievements
 {
 
 	boolean notifyAchievementEarned = false; //should this be moved into the while loop?
-	public static enum Achievement { BrokenHeart, ShootingTheMoon,
-		PassingTheBuck, StartTheParty, HatTrick, OvershootingTheMoon1, 
-		OvershootingTheMoon2, OvershootingTheMoon3 };
+//	public static enum Achievement { BrokenHeart, ShootingTheMoon,
+//		PassingTheBuck, StartTheParty, HatTrick, OvershootingTheMoon1, 
+//		OvershootingTheMoon2, OvershootingTheMoon3 };
+	List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
+			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
+			"OvershootingTheMoon3");
 		// TODO There are three Overshooting The Moon entries. Each indicates the 
 		// progress toward the achievement (i.e. 1 out of 3, 2 out of 3, 3 out of 3)
 	private int counterOvershootingTheMoon;
@@ -34,7 +38,7 @@ public class Achievements
 	private UserData user = new UserData();
 	private ReadFiles files = new ReadFiles();
 	private Player player;
-	Map<Achievement, Boolean> listOfAchievements;
+	Map<String, Boolean> listOfAchievements;
 	
 	
 	public Achievements()
@@ -42,14 +46,14 @@ public class Achievements
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
 		//TODO counter may need to be read in from file each time
 		//this.achievement = achievement;
-		listOfAchievements = new HashMap<Achievement, Boolean>();
+		listOfAchievements = new HashMap<String, Boolean>();
 		
 		// Create an array, populate each index with achievement name and
 		// a default boolean of false, meaning it hasn't been earned. Will save 
 		// array values to file only when they have changed. Array does NOT
 		// necessarily reflect earned achievements; only the user's file
 		// will hold saved achievement data throughout each game
-		for(Achievements.Achievement achievement : Achievements.Achievement.values()) //steps through the enum
+		for(String achievement : achievementNames) //steps through the enum
 		{
 			listOfAchievements.put(achievement, false);
 		}
@@ -87,16 +91,16 @@ public class Achievements
 		if (score == 13) //26 full - 13 queen
 		{
 			// if the value contains BrokenHeart key...
-			if (listOfAchievements.containsKey(Achievement.BrokenHeart)) {
+			if (listOfAchievements.containsKey("BrokenHeart")) {
 				// get the value (true or false). null if key not found
-				if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+				if (listOfAchievements.get("BrokenHeart") != null) {
 					// place value in a boolean container
-					achievedOrNot = listOfAchievements.get(Achievement.BrokenHeart);
+					achievedOrNot = listOfAchievements.get("BrokenHeart");
 					if (!achievedOrNot) // if it's false
 					{
 						notifyAchievementEarned = true; // notify user of earned achievement
-						listOfAchievements.remove(Achievement.BrokenHeart);
-						listOfAchievements.put(Achievement.BrokenHeart, true);
+						listOfAchievements.remove("BrokenHeart");
+						listOfAchievements.put("BrokenHeart", true);
 						//user.writeAchievement(counterOvershootingTheMoon, listOfAchievements);
 						return true;
 					}
@@ -112,16 +116,16 @@ public class Achievements
 		if (score == 26) //26 full score
 		{
 			// if the value contains BrokenHeart key...
-			if (listOfAchievements.containsKey(Achievement.ShootingTheMoon)) {
+			if (listOfAchievements.containsKey("ShootingTheMoon")) {
 				// get the value (true or false). null if key not found
-				if (listOfAchievements.get(Achievement.ShootingTheMoon) != null) {
+				if (listOfAchievements.get("ShootingTheMoon") != null) {
 					// place value in a boolean container
-					achievedOrNot = listOfAchievements.get(Achievement.ShootingTheMoon);
+					achievedOrNot = listOfAchievements.get("ShootingTheMoon");
 					if (!achievedOrNot) // if it's false
 					{
 						notifyAchievementEarned = true; // notify user of earned achievement
-						listOfAchievements.remove(Achievement.ShootingTheMoon);
-						listOfAchievements.put(Achievement.ShootingTheMoon,true);
+						listOfAchievements.remove("ShootingTheMoon");
+						listOfAchievements.put("ShootingTheMoon",true);
 						return true;
 					}
 				}
@@ -141,16 +145,16 @@ public class Achievements
 		{
 			if (counter == 0) {
 
-				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon1)) {
+				if (listOfAchievements.containsKey("OvershootingTheMoon1")) {
 					// get the value (true or false). null if key not found
-					if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+					if (listOfAchievements.get("OvershootingTheMoon1") != null) {
 						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get(Achievement.OvershootingTheMoon1);
+						achievedOrNot = listOfAchievements.get("OvershootingTheMoon1");
 						if (!achievedOrNot) // if it's false
 						{
 							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove(Achievement.OvershootingTheMoon1);
-							listOfAchievements.put(Achievement.OvershootingTheMoon1,true);
+							listOfAchievements.remove("OvershootingTheMoon1");
+							listOfAchievements.put("OvershootingTheMoon1",true);
 							setCounterOvershootingTheMoon(1);
 							return true;
 						}
@@ -160,16 +164,16 @@ public class Achievements
 			
 			if (counter == 1) {
 				
-				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon2)) {
+				if (listOfAchievements.containsKey("OvershootingTheMoon2")) {
 					// get the value (true or false). null if key not found
-					if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+					if (listOfAchievements.get("OvershootingTheMoon2") != null) {
 						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get(Achievement.OvershootingTheMoon2);
+						achievedOrNot = listOfAchievements.get("OvershootingTheMoon2");
 						if (!achievedOrNot) // if it's false
 						{
 							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove(Achievement.OvershootingTheMoon2);
-							listOfAchievements.put(Achievement.OvershootingTheMoon2,true);
+							listOfAchievements.remove("OvershootingTheMoon2");
+							listOfAchievements.put("OvershootingTheMoon2",true);
 							setCounterOvershootingTheMoon(2);
 							return true;
 						}
@@ -179,16 +183,16 @@ public class Achievements
 			
 			if (counter == 2) {
 				
-				if (listOfAchievements.containsKey(Achievement.OvershootingTheMoon3)) {
+				if (listOfAchievements.containsKey("OvershootingTheMoon2")) {
 					// get the value (true or false). null if key not found
-					if (listOfAchievements.get(Achievement.BrokenHeart) != null) {
+					if (listOfAchievements.get("OvershootingTheMoon2") != null) {
 						// place value in a boolean container
-						achievedOrNot = listOfAchievements.get(Achievement.OvershootingTheMoon3);
+						achievedOrNot = listOfAchievements.get("OvershootingTheMoon2");
 						if (!achievedOrNot) // if it's false
 						{
 							notifyAchievementEarned = true; // notify user of earned achievement
-							listOfAchievements.remove(Achievement.OvershootingTheMoon3);
-							listOfAchievements.put(Achievement.OvershootingTheMoon3,true);
+							listOfAchievements.remove("OvershootingTheMoon2");
+							listOfAchievements.put("OvershootingTheMoon2",true);
 							setCounterOvershootingTheMoon(3);
 							return true;
 						}
@@ -218,7 +222,7 @@ public class Achievements
 		return notifyAchievementEarned;
 	}
 	
-	public Map<Achievement, Boolean> returnList(Map<Achievement, Boolean> listOfAchievements)
+	public Map<String, Boolean> returnList(Map<String, Boolean> listOfAchievements)
 	{
 		String name = this.player.getName();
 		user.CreateUserData(name);
