@@ -5,7 +5,9 @@ package edu.txstate.hearts.model;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -24,6 +26,7 @@ public class AchievementsTest {
 	private String playerName = "initialize";
 	private Deck deck;
 	private Achievements a = new Achievements(playerName);
+	private List<Card> listOfCards = new ArrayList<Card>();
 	
 	/**
 	 * @throws java.lang.Exception
@@ -129,25 +132,64 @@ public class AchievementsTest {
 		
 		//Pass in a third score of 26. Test "Overshooting The Moon3" achievement
 		a.endGameAchievements(26, false);
-		assertEquals("OvershootingTheMoon2 hasn't been set,",true,a.listOfAchievements.get
+		assertEquals("OvershootingTheMoon3 hasn't been set,",true,a.listOfAchievements.get
 				("OvershootingTheMoon3"));
+		
 		
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#PassingTheBuck(int, boolean, int)}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#PassingTheBuck(int, boolean, List<Card>)}.
 	 */
 	@Test
 	public void testPassingTheBuck() {
-		fail("Not yet implemented");
+		
+		//Pass in a hand without desired Queen of Spades
+		listOfCards.add(new Card(Card.Face.Ace, Card.Suit.Hearts));
+		listOfCards.add(new Card(Card.Face.Queen, Card.Suit.Hearts));
+		listOfCards.add(new Card(Card.Face.Three, Card.Suit.Spades));
+		assertEquals("PassingTheBuck is set, but shouldn't be,",false,a.listOfAchievements.
+				get("PassingTheBuck"));
+		
+		//Ensure entire method returns false when requirements not met
+		assertEquals("Method should return false",false,a.PassingTheBuck(true, listOfCards));	
+		
+		//Pass in a hand with desired Queen of Spades
+		//Ensure entire method returns true when requirements met
+		listOfCards.add(new Card(Card.Face.Ace, Card.Suit.Hearts));
+		listOfCards.add(new Card(Card.Face.Queen, Card.Suit.Spades));
+		listOfCards.add(new Card(Card.Face.Three, Card.Suit.Spades));
+		assertEquals("Method should return true",true,a.PassingTheBuck(false, listOfCards));
+		
+		//Ensure achievement is set when requirements met
+		assertEquals("PassingTheBuck hasn't been set,",true,a.listOfAchievements.
+				get("PassingTheBuck"));
+		
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#StartTheParty(int, boolean, int)}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#StartTheParty(List<Card>, Player)}.
 	 */
 	@Test
 	public void testStartTheParty() {
-		fail("Not yet implemented");
+		User u = null;
+		
+		//User does not play the two of clubs
+		listOfCards.add(new Card(Card.Face.Ace, Card.Suit.Hearts));
+		assertEquals("StartTheParty is set, but shouldn't be,",false,a.listOfAchievements.
+				get("StartTheParty"));
+		
+		//Ensure entire method returns false when requirements not met
+		assertEquals("Method should return false",false,a.StartTheParty(listOfCards, p));
+		
+		//User plays the two of clubs
+		//Ensure entire method returns true when requirements met
+		listOfCards.add(new Card(Card.Face.Deuce, Card.Suit.Clubs));
+		assertEquals("Method should return true",true,a.StartTheParty(listOfCards, p));
+		
+		//Ensure achievement is set when requirements met
+		assertEquals("StartTheParty hasn't been set,",true,a.listOfAchievements.
+				get("StartTheParty"));
 	}
 
 	/**
@@ -155,7 +197,16 @@ public class AchievementsTest {
 	 */
 	@Test
 	public void testHatTrick() {
-		fail("Not yet implemented");
+		//Special method - achievement is given to user that called it, if not already earned
+		
+		//Ensure achievement is set
+		assertEquals("StartTheParty hasn't been set,",true,a.HatTrick());
+		
+		//Call method again
+		a.HatTrick();
+		
+		//Ensure method returns false (since achievement already earned)
+		assertEquals("Method should return false,",false,a.HatTrick());
 	}
 
 	/**

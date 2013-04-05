@@ -20,7 +20,7 @@ import edu.txstate.hearts.utils.UserData;
 public class Achievements 
 {
 
-	boolean notifyAchievementEarned = false; //TODO re-think notification system
+	boolean achievementEarned = false; //TODO re-think notification system
 	List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
 			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
 			"OvershootingTheMoon3");
@@ -74,6 +74,25 @@ public class Achievements
 	}
 	
 	/**
+	 * 
+	 * @return achievementEarned, 
+	 */
+	public boolean isAchievementEarned()
+	{
+		return achievementEarned;
+	}
+
+	/**
+	 * Achievement earned when this is set to true
+	 * @param achievementEarned
+	 */
+	public void setAchievementEarned(boolean achievementEarned)
+	{
+		//TODO Use for new notification system
+		this.achievementEarned = achievementEarned;
+	}
+
+	/**
 	 * @return the userFileName
 	 */
 	public String getUserFileName() {
@@ -111,7 +130,6 @@ public class Achievements
 		BrokenHeart(score, notifyAchievementEarned);
 		ShootingTheMoon(score, notifyAchievementEarned);
 		OvershootingTheMoon(score, notifyAchievementEarned);
-		notifyAchievementEarned = true;
 	}
 	
 	//writeAchievement(counter,table)
@@ -190,11 +208,12 @@ public class Achievements
 	 * @param cardsToPass
 	 * @return
 	 */
-	public boolean PassingTheBuck(int score, boolean notifyAchievementEarned, List<Card> cardsToPass) {
+	public boolean PassingTheBuck(boolean notifyAchievementEarned, List<Card> cardsToPass) {
 		// tracked in "real time" - only when passing cards 
 		// Passed: QoS
-		// Implementation: Take list of cards to pass as an argument. Iterate through to look for QoS
-		//				   Place call to function at the end of passingCards() in Hearts.java
+		// Implementation: Take list of cards to pass as an argument. Iterate through 
+		//    to look for Queen of Spades. Call to this method is made from within 
+		//    passingCards() in Hearts.java
 		String nameOfAchievement = "PassingTheBuck";
 		for (Card card : cardsToPass)
 		{
@@ -211,17 +230,46 @@ public class Achievements
 		return false;
 	}
 	
-	public boolean StartTheParty(int score, boolean notifyAchievementEarned) {
+	public boolean StartTheParty(List<Card> cardsPlayed, Player p) {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
-		// Implementation: If cardsPlayed for user is 2 of clubs, unlock achievement
-		return notifyAchievementEarned;
+		// Implementation: Take list of cardsPlayed (passed from game in progress).
+		//	  If two of clubs found, unlock achievement. Will be activated the moment 
+		//    the card is played
+		String nameOfAchievement = "StartTheParty";
+		for (Card card : cardsPlayed)
+		{
+			if ((card.getSuit() == Card.Suit.Clubs)
+					&& (card.getFace() == Card.Face.Deuce))
+			{
+				if (giveAchievement(nameOfAchievement))
+				{
+					//notify achievement earned
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
-	public boolean HatTrick(int score, boolean notifyAchievementEarned) {
+	/**
+	 * Method automatically hands the achievement to a user 
+	 * (if not already earned), therefore it MUST be called 
+	 * on the "playerWithHighestValue" after cards have been 
+	 * passed (near the bottom of runTurn() in Hearts.java)
+	 * @param achievementEarned
+	 * @return
+	 */
+	public boolean HatTrick() {
 		// tracked in "real time" - after 4 cards have been played
 		// Collect all 4 cards on table (suit doesn't matter)
-		return notifyAchievementEarned;
+		String nameOfAchievement = "HatTrick";
+		if (giveAchievement(nameOfAchievement))
+		{
+			//notify achievement earned
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -240,7 +288,7 @@ public class Achievements
 				achievedOrNot = listOfAchievements.get(nameOfAchievement);
 				if (!achievedOrNot) // if it's false (not achieved yet)
 				{
-					notifyAchievementEarned = true; // notify user of earned achievement. Not needed?
+					achievementEarned = true; // notify user of earned achievement. Not needed?
 					listOfAchievements.remove(nameOfAchievement);
 					listOfAchievements.put(nameOfAchievement, true);
 					//user.writeAchievement(currentAchievement);
