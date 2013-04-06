@@ -16,6 +16,7 @@ import java.awt.Font;
 
 import java.awt.event.*;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -24,6 +25,7 @@ import org.apache.commons.math3.util.MultidimensionalCounter.Iterator;
 
 import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.User;
+import edu.txstate.hearts.utils.ReadFiles;
 
 public class ConfigurationWindow {
 
@@ -61,8 +63,7 @@ public class ConfigurationWindow {
 	 * Create the application.
 	 * @param set 
 	 */
-	public ConfigurationWindow(Hearts obj, Set set) {
-		theUsers = set;
+	public ConfigurationWindow(Hearts obj) {
 		this.obj = obj;
 		initialize();
 		
@@ -79,13 +80,7 @@ public class ConfigurationWindow {
 		frmConfigurationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmConfigurationWindow.getContentPane().setLayout(null);
 		
-		String [] userName = new String [theUsers.size()];
-		java.util.Iterator goThroughUsers = theUsers.iterator();
-		int count = 0;
-		while(goThroughUsers.hasNext()){
-			User user = (User) goThroughUsers.next();
-			userName [count++]= user.getName();
-		}
+		Vector<String> userName = ReadFiles.getRecords();
 		comboBox = new JComboBox(userName);
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

@@ -43,17 +43,9 @@ public class Hearts {
 	private int endScore;
 	public final static boolean silent = false;
 	private final static int GAMES_TO_RUN = 1;
-	private Set setofusers;
 	private final static boolean runUI = true;
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public Set getSetofusers() {
-		return setofusers;
-	}
-
+	
 	/**
 	 * @param args
 	 */
@@ -66,7 +58,7 @@ public class Hearts {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ConfigurationWindow window = new ConfigurationWindow(game, game.getSetofusers());
+					ConfigurationWindow window = new ConfigurationWindow(game);
 					window.getFrmConfigurationWindow().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,26 +76,7 @@ public class Hearts {
 	}
 	
 	public Hearts(){
-		try {
-			// use buffering
-			InputStream file = new FileInputStream("Users.bin");
-			InputStream buffer = new BufferedInputStream(file);
-			ObjectInput input = new ObjectInputStream(buffer);
-			try {
-				// deserialize the RiskThreshold
-				setofusers = (Set) input.readObject();
-
-			} finally {
-				input.close();
-			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("problem reading in file Users.bin: "
-					+ e.getMessage());
-			setofusers = new HashSet();
-		}
+		
 	}
 	
 	public void oldInitialize() 

@@ -50,7 +50,7 @@ public class UserData {
 			FileWriter fw = new FileWriter(filename, true); // the true will
 															// append the new
 															// data
-			fw.write(userName);// appends the string to the file
+			fw.write(userName + "\n");// appends the string to the file
 			fw.close();
 			ReadFiles.addUserRecord(userName);
 		} catch (IOException ioe) {
