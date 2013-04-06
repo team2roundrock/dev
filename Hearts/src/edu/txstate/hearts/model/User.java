@@ -24,6 +24,7 @@ import edu.txstate.hearts.utils.ReadFiles;
  * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton
  *
  */
+
 public class User extends Player 
 {
 	private Achievements achievements; //this may not be needed
