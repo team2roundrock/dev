@@ -27,6 +27,13 @@ import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.User;
 import edu.txstate.hearts.utils.ReadFiles;
 
+/**
+ * This class displays the initial set up of the game. The user will be allow to enter a name, a level of
+ * difficulty and set the end score. This user interface is made up of a JFrame containing 3 ComboBoxes that
+ * allow for easy access to information.
+ * @author Maria Poole
+ *
+ */
 public class ConfigurationUI {
 
 	private JFrame frmConfigurationWindow;
@@ -43,26 +50,7 @@ public class ConfigurationUI {
 	private JComboBox comboBox;
 	private Hearts obj;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ConfigurationWindow window = new ConfigurationWindow();
-//					window.frmConfigurationWindow.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the application.
-	 * @param set 
-	 */
+	
 	public ConfigurationUI(Hearts obj) {
 		this.obj = obj;
 		initialize();
