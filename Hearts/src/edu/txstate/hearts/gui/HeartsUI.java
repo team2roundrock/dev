@@ -55,7 +55,7 @@ public class HeartsUI
 	private List<JButton> jButtonSouthList;
 	private List<JButton> jButtonEastList;
 	private List<JButton> jButtonWestList;
-	private String imagesFolder = "C:\\Users\\Gede\\Desktop\\dev\\Hearts\\images\\cards\\";
+	private String imagesFolder = "images\\cards\\";
 
 	public void showDialog()
 	{
