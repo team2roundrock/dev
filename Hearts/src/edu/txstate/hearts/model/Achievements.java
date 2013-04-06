@@ -20,7 +20,6 @@ import edu.txstate.hearts.utils.UserData;
 public class Achievements 
 {
 
-	boolean achievementEarned = false; //TODO re-think notification system
 	List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
 			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
 			"OvershootingTheMoon3");
@@ -65,31 +64,43 @@ public class Achievements
 			user.addUserNameToFile();
 			user.createUserDataFile(new ArrayList<String>());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 		
 	}
 	
 	/**
-	 * 
-	 * @return achievementEarned, 
+	 * Check if a particular achievement exists or not
+	 * @param nameOfAchievement name of achievement to
+	 * be checked
+	 * @return true or false
 	 */
-	public boolean isAchievementEarned()
+	public boolean isAchievementEarned(String nameOfAchievement)
 	{
-		return achievementEarned;
+		// if the value contains the named achievement key...
+				if (listOfAchievements.containsKey(nameOfAchievement)) {
+					// get the value (true or false). null if key not found
+					if (listOfAchievements.get(nameOfAchievement) != null) {
+						// place value in a boolean container
+						achievedOrNot = listOfAchievements.get(nameOfAchievement);
+						return achievedOrNot;
+//						if (!achievedOrNot) // if it's false (not achieved yet)
+//						{
+//							return true;
+//						}
+					}
+					//if key does not exist, achievement not earned
+				}
+				return false;
 	}
 
 	/**
-	 * Achievement earned when this is set to true
+	 * Notify achievement earned when this is set to true
 	 * @param achievementEarned
 	 */
-	public void setAchievementEarned(boolean achievementEarned)
+	public void notifyAchievementEarned(String achievementName)
 	{
-		//TODO Use for new notification system
-		this.achievementEarned = achievementEarned;
+		System.out.println("Achievement Unlocked - " + achievementName);
 	}
 
 	/**
@@ -132,15 +143,18 @@ public class Achievements
 		OvershootingTheMoon(score, notifyAchievementEarned);
 	}
 	
-	//writeAchievement(counter,table)
-	
 	private boolean BrokenHeart(int score, boolean notifyAchievementEarned) {
 		// "end game" usage
 		// Score: (Full_score)-(QoS)
 		String nameOfAchievement = "BrokenHeart";
 		if (score == 13) //26 full - 13 queen
 		{
-			return giveAchievement(nameOfAchievement);
+			if (giveAchievement(nameOfAchievement))
+			{
+				//notify achievement earned
+				notifyAchievementEarned("Broken Heart");
+				return true;
+			}
 		}
 		return false;
 	}
@@ -151,7 +165,12 @@ public class Achievements
 		String nameOfAchievement = "ShootingTheMoon";
 		if (score == 26) //26 full score
 		{
-			return giveAchievement(nameOfAchievement);
+			if (giveAchievement(nameOfAchievement))
+			{
+				//notify achievement earned
+				notifyAchievementEarned("Shooting The Moon");
+				return true;
+			}
 		}
 		return false;
 	}
@@ -172,6 +191,7 @@ public class Achievements
 				if (giveAchievement(nameOfAchievement1))
 				{
 					setCounterOvershootingTheMoon(1);
+					//progress toward achievement only
 					//no need to notify achievement earned
 					return true;
 				}
@@ -182,6 +202,7 @@ public class Achievements
 				if (giveAchievement(nameOfAchievement2))
 				{
 					setCounterOvershootingTheMoon(2);
+					//progress toward achievement only
 					//no need to notify achievement earned
 					return true;
 				}
@@ -192,7 +213,7 @@ public class Achievements
 				if (giveAchievement(nameOfAchievement3))
 				{
 					setCounterOvershootingTheMoon(3);
-					//notify achievement earned
+					notifyAchievementEarned("Overshooting The Moon");
 					return true;
 				}
 			}
@@ -222,7 +243,7 @@ public class Achievements
 			{
 				if (giveAchievement(nameOfAchievement))
 				{
-					//notify achievement earned
+					notifyAchievementEarned("Passing The Buck");
 					return true;
 				}
 			}
@@ -244,7 +265,7 @@ public class Achievements
 			{
 				if (giveAchievement(nameOfAchievement))
 				{
-					//notify achievement earned
+					notifyAchievementEarned("Start The Party");
 					return true;
 				}
 			}
@@ -266,7 +287,7 @@ public class Achievements
 		String nameOfAchievement = "HatTrick";
 		if (giveAchievement(nameOfAchievement))
 		{
-			//notify achievement earned
+			notifyAchievementEarned("Hat Trick");
 			return true;
 		}
 		return false;
@@ -277,9 +298,7 @@ public class Achievements
 	 * @return
 	 */
 	private boolean giveAchievement(String nameOfAchievement)
-	{
-		//boolean notifyAchievementEarned; //not needed?
-		
+	{		
 		// if the value contains the named achievement key...
 		if (listOfAchievements.containsKey(nameOfAchievement)) {
 			// get the value (true or false). null if key not found
@@ -288,17 +307,29 @@ public class Achievements
 				achievedOrNot = listOfAchievements.get(nameOfAchievement);
 				if (!achievedOrNot) // if it's false (not achieved yet)
 				{
-					achievementEarned = true; // notify user of earned achievement. Not needed?
 					listOfAchievements.remove(nameOfAchievement);
 					listOfAchievements.put(nameOfAchievement, true);
 					//user.writeAchievement(currentAchievement);
 					return true;
 				}
 			}
+			//what if key does not exist? (i.e. reading file of earned achievements)
+			//set achievement to true
+			else
+			{
+				listOfAchievements.put(nameOfAchievement, true);
+				// user.writeAchievement(currentAchievement);
+				return true;
+			}
 		}
 		return false;
 	}
 	
+	/**
+	 * Returns all of a user's earned achievements
+	 * @param listOfAchievements
+	 * @return Earned achievements
+	 */
 	public Map<String, Boolean> returnList(Map<String, Boolean> listOfAchievements)
 	{
 		
@@ -311,10 +342,5 @@ public class Achievements
 		
 		return listOfAchievements;
 	}
-	
-	
-//	while (game is playing)
-//	{
-//		
-//	}
+
 }
