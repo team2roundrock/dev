@@ -2,6 +2,8 @@
  * 
  */
 package edu.txstate.hearts.controller;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import java.awt.EventQueue;
 import java.io.BufferedInputStream;
@@ -16,17 +18,30 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.txstate.hearts.gui.ConfigurationWindow;
+import javax.swing.JButton;
+
+import edu.txstate.hearts.gui.ConfigurationUI;
+import edu.txstate.hearts.gui.HeartsUI;
+import edu.txstate.hearts.gui.HeartsUI.CardAction;
+import edu.txstate.hearts.gui.HeartsUI.Position;
 import edu.txstate.hearts.model.*;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
+import edu.txstate.hearts.utils.RiskThresholds;
 
 /**
  * @author Neil Stickels, I Gede Sutapa
  *
  */
-public class Hearts {
-
+public class Hearts implements ActionListener
+{
+	public enum CardAction
+	{
+		Passing
+		, Playing
+		, Idle
+	}
+	
 	public enum Passing
 	{
 		Left,
@@ -34,8 +49,19 @@ public class Hearts {
 		Front,
 		Stay
 	}
+	
+	private int numCardsSelectedToPass;
+	private boolean cardsReadyToPass;
+	private CardAction cardAction;
+	private HeartsUI heartsUI;
 	private Deck deck;
 	private List<Player> players;
+	private List<Card> cardsSelectedToPass;
+	private List<JButton> buttonCardsSelectedToPass;
+	private Card cardSelectedToPlay;
+	private JButton buttonCardSelectedToPlay;
+	private boolean cardChosenToPlay;
+	private boolean cardReadyToPlay;
 	private int turnsPlayed;
 	private boolean heartsBroken; //flag when hearts broken to allow a heart as first card played
 	private boolean notifyHeartsBroken; //implement notification "Hearts has been broken"
@@ -43,13 +69,21 @@ public class Hearts {
 	private int endScore;
 	public final static boolean silent = false;
 	private final static int GAMES_TO_RUN = 1;
+	private Set setofusers;
 	private final static boolean runUI = true;
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public Set getSetofusers() {
+		return setofusers;
+	}
+
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) 
+	/*public static void main(String[] args) 
 	{	
 		final Hearts game = new Hearts();
 		
@@ -58,7 +92,7 @@ public class Hearts {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ConfigurationWindow window = new ConfigurationWindow(game);
+					ConfigurationUI window = new ConfigurationUI(game);
 					window.getFrmConfigurationWindow().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,10 +107,27 @@ public class Hearts {
 		
 		//game.initialize();
 		//game.runGame();
+	}*/
+	
+	public Hearts()
+	{
+			
 	}
 	
-	public Hearts(){
+	public void addUI(HeartsUI heartsUI)
+	{
+		this.heartsUI = heartsUI;
+	}
+	
+	public void run()
+	{
+		//TODO: use configuration UI
+		String playerName = "Mr.Awesome";
+		int endScore = 100;
+		String levelOfDifficulty = "Hard";
 		
+		initialize(playerName, endScore, levelOfDifficulty);
+		runGame();
 	}
 	
 	public void oldInitialize() 
@@ -98,14 +149,15 @@ public class Hearts {
 
 	}
 	
-	
-	public void initialize(String playerName, int endScore2, String levelOfDifficulty) 
+	public void initialize(String playerName, int endScore, String levelOfDifficulty) 
 	{
-		passing = Passing.Left; //initial
-		endScore = endScore2; //default
+		this.passing = Passing.Left; //initial
+		this.endScore = endScore; //default
+		this.cardsSelectedToPass = new ArrayList<Card>(3);
+		this.buttonCardsSelectedToPass = new ArrayList<JButton>(3);
 		
-		players = new ArrayList<Player>(4);
-		//Player player1 = new AgentDetermined("Gede", 0);
+		this.players = new ArrayList<Player>(4);
+		
 		Player player1 = new User(playerName, 0);
 		Player player2;
 		Player player3;
@@ -133,7 +185,7 @@ public class Hearts {
 		players.add(player3);
 		players.add(player4);
 		
-		runGame();
+		//runGame();
 	}
 	
 	private void shuffleCards()
@@ -178,24 +230,30 @@ public class Hearts {
 		if(this.passing == Passing.Stay)
 			return;
 		
-		List<Card> p0CardsToPass = this.players.get(0).getCardsToPass(this.passing);
+		List<Card> p0CardsToPass = this.cardsSelectedToPass; 
+		for(int i = 0; i < p0CardsToPass.size(); i++)
+		{
+			this.players.get(0).getHand().remove(p0CardsToPass.get(i));
+		}
+		
+		//List<Card> p0CardsToPass = this.players.get(0).getCardsToPass(this.passing);
 		List<Card> p1CardsToPass = this.players.get(1).getCardsToPass(this.passing);
 		List<Card> p2CardsToPass = this.players.get(2).getCardsToPass(this.passing);
 		List<Card> p3CardsToPass = this.players.get(3).getCardsToPass(this.passing);
 		
 		if(this.passing == Passing.Left)
 		{
-			this.players.get(0).addCards(p1CardsToPass);
-			this.players.get(1).addCards(p2CardsToPass);
-			this.players.get(2).addCards(p3CardsToPass);
-			this.players.get(3).addCards(p0CardsToPass);
-		}
-		else if(this.passing == Passing.Right)
-		{
 			this.players.get(0).addCards(p3CardsToPass);
 			this.players.get(1).addCards(p0CardsToPass);
 			this.players.get(2).addCards(p1CardsToPass);
 			this.players.get(3).addCards(p2CardsToPass);
+		}
+		else if(this.passing == Passing.Right)
+		{
+			this.players.get(0).addCards(p1CardsToPass);
+			this.players.get(1).addCards(p2CardsToPass);
+			this.players.get(2).addCards(p3CardsToPass);
+			this.players.get(3).addCards(p0CardsToPass);
 		}
 		else if(this.passing == Passing.Front)
 		{
@@ -221,11 +279,17 @@ public class Hearts {
 		}
 	}
 	
-	private void runGame() {
+	private void runGame() 
+	{
+		this.heartsUI.setPlayers(this.players);
+		this.heartsUI.setUI();
+		this.heartsUI.showDialog();
+		
 		long start = System.nanoTime();
 		int myLossCount = 0;
 		int myWinCount = 0;
-		for (int n = 0; n < GAMES_TO_RUN; n++) {
+		for (int n = 0; n < GAMES_TO_RUN; n++) 
+		{
 			// while we still playing the game
 			for(int i = 0; i < players.size(); i++)
 			{
@@ -233,20 +297,48 @@ public class Hearts {
 				int score = (-1)*p.getScore();
 				p.addScore(score);
 			}
-			while (true) {
-				for (int i = 0; i < players.size(); i++) {
+			while (true) 
+			{
+				for (int i = 0; i < players.size(); i++)
+				{
 					Player p = players.get(i);
 					// clear each player cards
 					p.clearCards();
+					this.cardsSelectedToPass.clear();
+					this.buttonCardsSelectedToPass.clear();
+					
+					this.cardsReadyToPass = true;
 				}
 
 				// initialize deck for the game
 				deck = new Deck();
 				shuffleCards();
 				dealCards();
-				passingCards();
-
+				
+				this.cardAction = CardAction.Idle;
+				this.numCardsSelectedToPass = 0;
+				this.heartsUI.displayCards();
+				
+				if(this.passing != Passing.Stay)
+				{
+					this.cardAction = CardAction.Passing;
+					this.heartsUI.setPassButtonVisible(true);
+					this.cardsReadyToPass = false;
+				
+					while(!cardsReadyToPass)
+					{
+						
+					}
+					
+					passingCards();
+					this.heartsUI.redrawCards();
+				
+					for(int k = 0; k < this.buttonCardsSelectedToPass.size(); k++)
+						this.heartsUI.setCardUnselected(this.buttonCardsSelectedToPass.get(k));
+				}
+				
 				// initialize game properties
+				this.cardAction = CardAction.Playing;
 				turnsPlayed = 0;
 				heartsBroken = false;
 				notifyHeartsBroken = false;
@@ -257,9 +349,10 @@ public class Hearts {
 					System.out.println("Player "
 						+ players.get(playerToStartRound).getName()
 						+ " goes first");
-
+				
 				// while we still have cards
-				while (turnsPlayed < 13) {
+				while (turnsPlayed < 13) 
+				{
 					// clear player's in play cards
 					for (int i = 0; i < players.size(); i++)
 						players.get(i).clearInPlayCards();
@@ -342,19 +435,60 @@ public class Hearts {
 	
 	private int runTurn(int num) 
 	{
+		this.cardReadyToPlay = false;
+		this.cardChosenToPlay = false;
+		this.cardSelectedToPlay = null;
+		
 		List<Card> cardsPlayed = new ArrayList<Card>(4);
 		boolean first = true;
 		Card firstPlayedCard = null;
 		Card cardWithHighestValue = null;
 		Player playerWithHighestValue = null;
 		
+		Card c = null;
 		
 		while(cardsPlayed.size() < 4)
 		{
 		  Player p = players.get(num);
-		  Card c = p.playCard(cardsPlayed, heartsBroken, (first && turnsPlayed == 0));
-		  cardsPlayed.add(c);
+		  Position playerPosition = this.getPlayerPosition(num);
 		  
+		  //if this is user's turn
+		  if(p.getClass().equals(User.class))
+		  {
+			  User user = (User)p;
+			  this.cardAction = CardAction.Playing;
+			  
+			  while(!this.cardReadyToPlay)
+			  {
+				  try
+				  {
+					  while(!this.cardChosenToPlay)
+					  {
+						  
+					  }
+					  user.TryPlayCard(this.cardSelectedToPlay, cardsPlayed, heartsBroken, (first && turnsPlayed == 0));
+					  this.cardReadyToPlay = true;
+					  this.heartsUI.removeButton(this.buttonCardSelectedToPlay, playerPosition);
+					  
+					  c = this.cardSelectedToPlay;
+				  }
+				  catch(Exception ex)
+				  {
+					  this.cardChosenToPlay = false;
+					  //TODO show why this is illegal move
+				  }
+			  }
+		  }
+		  else
+		  {
+			  c = p.playCard(cardsPlayed, heartsBroken, (first && turnsPlayed == 0));
+			  JButton cardButton = this.heartsUI.findButton(playerPosition, c);
+			  this.heartsUI.removeButton(cardButton, playerPosition);
+		  }
+		  
+		  this.heartsUI.showPlayedCardButton(playerPosition, c);
+		  
+	  	  cardsPlayed.add(c);
 		  if(first)
 		  {
 			  firstPlayedCard = c;
@@ -387,7 +521,18 @@ public class Hearts {
 		  
 		  num++;
 		  num%=4;
+	  }
+		
+		//give a little time
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		this.heartsUI.hideAllPlayedCardButtons();
+		
 		
 		//also add to the played cards
 		//add that card to each player's list of played cards
@@ -410,8 +555,6 @@ public class Hearts {
 			}
 		}
 		  
-
-		
 		return this.players.indexOf(playerWithHighestValue);
 	}
 
@@ -505,5 +648,68 @@ public class Hearts {
 				System.out.println("=======================================");
 			}
 		}
+	}
+	
+	public Position getPlayerPosition(int num)
+	{
+		switch(num)
+		{
+			case 0:
+				return Position.South;
+			case 1:
+				return Position.West;
+			case 2:
+				return Position.North;
+			case 3:
+				return Position.East;
+			default:
+				return Position.South;
+		}
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent ae) 
+	{
+		 Object src = ae.getSource();
+		 JButton jButton = (JButton)src;
+		 String buttonType = (String)jButton.getClientProperty("ButtonType");
+		 
+		 if(buttonType.equals("PassButton"))
+		 {
+			 this.cardsReadyToPass = true;
+		 }
+		 else if (buttonType.equals("CardButton")) 
+		 {
+			 Card card = (Card)jButton.getClientProperty("Card");
+			 if (this.cardAction == CardAction.Passing) 
+			 {
+				 boolean isSelected = (boolean) jButton.getClientProperty("Selected");
+
+				 if (isSelected) 
+				 {
+				   	 this.heartsUI.setCardUnselected(jButton);
+				   	 this.buttonCardsSelectedToPass.remove(jButton);
+				   	 this.cardsSelectedToPass.remove(card);
+					 this.numCardsSelectedToPass--;
+				 } 
+				 else 
+				 {
+					 if (this.numCardsSelectedToPass != 3) 
+					 {
+						 this.heartsUI.setCardSelected(jButton);
+						 this.buttonCardsSelectedToPass.add(jButton);
+						 this.cardsSelectedToPass.add(card);
+						 this.numCardsSelectedToPass++;
+					 }
+				 }
+			 } 
+			 else if (this.cardAction == CardAction.Playing) 
+			 {
+				 this.buttonCardSelectedToPlay = jButton;
+				 this.cardSelectedToPlay = card;
+				 this.cardChosenToPlay = true;
+				 //this.heartsUI.removeButton(jButton, (Position) jButton.getClientProperty("Position"));
+			 }
+		 }
 	}
 }

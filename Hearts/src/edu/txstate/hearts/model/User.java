@@ -15,12 +15,13 @@ import java.io.IOException;
 
 import edu.txstate.hearts.controller.Hearts.Passing;
 import edu.txstate.hearts.model.Achievements;
+import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
 import edu.txstate.hearts.utils.ReadFiles;
 
 /**
  * User class holds implementation for human player input
- * @author Jonathan Shelton
+ * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton
  *
  */
 public class User extends Player 
@@ -44,12 +45,33 @@ public class User extends Player
 	public Achievements getAchievements() {
 		return achievements;
 	}
+	
 	/**
 	 * @param achievements the achievements to set
 	 */
 	public void setAchievements(Achievements achievements) {
 		this.achievements = achievements;
 	}
+	
+	
+	public void TryPlayCard(Card card, List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn)
+			throws Exception
+	{
+		if(veryFirstTurn)
+		{
+			if(card.getSuit() != Suit.Clubs && card.getFace() != Face.Deuce)
+				throw new Exception("Must play deuce of clubs");
+		} 
+		else
+		{
+			List<Card> playable = getLegalCards(cardsPlayed, heartsBroken);
+			if(!playable.contains(card))
+				throw new Exception("Invalid card to play. Try other card!");
+			
+			getHand().remove(card);
+		}
+	}
+	
 	/**
 	 * Human player is able to play a card
 	 * @param cardsPlayed

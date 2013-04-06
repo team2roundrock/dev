@@ -27,7 +27,7 @@ import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.User;
 import edu.txstate.hearts.utils.ReadFiles;
 
-public class ConfigurationWindow {
+public class ConfigurationUI {
 
 	private JFrame frmConfigurationWindow;
 	public JFrame getFrmConfigurationWindow() {
@@ -63,7 +63,7 @@ public class ConfigurationWindow {
 	 * Create the application.
 	 * @param set 
 	 */
-	public ConfigurationWindow(Hearts obj) {
+	public ConfigurationUI(Hearts obj) {
 		this.obj = obj;
 		initialize();
 		
