@@ -6,9 +6,7 @@ package edu.txstate.hearts.model;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,9 +21,9 @@ import org.junit.Test;
 public class AchievementsTest {
 
 	private User p;
-	private String playerName = "initialize";
+	//private String playerName;
 	private Deck deck;
-	private Achievements a = new Achievements(playerName);
+	private Achievements a;
 	private List<Card> listOfCards = new ArrayList<Card>();
 	
 	/**
@@ -34,6 +32,7 @@ public class AchievementsTest {
 	@Before
 	public void setUp() throws Exception {
 		p = new User("TestPlayer", 0);
+		a = new Achievements(p.getName());
 		deck = new Deck();
 		deck.shuffleCards();
 	}
@@ -71,7 +70,8 @@ public class AchievementsTest {
 		
 		//Ensure that player name is being passed correctly
 		String checkName = "TestPlayer";
-		assertEquals("Player Name isn't correct,", checkName, p.getAchievements().getUserFileName());
+		p.getAchievements();
+		assertEquals("Player Name isn't correct,", checkName, Achievements.getUserFileName());
 	}
 
 	/**
@@ -165,6 +165,11 @@ public class AchievementsTest {
 		assertEquals("PassingTheBuck hasn't been set,",true,a.listOfAchievements.
 				get("PassingTheBuck"));
 		
+		listOfCards.add(new Card(Card.Face.Ace, Card.Suit.Hearts));
+		listOfCards.add(new Card(Card.Face.Queen, Card.Suit.Spades));
+		listOfCards.add(new Card(Card.Face.Three, Card.Suit.Spades));
+		assertEquals("Method should return false",false,a.PassingTheBuck(false, listOfCards));
+		
 	}
 
 	/**
@@ -172,7 +177,6 @@ public class AchievementsTest {
 	 */
 	@Test
 	public void testStartTheParty() {
-		User u = null;
 		
 		//User does not play the two of clubs
 		listOfCards.add(new Card(Card.Face.Ace, Card.Suit.Hearts));
@@ -209,12 +213,16 @@ public class AchievementsTest {
 		assertEquals("Method should return false,",false,a.HatTrick());
 	}
 
-	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#returnList(java.util.Map)}.
-	 */
-	@Test
-	public void testReturnList() {
-		fail("Not yet implemented");
-	}
+//	/**
+//	 * Test method for {@link edu.txstate.hearts.model.Achievements#getListOfAchievements()}.
+//	 */
+//	@Test
+//	public void TestGetListOfAchievements() {
+//		//Activate the Hat Trick achievement
+//		a.HatTrick();
+//		assertEquals("The lists are not equal",a.listOfAchievements.get("HatTrick"),
+//				Achievements.getListOfAchievements().contains
+//				("HatTrick"));
+//	}
 
 }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.txstate.hearts.utils.ReadFiles;
 import edu.txstate.hearts.utils.UserData;
 
 /**
@@ -20,7 +21,7 @@ import edu.txstate.hearts.utils.UserData;
 public class Achievements 
 {
 
-	List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
+	static List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
 			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
 			"OvershootingTheMoon3");
 			// There are three Overshooting The Moon entries. The first two indicate 
@@ -29,7 +30,9 @@ public class Achievements
 	boolean achievedOrNot;
 	private final UserData user;
 	private Player player;
-	private String userFileName;
+	private static String userFileName;
+	private static ArrayList<String> arrayOfAchievements;
+	private static ArrayList<String> arrayOfUserAchievements;
 	Map<String, Boolean> listOfAchievements;
 	
 	public Achievements(String userName, List<String> passedAchievements)
@@ -106,7 +109,7 @@ public class Achievements
 	/**
 	 * @return the userFileName
 	 */
-	public String getUserFileName() {
+	public static String getUserFileName() {
 		return userFileName;
 	}
 
@@ -330,17 +333,13 @@ public class Achievements
 	 * @param listOfAchievements
 	 * @return Earned achievements
 	 */
-	public Map<String, Boolean> returnList(Map<String, Boolean> listOfAchievements)
+	public static List<String> getListOfAchievements()
 	{
-		
-		//user.createUserDataFile(userFileName);
-		
-//		for(String achievement : achievementNames) //steps through the enum
-//		{
-//			listOfAchievements.put(achievement, false);
-//		}
-		
-		return listOfAchievements;
+		for(String achievement : achievementNames) //steps through the enum
+		{
+			arrayOfAchievements.add(achievement);
+		}
+		return arrayOfAchievements;
 	}
 
 }
