@@ -60,7 +60,7 @@ public class User extends Player
 	{
 		if(veryFirstTurn)
 		{
-			if(card.getSuit() != Suit.Clubs && card.getFace() != Face.Deuce)
+			if(card.getSuit() != Suit.Clubs || card.getFace() != Face.Deuce)
 				throw new Exception("Must play deuce of clubs");
 		} 
 		else
