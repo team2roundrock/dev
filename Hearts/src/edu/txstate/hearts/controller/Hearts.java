@@ -548,6 +548,7 @@ public class Hearts implements ActionListener
 		
 		// notify that hearts has been broken (once per round)
 		notifyHeartsBroken(this.CURRENT_CARDS_PLAYED, player);
+//		this.heartsUI.ShowBalloonTip("DEBUG MESSAGE: A card has been played");
 		
 		// add that card to each player's in play cards
 		for (int i = 0; i < players.size(); i++)
@@ -826,6 +827,8 @@ public class Hearts implements ActionListener
 			{
 				if(cardsPlayed.get(i).getSuit() == Suit.Hearts)
 				{
+					this.heartsUI.ShowBalloonTip("Hearts have been broken by "
+								+ p.getName());
 					if(!silent)
 						System.out.println("*****Hearts have been broken by "
 								+ p.getName() + "*****");
