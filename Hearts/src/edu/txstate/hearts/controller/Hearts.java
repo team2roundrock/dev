@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
 
 import edu.txstate.hearts.gui.ConfigurationUI;
 import edu.txstate.hearts.gui.HeartsUI;
 import edu.txstate.hearts.gui.HeartsUI.CardAction;
 import edu.txstate.hearts.gui.HeartsUI.Position;
+import edu.txstate.hearts.gui.RulesWindow;
 import edu.txstate.hearts.model.*;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
@@ -71,7 +73,7 @@ public class Hearts implements ActionListener
 	private final static int GAMES_TO_RUN = 1;
 	private Set setofusers;
 	private final static boolean runUI = true;
-	private boolean showOpponentCards = false;
+	private boolean showOpponentCards = true;
 	
 	/**
 	 * 
@@ -930,100 +932,105 @@ public class Hearts implements ActionListener
 	public void actionPerformed(ActionEvent actionEvent)
 	{
 		Object source = actionEvent.getSource();
-		JButton jButton = (JButton) source;
-		String buttonType = (String) jButton.getClientProperty("ButtonType");
-		
-		if(buttonType.equals("ConfigurationOK"))
-		{
-			this.configurationUI.setVisibility(false);
-			String playerName = this.configurationUI.getPlayerName();
-			String levelOfDifficulty = this.configurationUI.getLevelofDifficulty();
-			int endScore = this.configurationUI.getEndScore();
-			
-			if(!silent)
-			{
-				System.out.println("Player: " + playerName + ", Level: " + levelOfDifficulty + ", End Score: " + endScore);
-			}
-			
-			initialize(playerName, endScore, levelOfDifficulty);
-			runGame();
-		}
-		else if(buttonType.equals("ConfigurationCancel"))
-		{
-			System.exit(0);
-		}
-		else if(buttonType.equals("PassButton"))
-		{
-			if(this.numCardsSelectedToPass != 3)
-			{
-				this.heartsUI.ShowBalloonTip("Pick 3 cards to pass!");
-				return;
-			}
-			
-			passingCards();
-			this.heartsUI.redrawCards();
-			
-			// set selected cards to normal mode
-			for (int k = 0; k < this.buttonCardsSelectedToPass.size(); k++)
-				this.heartsUI.setCardUnselected(this.buttonCardsSelectedToPass
-						.get(k));
-			
-			this.heartsUI.setPassButtonVisible(false);
-			this.currentCardAction = CardAction.Playing;
-			this.initializeFirstTurn();
-		}
-		else if(buttonType.equals("CardButton"))
-		{
-			Card card = (Card) jButton.getClientProperty("Card");
-			if(this.currentCardAction == CardAction.Passing)
-			{
-				boolean isSelected = (boolean) jButton
-						.getClientProperty("Selected");
-				
-				if(isSelected)
-				{
-					this.heartsUI.setCardUnselected(jButton);
-					this.buttonCardsSelectedToPass.remove(jButton);
-					this.cardsSelectedToPass.remove(card);
-					this.numCardsSelectedToPass--;
+
+		if (source.getClass() == JButton.class) {
+			JButton jButton = (JButton) source;
+			String buttonType = (String) jButton
+					.getClientProperty("ButtonType");
+
+			if (buttonType.equals("ConfigurationOK")) {
+				this.configurationUI.setVisibility(false);
+				String playerName = this.configurationUI.getPlayerName();
+				String levelOfDifficulty = this.configurationUI
+						.getLevelofDifficulty();
+				int endScore = this.configurationUI.getEndScore();
+
+				if (!silent) {
+					System.out.println("Player: " + playerName + ", Level: "
+							+ levelOfDifficulty + ", End Score: " + endScore);
 				}
-				else
-				{
-					if(this.numCardsSelectedToPass != 3)
-					{
-						this.heartsUI.setCardSelected(jButton);
-						this.buttonCardsSelectedToPass.add(jButton);
-						this.cardsSelectedToPass.add(card);
-						this.numCardsSelectedToPass++;
+
+				initialize(playerName, endScore, levelOfDifficulty);
+				runGame();
+			} else if (buttonType.equals("ConfigurationCancel")) {
+				System.exit(0);
+			} else if (buttonType.equals("PassButton")) {
+				if (this.numCardsSelectedToPass != 3) {
+					this.heartsUI.ShowBalloonTip("Pick 3 cards to pass!");
+					return;
+				}
+
+				passingCards();
+				this.heartsUI.redrawCards();
+
+				// set selected cards to normal mode
+				for (int k = 0; k < this.buttonCardsSelectedToPass.size(); k++)
+					this.heartsUI
+							.setCardUnselected(this.buttonCardsSelectedToPass
+									.get(k));
+
+				this.heartsUI.setPassButtonVisible(false);
+				this.currentCardAction = CardAction.Playing;
+				this.initializeFirstTurn();
+			} else if (buttonType.equals("CardButton")) {
+				Card card = (Card) jButton.getClientProperty("Card");
+				if (this.currentCardAction == CardAction.Passing) {
+					boolean isSelected = (boolean) jButton
+							.getClientProperty("Selected");
+
+					if (isSelected) {
+						this.heartsUI.setCardUnselected(jButton);
+						this.buttonCardsSelectedToPass.remove(jButton);
+						this.cardsSelectedToPass.remove(card);
+						this.numCardsSelectedToPass--;
+					} else {
+						if (this.numCardsSelectedToPass != 3) {
+							this.heartsUI.setCardSelected(jButton);
+							this.buttonCardsSelectedToPass.add(jButton);
+							this.cardsSelectedToPass.add(card);
+							this.numCardsSelectedToPass++;
+						}
+					}
+				} else if (this.currentCardAction == CardAction.Playing) {
+					// user turn
+					if (this.CURRENT_PLAYER_THIS_TURN == 0) {
+						try {
+							User user = (User) this.players.get(0);
+							user.TryPlayCard(
+									card,
+									this.CURRENT_CARDS_PLAYED,
+									this.HEARTS_BROKEN,
+									(this.CURRENT_TURN_FIRST && this.CURRENT_TURN == 0));
+
+							this.finalizePlayerTurn(card, Position.South,
+									this.players.get(0));
+
+							this.runAITurns();
+						} catch (Exception ex) {
+							// TODO show why this is illegal move
+							ex.printStackTrace();
+							this.heartsUI.ShowBalloonTip(ex.getMessage());
+						}
 					}
 				}
 			}
-			else if(this.currentCardAction == CardAction.Playing)
+		}
+		else if(source.getClass() == JMenuItem.class)
+		{
+			JMenuItem jMenuItem = (JMenuItem)source;
+			String menuItemType = (String)jMenuItem.getClientProperty("MenuItemType");
+			
+			if(menuItemType.equalsIgnoreCase("Rules"))
 			{
-				// user turn
-				if(this.CURRENT_PLAYER_THIS_TURN == 0)
-				{
-					try
-					{
-						User user = (User) this.players.get(0);
-						user.TryPlayCard(
-								card,
-								this.CURRENT_CARDS_PLAYED,
-								this.HEARTS_BROKEN,
-								(this.CURRENT_TURN_FIRST && this.CURRENT_TURN == 0));
-						
-						this.finalizePlayerTurn(card, Position.South,
-								this.players.get(0));
-						
-						this.runAITurns();
-					}
-					catch (Exception ex)
-					{
-						// TODO show why this is illegal move
-						ex.printStackTrace();
-						this.heartsUI.ShowBalloonTip(ex.getMessage());
-					}
-				}
+				RulesWindow rulesWindow = new RulesWindow();
+			}
+			else if(menuItemType.equalsIgnoreCase("Achievements"))
+			{
+				//TODO put achievements windows
+			}
+			else if(menuItemType.equalsIgnoreCase("Exit"))
+			{
+				System.exit(0);
 			}
 		}
 	}

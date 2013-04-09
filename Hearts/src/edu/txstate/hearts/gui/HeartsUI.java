@@ -9,12 +9,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -63,9 +67,9 @@ public class HeartsUI
 	private final int CARD_WIDTH = 72;
 	private final int CARD_HEIGHT = 96;
 	private final int FRAME_WIDTH = 740;
-	private final int FRAME_HEIGHT = 700;
+	private final int FRAME_HEIGHT = 730;
 	private final int PANEL_WIDTH = 720;
-	private final int PANEL_HEIGHT = 700;
+	private final int PANEL_HEIGHT = 730;
 	
 	public void showDialog()
 	{
@@ -124,7 +128,7 @@ public class HeartsUI
 		// add pass button
 		JButton passButton = new JButton();
 		passButton.setBounds(panel.getWidth() / 2 + 60,
-				panel.getHeight() - 240, 100, 30);
+				panel.getHeight() - 270, 100, 30);
 		passButton.setHorizontalTextPosition(JButton.CENTER);  
 		passButton.setText("<< Pass >>");
 		passButton.setVisible(false);
@@ -135,6 +139,7 @@ public class HeartsUI
 		
 		this.initializePlayingButtons();
 		this.initializeBalloonTip();
+		panel.setBackground(Color.GREEN);
 		frame.add(panel);
 		frame.addWindowListener(new WindowAdapter()
 		{
@@ -143,6 +148,39 @@ public class HeartsUI
 				System.exit(0);
 			}
 		});
+		
+		JMenuBar menuBar;
+		JMenu menu, submenu;
+		JMenuItem menuItem;
+
+		//Create the menu bar.
+		menuBar = new JMenuBar();
+
+		//Build the first menu.
+		menu = new JMenu("Game");
+		menu.setMnemonic(KeyEvent.VK_G);
+		menu.getAccessibleContext().setAccessibleDescription("Game menu");
+		menuBar.add(menu);
+
+		menuItem = new JMenuItem("Rules", KeyEvent.VK_R);
+		menuItem.getAccessibleContext().setAccessibleDescription("Show game rules");
+		menuItem.putClientProperty("MenuItemType", "Rules");
+		menuItem.addActionListener(this.heartsController);
+		menu.add(menuItem);
+
+		menuItem = new JMenuItem("Achievements", KeyEvent.VK_A);
+		menuItem.getAccessibleContext().setAccessibleDescription("Show user achievements");
+		menuItem.putClientProperty("MenuItemType", "Achievements");
+		menuItem.addActionListener(this.heartsController);
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Exit", KeyEvent.VK_X);
+		menuItem.getAccessibleContext().setAccessibleDescription("Exit game");
+		menuItem.putClientProperty("MenuItemType", "Exit");
+		menuItem.addActionListener(this.heartsController);
+		menu.add(menuItem);
+
+		frame.setJMenuBar(menuBar);
 	}
 	
 	public void displayCards()
@@ -202,7 +240,7 @@ public class HeartsUI
 	private void initializeBalloonTip()
 	{
 		JTextField jTextField = new JTextField();
-		jTextField.setBounds(20, panel.getHeight() - 60, 300, 25);
+		jTextField.setBounds(20, panel.getHeight() - 90, 300, 25);
 		jTextField.setBackground(Color.YELLOW);
 		panel.add(jTextField);
 		this.balloonTextField = jTextField;
@@ -223,7 +261,7 @@ public class HeartsUI
 		
 		southCardButton = new JButton();
 		southCardButton.setBounds(panel.getWidth() / 2 - 40,
-				panel.getHeight() - 290, this.CARD_WIDTH, this.CARD_HEIGHT);
+				panel.getHeight() - 320, this.CARD_WIDTH, this.CARD_HEIGHT);
 		panel.add(southCardButton);
 		this.southCardButton.setVisible(false);
 		
