@@ -1,5 +1,6 @@
 package edu.txstate.hearts.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 
@@ -58,6 +59,13 @@ public class HeartsUI
 	private List<JButton> jButtonSouthList;
 	private List<JButton> jButtonEastList;
 	private List<JButton> jButtonWestList;
+	private boolean SHOW_OPPONENT_CARDS = false;
+	private final int CARD_WIDTH = 72;
+	private final int CARD_HEIGHT = 96;
+	private final int FRAME_WIDTH = 740;
+	private final int FRAME_HEIGHT = 700;
+	private final int PANEL_WIDTH = 720;
+	private final int PANEL_HEIGHT = 700;
 	
 	public void showDialog()
 	{
@@ -87,8 +95,9 @@ public class HeartsUI
 		this.players = players;
 	}
 	
-	public void setUI()
+	public void setUI(boolean showOpponentCards)
 	{
+		this.SHOW_OPPONENT_CARDS = showOpponentCards;
 		initialize();
 	}
 	
@@ -100,7 +109,7 @@ public class HeartsUI
 	private void initialize()
 	{
 		frame = new JFrame();
-		frame.setSize(740, 700);
+		frame.setSize(this.FRAME_WIDTH, this.FRAME_HEIGHT);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Hearts");
@@ -110,12 +119,12 @@ public class HeartsUI
 		
 		panel = new JPanel();
 		panel.setLayout(null);
-		panel.setBounds(0, 0, 720, 600);
+		panel.setBounds(0, 0, this.PANEL_WIDTH, this.PANEL_HEIGHT);
 		
 		// add pass button
 		JButton passButton = new JButton();
 		passButton.setBounds(panel.getWidth() / 2 + 60,
-				panel.getHeight() - 120, 100, 30);
+				panel.getHeight() - 240, 100, 30);
 		passButton.setHorizontalTextPosition(JButton.CENTER);  
 		passButton.setText("<< Pass >>");
 		passButton.setVisible(false);
@@ -174,7 +183,7 @@ public class HeartsUI
 	{
 		this.balloonTextField.setText(message);
 		this.balloonTextField.setVisible(true);
-		panel.paintImmediately(0, 0, 720, 660);
+		this.repaintPanel(); //660
 		
 		try
 		{
@@ -187,13 +196,14 @@ public class HeartsUI
 		}
 		
 		this.balloonTextField.setVisible(false);
-		panel.paintImmediately(0, 0, 720, 660);
+		this.repaintPanel(); //660
 	}
 	
 	private void initializeBalloonTip()
 	{
 		JTextField jTextField = new JTextField();
-		jTextField.setBounds(20, panel.getHeight(), 300, 30);
+		jTextField.setBounds(20, panel.getHeight() - 60, 300, 25);
+		jTextField.setBackground(Color.YELLOW);
 		panel.add(jTextField);
 		this.balloonTextField = jTextField;
 		this.balloonTextField.setVisible(false);
@@ -203,31 +213,29 @@ public class HeartsUI
 	{
 		int xBound = 20;
 		int yBound = 20;
-		int jButtonWidth = 60;
-		int jButtonHeight = 80;
 		
 		// middle 4 cardsJButton jButton = new JButton();
 		northCardButton = new JButton();
 		northCardButton.setBounds(panel.getWidth() / 2 - 40, yBound + 120,
-				jButtonWidth, jButtonHeight);
+				this.CARD_WIDTH, this.CARD_HEIGHT);
 		panel.add(northCardButton);
 		this.northCardButton.setVisible(false);
 		
 		southCardButton = new JButton();
 		southCardButton.setBounds(panel.getWidth() / 2 - 40,
-				panel.getHeight() - 240, jButtonWidth, jButtonHeight);
+				panel.getHeight() - 290, this.CARD_WIDTH, this.CARD_HEIGHT);
 		panel.add(southCardButton);
 		this.southCardButton.setVisible(false);
 		
 		westCardButton = new JButton();
 		westCardButton.setBounds(xBound + 180, panel.getHeight() / 2 - 60,
-				jButtonWidth, jButtonHeight);
+				this.CARD_WIDTH, this.CARD_HEIGHT);
 		panel.add(westCardButton);
 		this.westCardButton.setVisible(false);
 		
 		eastCardButton = new JButton();
 		eastCardButton.setBounds(panel.getWidth() - 280,
-				panel.getHeight() / 2 - 60, jButtonWidth, jButtonHeight);
+				panel.getHeight() / 2 - 60, this.CARD_WIDTH, this.CARD_HEIGHT);
 		panel.add(eastCardButton);
 		this.eastCardButton.setVisible(false);
 		
@@ -235,8 +243,6 @@ public class HeartsUI
 	
 	public void redrawCards()
 	{
-		int width = 60;
-		int height = 80;
 		Player player = null;
 		
 		for (Position position : Position.values())
@@ -271,15 +277,22 @@ public class HeartsUI
 				jButton.putClientProperty("Position", position);
 				jButton.putClientProperty("Selected", false);
 				
-				Image image = ReadFiles.getCardImage(card);
-				Image scaledImage = image.getScaledInstance(width, height,
-						java.awt.Image.SCALE_SMOOTH);
-				jButton.setIcon(new ImageIcon(scaledImage));
+				if(position != Position.South && !this.SHOW_OPPONENT_CARDS)
+				{
+					Image image = ReadFiles.getImage("cards\\back_blue_potrait.png");
+					Image scaledImage = image.getScaledInstance(this.CARD_WIDTH, this.CARD_HEIGHT,
+							java.awt.Image.SCALE_SMOOTH);
+					jButton.setIcon(new ImageIcon(scaledImage));
+				}
+				else
+				{
+					Image image = ReadFiles.getCardImage(card);
+					Image scaledImage = image.getScaledInstance(this.CARD_WIDTH, this.CARD_HEIGHT,
+							java.awt.Image.SCALE_SMOOTH);
+					jButton.setIcon(new ImageIcon(scaledImage));
+				}
 				
-				// new
-				panel.paintImmediately(0, 0, 720, 620);
-				// panel.revalidate();
-				// panel.repaint();
+				this.repaintPanel();
 			}
 		}
 	}
@@ -288,8 +301,6 @@ public class HeartsUI
 	{
 		int xBound = 20;
 		int yBound = 20;
-		int jButtonWidth = 60;
-		int jButtonHeight = 80;
 		
 		// north player
 		jButtonNorthList = new ArrayList<JButton>();
@@ -314,7 +325,7 @@ public class HeartsUI
 					if(players != null)
 						player = players.get(0);
 					xBound = 20;
-					yBound = panel.getHeight() - 60 - jButtonHeight;
+					yBound = panel.getHeight() - 60 - this.CARD_HEIGHT;
 					addActionListener = true;
 					break;
 				case West:
@@ -327,7 +338,7 @@ public class HeartsUI
 				case East:
 					if(players != null)
 						player = players.get(3);
-					xBound = panel.getWidth() - 40 - jButtonWidth;
+					xBound = panel.getWidth() - 40 - this.CARD_WIDTH;
 					yBound = 20 + 140;
 					addActionListener = false;
 					break;
@@ -335,7 +346,7 @@ public class HeartsUI
 			
 			for (int i = 0; i < 13; i++)
 			{
-				addButton(xBound, yBound, jButtonWidth, jButtonHeight,
+				addButton(xBound, yBound, this.CARD_WIDTH, this.CARD_HEIGHT,
 						position, player.getHand().get(i), addActionListener);
 				
 				// increase bound
@@ -372,18 +383,25 @@ public class HeartsUI
 			jButton.addActionListener(heartsController);
 		
 		jButton.setBounds(xBound, yBound, width, height);
-		Image image = ReadFiles.getCardImage(card);
-		Image scaledImage = image.getScaledInstance(width, height,
-				java.awt.Image.SCALE_SMOOTH);
-		jButton.setIcon(new ImageIcon(scaledImage));
+		
+		if(position != Position.South && !this.SHOW_OPPONENT_CARDS)
+		{
+			Image image = ReadFiles.getImage("cards\\back_blue_potrait.png");
+			Image scaledImage = image.getScaledInstance(width, height,
+					java.awt.Image.SCALE_SMOOTH);
+			jButton.setIcon(new ImageIcon(scaledImage));
+		}
+		else
+		{
+			Image image = ReadFiles.getCardImage(card);
+			Image scaledImage = image.getScaledInstance(width, height,
+					java.awt.Image.SCALE_SMOOTH);
+			jButton.setIcon(new ImageIcon(scaledImage));
+		}
 		panel.add(jButton);
 		jButtonList.add(jButton);
 		
-		// new
-		panel.paintImmediately(0, 0, 720, 620);
-		
-		// panel.revalidate();
-		// panel.repaint();
+		this.repaintPanel();
 	}
 	
 	public void showPlayedCardButton(Position position, Card card)
@@ -411,9 +429,7 @@ public class HeartsUI
 		jButton.setIcon(new ImageIcon(scaledImage));
 		jButton.setVisible(true);
 		
-		// panel.revalidate();
-		// panel.repaint();
-		panel.paintImmediately(0, 0, 720, 620);
+		this.repaintPanel();
 	}
 	
 	public void hideAllPlayedCardButtons()
@@ -423,7 +439,7 @@ public class HeartsUI
 		this.eastCardButton.setVisible(false);
 		this.westCardButton.setVisible(false);
 		
-		panel.paintImmediately(0, 0, 720, 620);
+		this.repaintPanel();
 	}
 	
 	
@@ -492,21 +508,7 @@ public class HeartsUI
 			}
 		}
 		
-		panel.paintImmediately(0, 0, 720, 620);
-	}
-	
-	public void setButtonImage(int cardIndex, Card card)
-	{
-		JButton jButton = jButtonSouthList.get(cardIndex);
-		try
-		{
-			Image img = ImageIO.read(new File("5s.gif"));
-			Image resizedImage = img.getScaledInstance(60, 80, 0);
-			jButton.setIcon(new ImageIcon(resizedImage));
-		}
-		catch (Exception ex)
-		{
-		}
+		this.repaintPanel();
 	}
 	
 	public void setCardSelected(JButton button)
@@ -539,6 +541,11 @@ public class HeartsUI
 				break;
 		}
 		
-		panel.paintImmediately(0, 0, 720, 620);
+		this.repaintPanel();
+	}
+	
+	private void repaintPanel()
+	{
+		panel.paintImmediately(0, 0, this.PANEL_WIDTH, this.PANEL_HEIGHT);
 	}
 }

@@ -87,7 +87,7 @@ public abstract class ReadFiles {
 				break;
 		}
 		
-		String fileName = faceName + suitName + ".gif";
+		String fileName = faceName + suitName + ".png";
 		String fullFileName = cardImagesFolder + fileName;
 		
 		Image image = null;

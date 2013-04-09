@@ -71,6 +71,7 @@ public class Hearts implements ActionListener
 	private final static int GAMES_TO_RUN = 1;
 	private Set setofusers;
 	private final static boolean runUI = true;
+	private boolean showOpponentCards = false;
 	
 	/**
 	 * 
@@ -256,7 +257,7 @@ public class Hearts implements ActionListener
 	private void runGameOld()
 	{
 		this.heartsUI.setPlayers(this.players);
-		this.heartsUI.setUI();
+		this.heartsUI.setUI(this.showOpponentCards);
 		this.heartsUI.showDialog();
 		
 		long start = System.nanoTime();
@@ -417,7 +418,7 @@ public class Hearts implements ActionListener
 	private void runGame()
 	{
 		this.heartsUI.setPlayers(this.players);
-		this.heartsUI.setUI();
+		this.heartsUI.setUI(this.showOpponentCards);
 		this.heartsUI.showDialog();
 		
 		this.runNextGame();
