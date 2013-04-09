@@ -445,6 +445,48 @@ public class Hearts implements ActionListener
 		{
 			this.currentCardAction = CardAction.Playing;
 			this.heartsUI.setPassButtonVisible(false);
+			this.initializeFirstTurn();
+		}
+	}
+	
+	private void initializeFirstTurn()
+	{
+		// clear player's in play cards
+		for (int i = 0; i < players.size(); i++)
+			players.get(i).clearInPlayCards();
+
+		this.CURRENT_TURN = 0;
+		this.CURRENT_PLAYER_THIS_TURN = this.findPlayerToStart();
+		this.initializeTurn();
+
+		// user move
+		if (this.CURRENT_PLAYER_THIS_TURN == 0)
+		{
+			// do nothing, wait for user move
+		}
+		else
+		{
+			this.runAITurns();
+		}
+	}
+	
+	private void runAITurns()
+	{
+		// while the next player to move is AI and this turn is not
+		// finished yet
+		while (this.CURRENT_PLAYER_THIS_TURN != 0
+				&& this.CURRENT_CARDS_PLAYED.size() != this.MAX_CARDS_PER_TURN)
+		{
+			// AI move
+			this.runTurn(this.CURRENT_PLAYER_THIS_TURN);
+		}
+
+		if (this.CURRENT_CARDS_PLAYED.size() == this.MAX_CARDS_PER_TURN)
+		{
+			this.summarizeTurn();
+			this.CURRENT_TURN++;
+			this.initializeTurn();
+			this.nextTurn();
 		}
 	}
 	
@@ -687,8 +729,10 @@ public class Hearts implements ActionListener
 	private void initializeTurn()
 	{
 		this.CURRENT_CARDS_PLAYED = new ArrayList<Card>(4);
+		
 		for (int i = 0; i < players.size(); i++)
 			players.get(i).clearInPlayCards();
+		
 		this.CURRENT_TURN_FIRST = true;
 		this.CURRENT_TURN_FIRST_PLAYED_CARD = null;
 		this.CURRENT_TURN_HIGHEST_VALUE_CARD = null;
@@ -897,41 +941,8 @@ public class Hearts implements ActionListener
 						.get(k));
 			
 			this.heartsUI.setPassButtonVisible(false);
-			
 			this.currentCardAction = CardAction.Playing;
-			
-			// clear player's in play cards
-			for (int i = 0; i < players.size(); i++)
-				players.get(i).clearInPlayCards();
-			
-			this.CURRENT_TURN = 0;
-			this.CURRENT_PLAYER_THIS_TURN = this.findPlayerToStart();
-			this.initializeTurn();
-			
-			// user move
-			if(this.CURRENT_PLAYER_THIS_TURN == 0)
-			{
-				// do nothing, wait for user move
-			}
-			else
-			{
-				// while the next player to move is AI and this turn is not
-				// finished yet
-				while (this.CURRENT_PLAYER_THIS_TURN != 0
-						&& this.CURRENT_CARDS_PLAYED.size() != this.MAX_CARDS_PER_TURN)
-				{
-					// AI move
-					this.runTurn(this.CURRENT_PLAYER_THIS_TURN);
-				}
-				
-				if(this.CURRENT_CARDS_PLAYED.size() == this.MAX_CARDS_PER_TURN)
-				{
-					this.summarizeTurn();
-					this.CURRENT_TURN++;
-					this.initializeTurn();
-					this.nextTurn();
-				}
-			}
+			this.initializeFirstTurn();
 		}
 		else if(buttonType.equals("CardButton"))
 		{
@@ -976,20 +987,7 @@ public class Hearts implements ActionListener
 						this.finalizePlayerTurn(card, Position.South,
 								this.players.get(0));
 						
-						while (this.CURRENT_PLAYER_THIS_TURN != 0
-								&& this.CURRENT_CARDS_PLAYED.size() != this.MAX_CARDS_PER_TURN)
-						{
-							// AI move
-							this.runTurn(this.CURRENT_PLAYER_THIS_TURN);
-						}
-						
-						if(this.CURRENT_CARDS_PLAYED.size() == this.MAX_CARDS_PER_TURN)
-						{
-							this.summarizeTurn();
-							this.CURRENT_TURN++;
-							this.initializeTurn();
-							this.nextTurn();
-						}
+						this.runAITurns();
 					}
 					catch (Exception ex)
 					{
