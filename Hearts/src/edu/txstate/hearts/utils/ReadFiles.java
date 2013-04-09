@@ -147,8 +147,8 @@ public abstract class ReadFiles {
 			Scanner input = openFile("Users");
 
 			try {
-				while (input.hasNext()) {
-					String user = input.next();
+				while (input.hasNextLine()) {
+					String user = input.nextLine();
 					listOfUsers.add(user);
 				}// end while
 			}// end try
