@@ -1,5 +1,6 @@
 package edu.txstate.hearts.gui;
 
+import java.awt.Dimension;
 import java.awt.Image;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.*;
+import edu.txstate.hearts.utils.ReadFiles;
 
 public class HeartsUI
 {
@@ -56,12 +58,12 @@ public class HeartsUI
 	private List<JButton> jButtonSouthList;
 	private List<JButton> jButtonEastList;
 	private List<JButton> jButtonWestList;
-	private String imagesFolder = "images\\cards\\";
 	
 	public void showDialog()
 	{
 		try
 		{
+			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
 		}
 		catch (Exception e)
@@ -72,11 +74,6 @@ public class HeartsUI
 	
 	public HeartsUI()
 	{
-		// javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		// public void run() {
-		// panel.repaint();
-		// }
-		// });
 	}
 	
 	public HeartsUI(List<Player> players)
@@ -102,13 +99,14 @@ public class HeartsUI
 	
 	private void initialize()
 	{
-		// dialog = new JDialog();
-		// dialog.setSize(720, 600);
-		// dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		
 		frame = new JFrame();
 		frame.setSize(740, 700);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Hearts");
+		
+		Image image = ReadFiles.getImage("heart.png");
+		frame.setIconImage(image);
 		
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -118,7 +116,8 @@ public class HeartsUI
 		JButton passButton = new JButton();
 		passButton.setBounds(panel.getWidth() / 2 + 60,
 				panel.getHeight() - 120, 100, 30);
-		passButton.setText("PASS");
+		passButton.setHorizontalTextPosition(JButton.CENTER);  
+		passButton.setText("<< Pass >>");
 		passButton.setVisible(false);
 		passButton.putClientProperty("ButtonType", "PassButton");
 		passButton.addActionListener(this.heartsController);
@@ -127,20 +126,7 @@ public class HeartsUI
 		
 		this.initializePlayingButtons();
 		this.initializeBalloonTip();
-		// initializeButtons();
-		
-		// dialog.add(panel);
-		//
-		// dialog.addWindowListener(new WindowAdapter()
-		// {
-		// public void windowClosing(WindowEvent e)
-		// {
-		// System.exit(0);
-		// }
-		// });
-		
 		frame.add(panel);
-		
 		frame.addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)
@@ -285,7 +271,7 @@ public class HeartsUI
 				jButton.putClientProperty("Position", position);
 				jButton.putClientProperty("Selected", false);
 				
-				Image image = GetImage(card);
+				Image image = ReadFiles.getCardImage(card);
 				Image scaledImage = image.getScaledInstance(width, height,
 						java.awt.Image.SCALE_SMOOTH);
 				jButton.setIcon(new ImageIcon(scaledImage));
@@ -386,7 +372,7 @@ public class HeartsUI
 			jButton.addActionListener(heartsController);
 		
 		jButton.setBounds(xBound, yBound, width, height);
-		Image image = GetImage(card);
+		Image image = ReadFiles.getCardImage(card);
 		Image scaledImage = image.getScaledInstance(width, height,
 				java.awt.Image.SCALE_SMOOTH);
 		jButton.setIcon(new ImageIcon(scaledImage));
@@ -419,7 +405,7 @@ public class HeartsUI
 				break;
 		}
 		
-		Image image = GetImage(card);
+		Image image = ReadFiles.getCardImage(card);
 		Image scaledImage = image.getScaledInstance(jButton.getWidth(),
 				jButton.getHeight(), java.awt.Image.SCALE_SMOOTH);
 		jButton.setIcon(new ImageIcon(scaledImage));
@@ -438,90 +424,9 @@ public class HeartsUI
 		this.westCardButton.setVisible(false);
 		
 		panel.paintImmediately(0, 0, 720, 620);
-		// panel.revalidate();
-		// panel.repaint();
-		// panel.paintComponents(panel.getGraphics());
 	}
 	
-	private Image GetImage(Card card)
-	{
-		String suitName = "";
-		String faceName = "";
-		
-		switch (card.getSuit())
-		{
-			case Clubs:
-				suitName = "c";
-				break;
-			case Diamonds:
-				suitName = "d";
-				break;
-			case Hearts:
-				suitName = "h";
-				break;
-			case Spades:
-				suitName = "s";
-				break;
-		}
-		
-		switch (card.getFace())
-		{
-			case Deuce:
-				faceName = "2";
-				break;
-			case Three:
-				faceName = "3";
-				break;
-			case Four:
-				faceName = "4";
-				break;
-			case Five:
-				faceName = "5";
-				break;
-			case Six:
-				faceName = "6";
-				break;
-			case Seven:
-				faceName = "7";
-				break;
-			case Eight:
-				faceName = "8";
-				break;
-			case Nine:
-				faceName = "9";
-				break;
-			case Ten:
-				faceName = "t";
-				break;
-			case Jack:
-				faceName = "j";
-				break;
-			case Queen:
-				faceName = "q";
-				break;
-			case King:
-				faceName = "k";
-				break;
-			case Ace:
-				faceName = "a";
-				break;
-		}
-		
-		String fileName = faceName + suitName + ".gif";
-		String fullFileName = imagesFolder + fileName;
-		
-		Image image = null;
-		try
-		{
-			image = ImageIO.read(new File(fullFileName));
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return image;
-	}
+	
 	
 	public JButton findButton(Position position, Card card)
 	{
@@ -587,11 +492,7 @@ public class HeartsUI
 			}
 		}
 		
-		// new
 		panel.paintImmediately(0, 0, 720, 620);
-		// panel.revalidate();
-		// panel.repaint();
-		// panel.paintComponents(panel.getGraphics());
 	}
 	
 	public void setButtonImage(int cardIndex, Card card)
@@ -638,11 +539,6 @@ public class HeartsUI
 				break;
 		}
 		
-		// panel.revalidate();
-		// panel.repaint();
-		
-		// new
 		panel.paintImmediately(0, 0, 720, 620);
-		// panel.paintComponents(panel.getGraphics());
 	}
 }

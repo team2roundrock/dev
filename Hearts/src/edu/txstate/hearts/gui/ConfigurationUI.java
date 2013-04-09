@@ -1,6 +1,7 @@
 package edu.txstate.hearts.gui;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -48,13 +49,27 @@ public class ConfigurationUI {
 	private String playerName;
 	private Set theUsers;
 	private JComboBox comboBox;
-	private Hearts obj;
-
+	private Hearts heartsController;
 	
-	public ConfigurationUI(Hearts obj) {
-		this.obj = obj;
-		initialize();
-		
+	public ConfigurationUI(Hearts heartsController) 
+	{
+		this.heartsController = heartsController;
+		initialize();	
+	}
+	
+	public String getPlayerName()
+	{
+		return this.playerName;
+	}
+	
+	public String getLevelofDifficulty()
+	{
+		return this.levelOfDifficulty;
+	}
+	
+	public int getEndScore()
+	{
+		return this.endScore;
 	}
 
 	/**
@@ -62,11 +77,15 @@ public class ConfigurationUI {
 	 */
 	private void initialize() {
 		frmConfigurationWindow = new JFrame();
-		frmConfigurationWindow.setTitle("CONFIGURATION WINDOW");
+		frmConfigurationWindow.setTitle("Configuration");
 		frmConfigurationWindow.getContentPane().setEnabled(false);
 		frmConfigurationWindow.setBounds(100, 100, 450, 300);
+		frmConfigurationWindow.setResizable(false);
 		frmConfigurationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmConfigurationWindow.getContentPane().setLayout(null);
+		
+		Image image = ReadFiles.getImage("heart.png");
+		frmConfigurationWindow.setIconImage(image);
 		
 		Vector<String> userName = ReadFiles.getRecords();
 		comboBox = new JComboBox(userName);
@@ -144,28 +163,57 @@ public class ConfigurationUI {
 		frmConfigurationWindow.getContentPane().add(comboBox_2);
 		
 		JButton btnOk = new JButton("OK");
-		btnOk.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frmConfigurationWindow.setVisible(false);
-				obj.initialize(playerName, endScore, levelOfDifficulty);
-			}
-		});
+		btnOk.putClientProperty("ButtonType", "ConfigurationOK");
+		btnOk.addActionListener(this.heartsController);
+//		btnOk.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) 
+//			{
+//				frmConfigurationWindow.setVisible(false);
+//				obj.initialize(playerName, endScore, levelOfDifficulty);
+//			}
+//		});
 		btnOk.setBounds(119, 206, 93, 29);
 		frmConfigurationWindow.getContentPane().add(btnOk);
 		
 		//Cancel button includes event handler: closes window when pressed
 		JButton btnCancel = new JButton("CANCEL");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
+		btnCancel.putClientProperty("ButtonType", "ConfigurationCancel");
+		btnCancel.addActionListener(this.heartsController);
+//		btnCancel.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				System.exit(0);
+//			}
+//		});
 		btnCancel.setAction(action);
 		btnCancel.setBounds(259, 206, 93, 29);
 		frmConfigurationWindow.getContentPane().add(btnCancel);
 					
 	}//end of initialize
 	
+	public void showDialog()
+	{
+		try
+		{
+			frmConfigurationWindow.setLocationRelativeTo(null);
+			frmConfigurationWindow.setVisible(true);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void setVisibility(boolean flag)
+	{
+		try
+		{
+			frmConfigurationWindow.setVisible(flag);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 	
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {

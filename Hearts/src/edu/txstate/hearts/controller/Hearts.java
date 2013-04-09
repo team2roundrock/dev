@@ -51,6 +51,7 @@ public class Hearts implements ActionListener
 	private boolean cardsReadyToPass;
 	private CardAction currentCardAction;
 	private HeartsUI heartsUI;
+	private ConfigurationUI configurationUI;
 	private Deck deck;
 	private List<Player> players;
 	private List<Card> cardsSelectedToPass;
@@ -108,13 +109,14 @@ public class Hearts implements ActionListener
 	
 	public void run()
 	{
-		// TODO: use configuration UI
-		String playerName = "Mr.Awesome";
-		int endScore = 100;
-		String levelOfDifficulty = "Master";
-		
-		initialize(playerName, endScore, levelOfDifficulty);
-		runGame();
+		this.configurationUI = new ConfigurationUI(this);
+		configurationUI.showDialog();
+//		String playerName = "Mr.Awesome";
+//		int endScore = 100;
+//		String levelOfDifficulty = "Master";
+//		
+//		initialize(playerName, endScore, levelOfDifficulty);
+//		runGame();
 	}
 	
 	public void initialize(String playerName, int endScore,
@@ -927,10 +929,32 @@ public class Hearts implements ActionListener
 		JButton jButton = (JButton) source;
 		String buttonType = (String) jButton.getClientProperty("ButtonType");
 		
-		if(buttonType.equals("PassButton"))
+		if(buttonType.equals("ConfigurationOK"))
+		{
+			this.configurationUI.setVisibility(false);
+			String playerName = this.configurationUI.getPlayerName();
+			String levelOfDifficulty = this.configurationUI.getLevelofDifficulty();
+			int endScore = this.configurationUI.getEndScore();
+			
+			if(!silent)
+			{
+				System.out.println("Player: " + playerName + ", Level: " + levelOfDifficulty + ", End Score: " + endScore);
+			}
+			
+			initialize(playerName, endScore, levelOfDifficulty);
+			runGame();
+		}
+		else if(buttonType.equals("ConfigurationCancel"))
+		{
+			System.exit(0);
+		}
+		else if(buttonType.equals("PassButton"))
 		{
 			if(this.numCardsSelectedToPass != 3)
+			{
+				this.heartsUI.ShowBalloonTip("Pick 3 cards to pass!");
 				return;
+			}
 			
 			passingCards();
 			this.heartsUI.redrawCards();
