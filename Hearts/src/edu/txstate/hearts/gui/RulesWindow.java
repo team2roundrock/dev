@@ -22,22 +22,7 @@ public class RulesWindow extends JFrame {
 
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RulesWindow frame = new RulesWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	/**
 	 * Create the frame.
 	 */
@@ -60,6 +45,6 @@ public class RulesWindow extends JFrame {
 		txtrRulesOfThe.setBounds(28, 11, 311, 363);
 		contentPane.add(txtrRulesOfThe);
 		
-		
+		setVisible(true);
 	}
 }
