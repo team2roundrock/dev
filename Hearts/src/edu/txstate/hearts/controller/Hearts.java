@@ -111,7 +111,7 @@ public class Hearts implements ActionListener
 		// TODO: use configuration UI
 		String playerName = "Mr.Awesome";
 		int endScore = 100;
-		String levelOfDifficulty = "Easy";
+		String levelOfDifficulty = "Master";
 		
 		initialize(playerName, endScore, levelOfDifficulty);
 		runGame();
@@ -687,6 +687,8 @@ public class Hearts implements ActionListener
 	private void initializeTurn()
 	{
 		this.CURRENT_CARDS_PLAYED = new ArrayList<Card>(4);
+		for (int i = 0; i < players.size(); i++)
+			players.get(i).clearInPlayCards();
 		this.CURRENT_TURN_FIRST = true;
 		this.CURRENT_TURN_FIRST_PLAYED_CARD = null;
 		this.CURRENT_TURN_HIGHEST_VALUE_CARD = null;
@@ -992,6 +994,7 @@ public class Hearts implements ActionListener
 					catch (Exception ex)
 					{
 						// TODO show why this is illegal move
+						ex.printStackTrace();
 						this.heartsUI.ShowBalloonTip(ex.getMessage());
 					}
 				}
