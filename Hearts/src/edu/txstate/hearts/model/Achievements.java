@@ -28,7 +28,7 @@ public class Achievements
 			// progress toward the actual achievement, which is OvershootingTheMoon3
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
-	private final UserData user;
+	private UserData user;
 	private Player player;
 	private static String userFileName;
 	private static ArrayList<String> arrayOfAchievements;
@@ -37,7 +37,7 @@ public class Achievements
 	
 	public Achievements(String userName, List<String> passedAchievements)
 	{
-		super();
+		this(userName);
 		user = new UserData(userName);
 		userFileName = userName;
 		for(String achievement: passedAchievements)
@@ -335,6 +335,8 @@ public class Achievements
 	 */
 	public static List<String> getListOfAchievements()
 	{
+		if(arrayOfAchievements == null)
+			arrayOfAchievements = new ArrayList<String>(); 
 		for(String achievement : achievementNames) //steps through the enum
 		{
 			arrayOfAchievements.add(achievement);
