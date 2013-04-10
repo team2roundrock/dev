@@ -94,6 +94,7 @@ public class ConfigurationUI {
 		Vector<String> userName = ReadFiles.getRecords();
 		comboBox = new JComboBox(userName);
 		comboBox.setSelectedIndex(0);
+		playerName = (String)comboBox.getSelectedItem();
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
