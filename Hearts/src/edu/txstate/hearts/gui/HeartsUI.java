@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -68,7 +69,7 @@ public class HeartsUI
 	private final int CARD_HEIGHT = 96;
 	private final int FRAME_WIDTH = 740;
 	private final int FRAME_HEIGHT = 730;
-	private final int PANEL_WIDTH = 720;
+	private final int PANEL_WIDTH = 740;
 	private final int PANEL_HEIGHT = 730;
 	
 	public void showDialog()
@@ -97,6 +98,35 @@ public class HeartsUI
 	public void setPlayers(List<Player> players)
 	{
 		this.players = players;
+		
+		//south
+		JLabel player1Label = new JLabel();
+		String playerName = players.get(0).getName();
+		player1Label.setText(playerName);
+		player1Label.setBounds(20, 500, 100, 25);
+		player1Label.setVisible(true);
+		this.panel.add(player1Label);
+		
+		//west
+		JLabel player2Label = new JLabel();
+		player2Label.setText(players.get(1).getName());
+		player2Label.setBounds(20, 140, 100, 25);
+		player2Label.setVisible(true);
+		this.panel.add(player2Label);
+		
+		//north
+		JLabel player3Label = new JLabel();
+		player3Label.setText(players.get(2).getName());
+		player3Label.setBounds(20, 10, 100, 25);
+		player3Label.setVisible(true);
+		this.panel.add(player3Label);
+		
+		//east
+		JLabel player4Label = new JLabel();
+		player4Label.setText(players.get(3).getName());
+		player4Label.setBounds(660, 140, 100, 25);
+		player4Label.setVisible(true);
+		this.panel.add(player4Label);
 	}
 	
 	public void setUI(boolean showOpponentCards)
@@ -356,7 +386,7 @@ public class HeartsUI
 					if(players != null)
 						player = players.get(2);
 					xBound = 20;
-					yBound = 40;
+					yBound = 30;
 					addActionListener = false;
 					break;
 				case South:
