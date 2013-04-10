@@ -419,8 +419,8 @@ public class Hearts implements ActionListener
 	
 	private void runGame()
 	{
-		this.heartsUI.setPlayers(this.players);
 		this.heartsUI.setUI(this.showOpponentCards);
+		this.heartsUI.setPlayers(this.players);
 		this.heartsUI.showDialog();
 		
 		this.runNextGame();
