@@ -939,19 +939,28 @@ public class Hearts implements ActionListener
 					.getClientProperty("ButtonType");
 
 			if (buttonType.equals("ConfigurationOK")) {
-				this.configurationUI.setVisibility(false);
 				String playerName = this.configurationUI.getPlayerName();
-				String levelOfDifficulty = this.configurationUI
+				if(playerName == null || playerName.trim().equals(""))
+					if(!configurationUI.isUserErrorShown())
+					{
+						configurationUI.displayErrorDialog("Enter a user name");
+						configurationUI.setUserErrorShown(true);
+					}
+				else
+				{
+					String levelOfDifficulty = this.configurationUI
 						.getLevelofDifficulty();
-				int endScore = this.configurationUI.getEndScore();
+					int endScore = this.configurationUI.getEndScore();
 
-				if (!silent) {
-					System.out.println("Player: " + playerName + ", Level: "
+					if (!silent) {
+						System.out.println("Player: " + playerName + ", Level: "
 							+ levelOfDifficulty + ", End Score: " + endScore);
-				}
+					}
+					this.configurationUI.getFrmConfigurationWindow().dispose();
 
-				initialize(playerName, endScore, levelOfDifficulty);
-				runGame();
+					initialize(playerName, endScore, levelOfDifficulty);
+					runGame();
+				}
 			} else if (buttonType.equals("ConfigurationCancel")) {
 				System.exit(0);
 			} else if (buttonType.equals("PassButton")) {
