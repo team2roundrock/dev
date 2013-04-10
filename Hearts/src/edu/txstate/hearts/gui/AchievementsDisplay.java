@@ -13,8 +13,11 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import edu.txstate.hearts.model.Achievements;
+import edu.txstate.hearts.model.User;
+import edu.txstate.hearts.utils.ReadFiles;
 /**
  * This class displays a window that contains the achievements the user had completed. The completion of an
  * achievement is identified by a check mark next to the achievement. And, the uncompleted achievements are also
@@ -26,11 +29,12 @@ import edu.txstate.hearts.model.Achievements;
 public class AchievementsDisplay extends JFrame {
 
 	private JPanel contentPane;
+	private User userObj;
 	private List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
 			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
 			"OvershootingTheMoon3");
 	private Icon checkMark = new ImageIcon("images\\other\\CheckMarkSmall.gif");
-	private List<String> userAchievements = Arrays.asList("PassingTheBuck", "OvershootingTheMoon2", "HatTrick");;
+	private List<String> userAchievements;
 	private List<String> unCompletedA = new ArrayList<String>();
 
 	/**
@@ -40,7 +44,8 @@ public class AchievementsDisplay extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AchievementsDisplay frame = new AchievementsDisplay();
+					User user = new User(ReadFiles.readUserRecords().get(0), 0);
+					AchievementsDisplay frame = new AchievementsDisplay(user);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,7 +57,8 @@ public class AchievementsDisplay extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AchievementsDisplay() {
+	public AchievementsDisplay(User user) {
+		userObj = user;
 		setTitle("Achievements List");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 242, 435);
@@ -62,25 +68,32 @@ public class AchievementsDisplay extends JFrame {
 		contentPane.setLayout(new GridLayout(9,1));
 		
 		//This field contains the user name
-		String userName = Achievements.getUserFileName();
-		JLabel lblNewLabel = new JLabel("UserName");
+		String userName = user.getName();
+		JLabel lblNewLabel = new JLabel(userName);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		//lblNewLabel.setBounds(66, 11, 103, 30);
 		contentPane.add(lblNewLabel);
 		
-		
+		try {
+			userAchievements = ReadFiles.readAchievements(userName);
+			System.out.println(userAchievements);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//userAchievements = user.getAchievements().getListOfAchievements();
 		for(int i = 0; i < achievementNames.size(); i++){
-			boolean found = false;
-			for(int j = 0; j < userAchievements.size(); j++){
-				if(userAchievements.get(j) == achievementNames.get(i)){
-					JLabel newLabel = new JLabel(userAchievements.get(j));
+			boolean found = userAchievements.contains(achievementNames.get(i));
+			{
+				if(found){
+					JLabel newLabel = new JLabel(achievementNames.get(i));
 					newLabel.setIcon(checkMark);
 					newLabel.setHorizontalTextPosition(SwingConstants.LEFT);
 					newLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
 					newLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 					contentPane.add(newLabel);
 					found = true;
-					break;
+					
 				}
 			}
 			if(!found){

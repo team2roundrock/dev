@@ -87,14 +87,23 @@ public class ConfigurationUI {
 		Image image = ReadFiles.getImage("heart.png");
 		frmConfigurationWindow.setIconImage(image);
 		
+		final JButton btnOk = new JButton("OK");
+		btnOk.putClientProperty("ButtonType", "ConfigurationOK");
+		btnOk.addActionListener(this.heartsController);
+		
 		Vector<String> userName = ReadFiles.getRecords();
 		comboBox = new JComboBox(userName);
+		comboBox.setSelectedIndex(0);
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
 				playerName = (String)cb.getSelectedItem();
-				//if(newSelection != (String)cb.getItemAt(0))
-				//cb.addItem(newSelection);
+				if(playerName == null || playerName.trim().equals("")){
+					JOptionPane.showMessageDialog(null, "Enter a user name","", JOptionPane.INFORMATION_MESSAGE);
+					btnOk.setEnabled(false);
+				}
+				else
+					btnOk.setEnabled(true);
 			}
 		});
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -162,9 +171,7 @@ public class ConfigurationUI {
 		comboBox_2.setBounds(138, 151, 163, 29);
 		frmConfigurationWindow.getContentPane().add(comboBox_2);
 		
-		JButton btnOk = new JButton("OK");
-		btnOk.putClientProperty("ButtonType", "ConfigurationOK");
-		btnOk.addActionListener(this.heartsController);
+		
 //		btnOk.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) 
 //			{
