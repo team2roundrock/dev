@@ -28,7 +28,7 @@ public class Achievements
 			// progress toward the actual achievement, which is OvershootingTheMoon3
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
-	private UserData user;
+	private final UserData user;
 	private Player player;
 	private static String userFileName;
 	private static ArrayList<String> arrayOfAchievements;
@@ -38,8 +38,6 @@ public class Achievements
 	public Achievements(String userName, List<String> passedAchievements)
 	{
 		this(userName);
-		user = new UserData(userName);
-		userFileName = userName;
 		for(String achievement: passedAchievements)
 		{
 			listOfAchievements.put(achievement, true);
@@ -312,7 +310,7 @@ public class Achievements
 				{
 					listOfAchievements.remove(nameOfAchievement);
 					listOfAchievements.put(nameOfAchievement, true);
-					//user.writeAchievement(currentAchievement);
+					user.writeAchievements(listOfAchievements);
 					return true;
 				}
 			}

@@ -19,7 +19,7 @@ import edu.txstate.hearts.model.Card;
 
 public abstract class ReadFiles {
 	private static List<String> listOfUsers;
-	private static Map<String,List<String>> readAchievements;
+	//private static Map<String,List<String>> readAchievements;
 	private static String cardImagesFolder = "images\\cards\\";
 	private static String mainImagesFolder = "images\\";
 	
@@ -167,13 +167,13 @@ public abstract class ReadFiles {
 		return listOfUsers;
 	}// end of readRecords
 	
-	public static List readAchievements(String playerName) throws FileNotFoundException {
+	public static List<String> readAchievements(String playerName) throws FileNotFoundException {
 
-		if (readAchievements == null) {
-			readAchievements = new HashMap<String,List<String>>();
-		}
-		if(readAchievements.get(playerName) == null)
-		{
+//		if (readAchievements == null) {
+//			readAchievements = new HashMap<String,List<String>>();
+//		}
+//		if(readAchievements.get(playerName) == null)
+//		{
 			List playerAchievements = new ArrayList<String>();
 			Scanner input = openFile(playerName);
 			try {
@@ -181,7 +181,7 @@ public abstract class ReadFiles {
 					String achievement = input.nextLine();
 					playerAchievements.add(achievement);
 				}
-				readAchievements.put(playerName, playerAchievements);
+				//readAchievements.put(playerName, playerAchievements);
 
 			} catch (NoSuchElementException nosuchelement) {
 				System.err.println("File improperly formed");
@@ -192,8 +192,9 @@ public abstract class ReadFiles {
 			} finally {
 				closeFile(input);
 			}
-		}
-		return readAchievements.get(playerName);
+			return playerAchievements;
+//		}
+//		return readAchievements.get(playerName);
 	}
 	
 	public static Vector<String> getRecords(){
@@ -209,18 +210,18 @@ public abstract class ReadFiles {
 		return new Vector(listOfUsers);
 	}
 	
-	public static List<String> getReadAchievements(String playerName){
-		if(readAchievements == null || readAchievements.get(playerName) == null)
-		{
-			try {
-				readAchievements(playerName);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return readAchievements.get(playerName);
-	}
+//	public static List<String> getReadAchievements(String playerName){
+//		if(readAchievements == null || readAchievements.get(playerName) == null)
+//		{
+//			try {
+//				readAchievements(playerName);
+//			} catch (FileNotFoundException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		return readAchievements.get(playerName);
+//	}
 	
 	private static void closeFile(Scanner input){
 		if(input != null)

@@ -6,7 +6,10 @@ package edu.txstate.hearts.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -45,6 +48,8 @@ public class UserData {
 	}// end of function
 
 	public void addUserNameToFile() throws IOException {
+		if(!ReadFiles.getRecords().contains(userName))
+		{
 		try {
 			String filename = "Users.txt";
 			FileWriter fw = new FileWriter(filename, true); // the true will
@@ -57,7 +62,26 @@ public class UserData {
 			System.err.println("IOException: " + ioe.getMessage());
 			throw ioe;
 		}
+		}
 
+	}
+	
+	public void writeAchievements(Map<String, Boolean> achievements)
+	{
+		Set<String> keySet = achievements.keySet();
+		List<String> passedAchievements = new ArrayList<String>();
+		for(String key: keySet)
+		{
+			Boolean passed = achievements.get(key);
+			if(passed.booleanValue())
+				passedAchievements.add(key);
+		}
+		try {
+			createUserDataFile(passedAchievements);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }// end of class
