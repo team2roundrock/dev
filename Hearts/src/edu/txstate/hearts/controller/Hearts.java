@@ -938,14 +938,17 @@ public class Hearts implements ActionListener
 			String buttonType = (String) jButton
 					.getClientProperty("ButtonType");
 
-			if (buttonType.equals("ConfigurationOK")) {
+			if (buttonType.equals("ConfigurationOK")) 
+			{
 				String playerName = this.configurationUI.getPlayerName();
 				if(playerName == null || playerName.trim().equals(""))
+				{
 					if(!configurationUI.isUserErrorShown())
 					{
 						configurationUI.displayErrorDialog("Enter a user name");
 						configurationUI.setUserErrorShown(true);
 					}
+				}
 				else
 				{
 					String levelOfDifficulty = this.configurationUI
