@@ -985,26 +985,37 @@ public class Hearts implements ActionListener
 				this.heartsUI.setPassButtonVisible(false);
 				this.currentCardAction = CardAction.Playing;
 				this.initializeFirstTurn();
-			} else if (buttonType.equals("CardButton")) {
+			} 
+			else if (buttonType.equals("CardButton")) 
+			{
 				Card card = (Card) jButton.getClientProperty("Card");
-				if (this.currentCardAction == CardAction.Passing) {
-					boolean isSelected = (boolean) jButton
-							.getClientProperty("Selected");
+				if (this.currentCardAction == CardAction.Passing) 
+				{
+					boolean isSelected = (boolean) jButton.getClientProperty("Selected");
 
-					if (isSelected) {
+					if (isSelected) 
+					{
 						this.heartsUI.setCardUnselected(jButton);
 						this.buttonCardsSelectedToPass.remove(jButton);
 						this.cardsSelectedToPass.remove(card);
 						this.numCardsSelectedToPass--;
-					} else {
-						if (this.numCardsSelectedToPass != 3) {
+					} 
+					else 
+					{
+						if (this.numCardsSelectedToPass != 3) 
+						{
 							this.heartsUI.setCardSelected(jButton);
 							this.buttonCardsSelectedToPass.add(jButton);
 							this.cardsSelectedToPass.add(card);
 							this.numCardsSelectedToPass++;
 						}
+						else
+						{
+							this.heartsUI.ShowBalloonTip("You can only select 3 cards to pass!");
+						}
 					}
-				} else if (this.currentCardAction == CardAction.Playing) {
+				} 
+				else if (this.currentCardAction == CardAction.Playing) {
 					// user turn
 					if (this.CURRENT_PLAYER_THIS_TURN == 0) {
 						try {
