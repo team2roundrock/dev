@@ -162,22 +162,23 @@ public abstract class ReadFiles {
 	{
 		//Users.txt file is created if it doesn't exist
 		File userFile = new File("Users.txt");
-		if (file.equals(userFile)) 
-		{
-			if (!file.isFile() && !file.createNewFile())
-				throw new IOException("Error creating new file: " + file.getAbsolutePath());
-			if (file.createNewFile())
-			{
-			try {
-				String playerName = "Player 1";
-				FileWriter fw = new FileWriter(userFile, true); 
-				fw.write(playerName + "\n");
-				fw.close();
-				//addUserRecord(playerName);
-			} catch (IOException ioe) {
-				System.err.println("IOException: " + ioe.getMessage());
-				throw ioe;
-			}
+		if (file.equals(userFile)) {
+			// if (!file.isFile() && !file.createNewFile())
+			// throw new IOException("Error creating new file: " +
+			// file.getAbsolutePath());
+			if (file.createNewFile()) {
+				try 
+				{
+					String playerName = "Player 1";
+					FileWriter fw = new FileWriter(userFile, true);
+					fw.write(playerName + "\n");
+					fw.close();
+					// addUserRecord(playerName);
+				} catch (IOException ioe) {
+					System.err.println("Error creating new file: "
+							+ file.getAbsolutePath());
+					throw ioe;
+				}
 			}
 		}
 	}
