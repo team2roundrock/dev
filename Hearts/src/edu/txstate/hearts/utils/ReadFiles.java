@@ -22,7 +22,7 @@ import edu.txstate.hearts.model.Card;
  * as images and text files, needed for the game to run
  * properly
  * 
- * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton
+ * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton, Maria Poole
  *
  */
 public abstract class ReadFiles {

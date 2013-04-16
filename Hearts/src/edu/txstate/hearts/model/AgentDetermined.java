@@ -7,6 +7,11 @@ import java.util.List;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
 
+/**
+ * This class implements the logic for a medium level AI.
+ * @author Gede Sutapa, Maria Poole
+ *
+ */
 public class AgentDetermined extends Agent {
 
 	public AgentDetermined(String playerName, int num) {
