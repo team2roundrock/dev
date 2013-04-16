@@ -3,6 +3,7 @@ package edu.txstate.hearts.utils;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +17,14 @@ import javax.imageio.ImageIO;
 
 import edu.txstate.hearts.model.Card;
 
-
+/**
+ * Class assists in the reading of various inputs, such
+ * as images and text files, needed for the game to run
+ * properly
+ * 
+ * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton
+ *
+ */
 public abstract class ReadFiles {
 	private static List<String> listOfUsers;
 	//private static Map<String,List<String>> readAchievements;
@@ -124,6 +132,16 @@ public abstract class ReadFiles {
 	private static Scanner openFile(String fileName) throws FileNotFoundException{
 		try{
 			File file = new File(fileName + ".txt");
+			
+			try
+			{
+				ensureUsersFileExists(file);
+			} 
+			catch (IOException io)
+			{
+				io.printStackTrace();
+			}
+			
 			Scanner input = new Scanner(file);
 			return input;
 		}
@@ -131,6 +149,38 @@ public abstract class ReadFiles {
 			throw filenotfound;
 		}
 	}//end of open file
+
+	/**
+	 * If the Users.txt file does not exist for any reason, a new
+	 * Users.txt file is created and initialized with "Player 1"
+	 * as the default player name
+	 * 
+	 * @param file
+	 * @throws IOException
+	 */
+	private static void ensureUsersFileExists(File file) throws IOException
+	{
+		//Users.txt file is created if it doesn't exist
+		File userFile = new File("Users.txt");
+		if (file.equals(userFile)) 
+		{
+			if (!file.isFile() && !file.createNewFile())
+				throw new IOException("Error creating new file: " + file.getAbsolutePath());
+			if (file.createNewFile())
+			{
+			try {
+				String playerName = "Player 1";
+				FileWriter fw = new FileWriter(userFile, true); 
+				fw.write(playerName + "\n");
+				fw.close();
+				//addUserRecord(playerName);
+			} catch (IOException ioe) {
+				System.err.println("IOException: " + ioe.getMessage());
+				throw ioe;
+			}
+			}
+		}
+	}
 	
 	public static void addUserRecord(String userName)
 	{
