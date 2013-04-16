@@ -77,7 +77,7 @@ public class ConfigurationUI {
 	 */
 	private void initialize() {
 		frmConfigurationWindow = new JFrame();
-		frmConfigurationWindow.setTitle("Configuration");
+		frmConfigurationWindow.setTitle("Hearts - configuration");
 		frmConfigurationWindow.getContentPane().setEnabled(false);
 		frmConfigurationWindow.setBounds(100, 100, 450, 300);
 		frmConfigurationWindow.setResizable(false);
@@ -209,11 +209,15 @@ public class ConfigurationUI {
 
 	}// end of initialize
 
-	public void showDialog() {
-		try {
+	public void showDialog() 
+	{
+		try 
+		{
 			frmConfigurationWindow.setLocationRelativeTo(null);
 			frmConfigurationWindow.setVisible(true);
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}

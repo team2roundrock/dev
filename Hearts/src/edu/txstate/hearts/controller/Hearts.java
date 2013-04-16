@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 
+import edu.txstate.hearts.gui.AchievementsDisplay;
 import edu.txstate.hearts.gui.ConfigurationUI;
 import edu.txstate.hearts.gui.HeartsUI;
 import edu.txstate.hearts.gui.HeartsUI.CardAction;
@@ -1035,10 +1036,13 @@ public class Hearts implements ActionListener
 			if(menuItemType.equalsIgnoreCase("Rules"))
 			{
 				RulesWindow rulesWindow = new RulesWindow();
+				rulesWindow.showDialog();
 			}
 			else if(menuItemType.equalsIgnoreCase("Achievements"))
 			{
-				//TODO put achievements windows
+				User user = (User)this.players.get(0);
+				AchievementsDisplay achivementsDisplay = new AchievementsDisplay(user);
+				achivementsDisplay.showDialog();
 			}
 			else if(menuItemType.equalsIgnoreCase("Exit"))
 			{

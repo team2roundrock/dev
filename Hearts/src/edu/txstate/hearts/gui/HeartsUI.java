@@ -146,7 +146,7 @@ public class HeartsUI
 		frame.setSize(this.FRAME_WIDTH, this.FRAME_HEIGHT);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("Hearts");
+		frame.setTitle("Hearts - game");
 		
 		Image image = ReadFiles.getImage("heart.png");
 		frame.setIconImage(image);

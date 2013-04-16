@@ -3,6 +3,7 @@ package edu.txstate.hearts.gui;
 
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
@@ -26,8 +27,8 @@ import edu.txstate.hearts.utils.ReadFiles;
  *
  */
 
-public class AchievementsDisplay extends JFrame {
-
+public class AchievementsDisplay extends JFrame 
+{
 	private JPanel contentPane;
 	private User userObj;
 	private List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
@@ -57,11 +58,12 @@ public class AchievementsDisplay extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AchievementsDisplay(User user) {
+	public AchievementsDisplay(User user) 
+	{
 		userObj = user;
-		setTitle("Achievements List");
+		setTitle("Hearts - achievements");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 242, 435);
+		setBounds(100, 100, 300, 435);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -108,5 +110,20 @@ public class AchievementsDisplay extends JFrame {
 			contentPane.add(newLabel);
 		}
 		
+		Image image = ReadFiles.getImage("heart.png");
+		this.setIconImage(image);
 	}//end constructor
+	
+	public void showDialog() 
+	{
+		try 
+		{
+			this.setLocationRelativeTo(null);
+			this.setVisible(true);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+	}
 }//end class

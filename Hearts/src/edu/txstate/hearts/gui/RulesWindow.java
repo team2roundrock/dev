@@ -2,6 +2,7 @@ package edu.txstate.hearts.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,23 +13,26 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.UIManager;
 
+import edu.txstate.hearts.utils.ReadFiles;
+
 /**
  * This class displays the rules of the Hearts card game. This window will be accessed from the
  * main Hearts window. This class allows the users to have access to the rules of the game whenever needed.
  * @author Maria Poole
  *
  */
-public class RulesWindow extends JFrame {
-
+public class RulesWindow extends JFrame 
+{
 	private JPanel contentPane;
 
 	
 	/**
 	 * Create the frame.
 	 */
-	public RulesWindow() {
+	public RulesWindow() 
+	{
 		setForeground(Color.LIGHT_GRAY);
-		setTitle("Hearts Rules");
+		setTitle("Hearts - rules");
 		setBounds(100, 100, 383, 423);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -44,6 +48,20 @@ public class RulesWindow extends JFrame {
 		txtrRulesOfThe.setBounds(28, 11, 311, 363);
 		contentPane.add(txtrRulesOfThe);
 		
-		setVisible(true);
+		Image image = ReadFiles.getImage("heart.png");
+		this.setIconImage(image);
+	}
+	
+	public void showDialog() 
+	{
+		try 
+		{
+			this.setLocationRelativeTo(null);
+			this.setVisible(true);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 	}
 }
