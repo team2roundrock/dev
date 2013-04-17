@@ -29,6 +29,7 @@ import java.util.List;
 
 import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.*;
+import edu.txstate.hearts.model.Card.Suit;
 import edu.txstate.hearts.utils.ReadFiles;
 
 public class HeartsUI
@@ -296,14 +297,14 @@ public class HeartsUI
 		this.southCardButton.setVisible(false);
 		
 		westCardButton = new JButton();
-		westCardButton.setBounds(xBound + 180, panel.getHeight() / 2 - 60,
+		westCardButton.setBounds(xBound + 180, panel.getHeight() / 2 - 90,
 				this.CARD_WIDTH, this.CARD_HEIGHT);
 		panel.add(westCardButton);
 		this.westCardButton.setVisible(false);
 		
 		eastCardButton = new JButton();
 		eastCardButton.setBounds(panel.getWidth() - 280,
-				panel.getHeight() / 2 - 60, this.CARD_WIDTH, this.CARD_HEIGHT);
+				panel.getHeight() / 2 - 90, this.CARD_WIDTH, this.CARD_HEIGHT);
 		panel.add(eastCardButton);
 		this.eastCardButton.setVisible(false);
 		
@@ -336,9 +337,12 @@ public class HeartsUI
 			}
 			
 			List<JButton> jButtonList = getJButtonList(position);
+			
+			List<Card> suitHand = getHandGroupBySuit(player.getHand());
+			
 			for (int i = 0; i < 13; i++)
 			{
-				Card card = player.getHand().get(i);
+				Card card = suitHand.get(i);
 				JButton jButton = jButtonList.get(i);
 				jButton.putClientProperty("ButtonType", "CardButton");
 				jButton.putClientProperty("Card", card);
@@ -412,10 +416,11 @@ public class HeartsUI
 					break;
 			}
 			
+			List<Card> suitHand = getHandGroupBySuit(player.getHand());
 			for (int i = 0; i < 13; i++)
 			{
 				addButton(xBound, yBound, this.CARD_WIDTH, this.CARD_HEIGHT,
-						position, player.getHand().get(i), addActionListener);
+						position, suitHand.get(i), addActionListener);
 				
 				// increase bound
 				switch (position)
@@ -435,6 +440,45 @@ public class HeartsUI
 				}
 			}
 		}
+	}
+	
+	private List<Card> getHandGroupBySuit(List<Card> hand)
+	{
+		List<Card> suitHand = new ArrayList<Card>(hand.size());
+		
+		for (int i = 0; i < hand.size(); i++) 
+		{
+			if(hand.get(i).getSuit() == Suit.Clubs)
+			{
+				suitHand.add(hand.get(i));
+			}
+		}
+		
+		for (int i = 0; i < hand.size(); i++) 
+		{
+			if(hand.get(i).getSuit() == Suit.Diamonds)
+			{
+				suitHand.add(hand.get(i));
+			}
+		}
+		
+		for (int i = 0; i < hand.size(); i++) 
+		{
+			if(hand.get(i).getSuit() == Suit.Spades)
+			{
+				suitHand.add(hand.get(i));
+			}
+		}
+		
+		for (int i = 0; i < hand.size(); i++) 
+		{
+			if(hand.get(i).getSuit() == Suit.Hearts)
+			{
+				suitHand.add(hand.get(i));
+			}
+		}
+		
+		return suitHand;
 	}
 	
 	private void addButton(int xBound, int yBound, int width, int height,
