@@ -37,7 +37,9 @@ public class Achievements
 	
 	public Achievements(String userName, List<String> passedAchievements)
 	{
-		this(userName);
+		user = new UserData(userName);
+		userFileName = userName;
+		initializeUser();
 		for(String achievement: passedAchievements)
 		{
 			listOfAchievements.put(achievement, true);
@@ -55,6 +57,17 @@ public class Achievements
 	{	
 		user = new UserData(userName);
 		userFileName = userName;
+		initializeUser();
+		try {
+			user.createUserDataFile(new ArrayList<String>());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void initializeUser()
+	{
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
 		listOfAchievements = new HashMap<String, Boolean>();		
 		for(String achievement : achievementNames) //steps through the enum
@@ -63,11 +76,9 @@ public class Achievements
 		}
 		try {
 			user.addUserNameToFile();
-			user.createUserDataFile(new ArrayList<String>());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	/**
