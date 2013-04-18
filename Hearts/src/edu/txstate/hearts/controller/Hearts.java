@@ -908,6 +908,9 @@ public class Hearts implements ActionListener
 			}
 		}
 		
+		//Run check for set of three achievements based on score
+		user.getAchievements().endGameAchievements(scores.get(0), true);
+		
 		for (int i = 0; i < players.size(); i++)
 		{
 			Player player = players.get(i);

@@ -157,6 +157,18 @@ public class Achievements
 				return true;
 			}
 		}
+		//TESTING ACHIEVEMENT UNLOCK - DO NOT SUBMIT THIS METHOD WITH FINAL PROGRAM
+		if (score == 1)
+		{
+			if (giveAchievement(nameOfAchievement))
+			{
+				//notify achievement earned
+				notifyAchievementEarned("Broken Heart");
+				return true;
+			}
+		}
+		//DELETE THE ABOVE!!
+		
 		return false;
 	}
 	
