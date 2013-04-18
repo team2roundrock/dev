@@ -158,7 +158,7 @@ public class Achievements
 			}
 		}
 		//TESTING ACHIEVEMENT UNLOCK - DO NOT SUBMIT THIS METHOD WITH FINAL PROGRAM
-		if (score == 1)
+		if (score >= 1)
 		{
 			if (giveAchievement(nameOfAchievement))
 			{

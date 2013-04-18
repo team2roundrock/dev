@@ -742,6 +742,12 @@ public class Hearts implements ActionListener
 		// find player to start next
 		this.CURRENT_PLAYER_THIS_TURN = this.players
 				.indexOf(this.CURRENT_TURN_PLAYER_HIGHEST_VALUE);
+		
+		// If player who won the cards is the user, give achievement
+		if (this.CURRENT_PLAYER_THIS_TURN == 0)
+		{
+			user.getAchievements().HatTrick();
+		}
 	}
 	
 	private void initializeTurn()
