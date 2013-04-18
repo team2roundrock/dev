@@ -75,6 +75,7 @@ public class Hearts implements ActionListener
 	private Set setofusers;
 	private final static boolean runUI = true;
 	private boolean showOpponentCards = true;
+	private User user; //for achievements
 	
 	/**
 	 * 
@@ -137,6 +138,8 @@ public class Hearts implements ActionListener
 		Player player2;
 		Player player3;
 		Player player4;
+		
+		user = (User) player1; //for achievements
 		
 		if(levelOfDifficulty.equalsIgnoreCase("Easy"))
 		{
@@ -210,6 +213,8 @@ public class Hearts implements ActionListener
 		{
 			this.players.get(0).getHand().remove(p0CardsToPass.get(i));
 		}
+		
+		user.getAchievements().PassingTheBuck(true, p0CardsToPass);
 		
 		List<Card> p1CardsToPass = this.players.get(1).getCardsToPass(
 				this.passing);
@@ -674,6 +679,12 @@ public class Hearts implements ActionListener
 				for(int j = 0; j < cardsPlayed.size(); j++)
 				{
 					playerWithHighestValue.addTakenCard(cardsPlayed.get(j), !silent);
+					
+					//Give achievement to user (player 1) if cards are collected
+					if (players.get(0).equals(playerWithHighestValue));
+					{
+					user.getAchievements().HatTrick();
+					}
 					
 					//figure out if hearts already broken
 					if(!this.heartsBroken && cardsPlayed.get(j).getSuit() == Suit.Hearts)
