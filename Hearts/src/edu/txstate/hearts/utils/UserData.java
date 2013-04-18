@@ -35,7 +35,7 @@ public class UserData {
 
 		File name = new File(userName + ".txt");
 		try {
-			FileWriter output = new FileWriter(name, true);// open/create file
+			FileWriter output = new FileWriter(name, false);// open/create file
 			for (String achievement : achievements) {
 				output.write(achievement + "\n");
 			}
