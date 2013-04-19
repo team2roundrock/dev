@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.txstate.hearts.controller.Hearts;
+import edu.txstate.hearts.gui.HeartsUI;
 import edu.txstate.hearts.utils.ReadFiles;
 import edu.txstate.hearts.utils.UserData;
 
@@ -30,9 +32,11 @@ public class Achievements
 	boolean achievedOrNot;
 	private final UserData user;
 	private Player player;
+	private Hearts hearts;
 	private static String userFileName;
 	private static ArrayList<String> arrayOfAchievements;
 	private static ArrayList<String> arrayOfUserAchievements;
+	private HeartsUI heartsUI;
 	Map<String, Boolean> listOfAchievements;
 	
 	public Achievements(String userName, List<String> passedAchievements)
@@ -113,6 +117,8 @@ public class Achievements
 	public void notifyAchievementEarned(String achievementName)
 	{
 		System.out.println("Achievement Unlocked - " + achievementName);
+		//Hearts.heartsUI.ShowBalloonTip("WTF is going on");
+		//Hearts.accessUI.ShowBalloonTip("Achievement Unlocked - " + achievementName);
 	}
 
 	/**
@@ -196,7 +202,20 @@ public class Achievements
 				return true;
 			}
 		}
+		//TESTING ACHIEVEMENT UNLOCK - DO NOT SUBMIT THIS METHOD WITH FINAL PROGRAM
+		if (score >= 1) //26 full score
+		{
+			if (giveAchievement(nameOfAchievement))
+			{
+				//notify achievement earned
+				notifyAchievementEarned("Shooting The Moon");
+				return true;
+			}
+		}
+		//DELETE THE ABOVE!!
 		return false;
+		
+		
 	}
 	
 	private boolean OvershootingTheMoon(int score, boolean notifyAchievementEarned) {
@@ -208,7 +227,8 @@ public class Achievements
 		String nameOfAchievement3 = "OvershootingTheMoon3";
 		int counter = getCounterOvershootingTheMoon();
 		
-		if (score == 26) 
+		//if (score == 26) 
+		if (score >= 1)
 		{
 			if (counter == 0) {
 
@@ -275,13 +295,14 @@ public class Achievements
 		return false;
 	}
 	
-	public boolean StartTheParty(List<Card> cardsPlayed, Player p) {
+	public boolean StartTheParty(List<Card> cardsPlayed) {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
 		// Implementation: Take list of cardsPlayed (passed from game in progress).
 		//	  If two of clubs found, unlock achievement. Will be activated the moment 
 		//    the card is played
 		String nameOfAchievement = "StartTheParty";
+		//Hearts.accessUI.ShowBalloonTip("You are IN the achievement");
 		for (Card card : cardsPlayed)
 		{
 			if ((card.getSuit() == Card.Suit.Clubs)
@@ -294,6 +315,7 @@ public class Achievements
 				}
 			}
 		}
+		//Hearts.accessUI.ShowBalloonTip("You are NOT getting the achievement");
 		return false;
 	}
 	

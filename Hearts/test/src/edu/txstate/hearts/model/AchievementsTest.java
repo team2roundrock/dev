@@ -184,12 +184,12 @@ public class AchievementsTest {
 				get("StartTheParty"));
 		
 		//Ensure entire method returns false when requirements not met
-		assertEquals("Method should return false",false,a.StartTheParty(listOfCards, p));
+		assertEquals("Method should return false",false,a.StartTheParty(listOfCards));
 		
 		//User plays the two of clubs
 		//Ensure entire method returns true when requirements met
 		listOfCards.add(new Card(Card.Face.Deuce, Card.Suit.Clubs));
-		assertEquals("Method should return true",true,a.StartTheParty(listOfCards, p));
+		assertEquals("Method should return true",true,a.StartTheParty(listOfCards));
 		
 		//Ensure achievement is set when requirements met
 		assertEquals("StartTheParty hasn't been set,",true,a.listOfAchievements.

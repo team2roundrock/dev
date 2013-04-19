@@ -53,7 +53,6 @@ public class Hearts implements ActionListener
 	private int numCardsSelectedToPass;
 	private boolean cardsReadyToPass;
 	private CardAction currentCardAction;
-	private HeartsUI heartsUI;
 	private ConfigurationUI configurationUI;
 	private Deck deck;
 	private List<Player> players;
@@ -76,6 +75,9 @@ public class Hearts implements ActionListener
 	private final static boolean runUI = true;
 	private boolean showOpponentCards = true;
 	private User user; //for achievements
+	private HeartsUI heartsUI; //Public so that achievements can connect to it
+	private boolean startThePartyAchieve = false;
+	public static HeartsUI accessUI;
 	
 	/**
 	 * 
@@ -471,8 +473,12 @@ public class Hearts implements ActionListener
 		this.initializeTurn();
 
 		// user move
+		this.heartsUI.ShowBalloonTip("First turn somewhere");
 		if (this.CURRENT_PLAYER_THIS_TURN == 0)
 		{
+			this.heartsUI.ShowBalloonTip("start party should be true");
+			startThePartyAchieve  = true;
+			this.heartsUI.ShowBalloonTip("should be true: " + startThePartyAchieve);
 			// do nothing, wait for user move
 		}
 		else
@@ -551,8 +557,7 @@ public class Hearts implements ActionListener
 		
 		this.CURRENT_TURN_FIRST = false;
 		if(!silent)
-			System.out
-					.println("Player " + player.getName() + " played " + card);
+			System.out.println("Player " + player.getName() + " played " + card);
 		
 		// notify that hearts has been broken (once per round)
 		notifyHeartsBroken(this.CURRENT_CARDS_PLAYED, player);
@@ -706,6 +711,14 @@ public class Hearts implements ActionListener
 		
 		card = player.playCard(this.CURRENT_CARDS_PLAYED, this.HEARTS_BROKEN,
 				(this.CURRENT_TURN_FIRST && this.CURRENT_TURN == 0));
+		
+		//Give achievement if user has played correct card, boolean is true
+		if (startThePartyAchieve)
+		{
+			this.heartsUI.ShowBalloonTip("entering achievement give");
+			user.getAchievements().StartTheParty(CURRENT_CARDS_PLAYED);
+			startThePartyAchieve = false;
+		}
 		
 		this.finalizePlayerTurn(card, position, player);
 	}
