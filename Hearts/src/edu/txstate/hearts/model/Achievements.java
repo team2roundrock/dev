@@ -232,8 +232,7 @@ public class Achievements
 		String nameOfAchievement3 = "OvershootingTheMoon";
 		int counter = getCounterOvershootingTheMoon();
 		
-		//if (score == 26) 
-		if (score >= 1)
+		if (score == 26) 
 		{
 			if (counter == 0) {
 
