@@ -25,9 +25,9 @@ public class Achievements
 
 	static List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
 			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
-			"OvershootingTheMoon3");
+			"OvershootingTheMoon");
 			// There are three Overshooting The Moon entries. The first two indicate 
-			// progress toward the actual achievement, which is OvershootingTheMoon3
+			// progress toward the actual achievement, which is OvershootingTheMoon
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
 	private final UserData user;
@@ -52,7 +52,7 @@ public class Achievements
 			counterOvershootingTheMoon = 1;
 		if(passedAchievements.contains("OvershootingTheMoon2"))
 			counterOvershootingTheMoon = 2;
-		if(passedAchievements.contains("OvershootingTheMoon3"))
+		if(passedAchievements.contains("OvershootingTheMoon"))
 			counterOvershootingTheMoon = 3;
 	}
 	
@@ -218,7 +218,7 @@ public class Achievements
 	 * achievementNames list, however, OvershootingTheMoon1 and
 	 * OvershootingTheMoon2 are "progression" achievements and do not
 	 * actually count as a full achievement. Therefore, this method will
-	 * only return true when the requirements for OvershootingTheMoon3 
+	 * only return true when the requirements for OvershootingTheMoon 
 	 * are earned (which includes having  both progression "achievements")
 	 * @param score
 	 * @return true or false, which indicates achievement has been earned.
@@ -229,7 +229,7 @@ public class Achievements
 		// Score must be obtained three times (meaning three different rounds)
 		String nameOfAchievement1 = "OvershootingTheMoon1";
 		String nameOfAchievement2 = "OvershootingTheMoon2";
-		String nameOfAchievement3 = "OvershootingTheMoon3";
+		String nameOfAchievement3 = "OvershootingTheMoon";
 		int counter = getCounterOvershootingTheMoon();
 		
 		//if (score == 26) 

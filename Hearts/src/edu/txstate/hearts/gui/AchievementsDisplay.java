@@ -32,8 +32,8 @@ public class AchievementsDisplay extends JFrame
 	private JPanel contentPane;
 	private User userObj;
 	private List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
-			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
-			"OvershootingTheMoon3");
+			"StartTheParty","HatTrick",/*"OvershootingTheMoon1","OvershootingTheMoon2",*/ 
+			"OvershootingTheMoon");
 	private Icon checkMark = new ImageIcon("images\\other\\CheckMarkSmall.gif");
 	private List<String> userAchievements;
 	private List<String> unCompletedA = new ArrayList<String>();
