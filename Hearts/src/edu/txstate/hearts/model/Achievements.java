@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.txstate.hearts.controller.Hearts;
-import edu.txstate.hearts.gui.HeartsUI;
-import edu.txstate.hearts.utils.ReadFiles;
+//import edu.txstate.hearts.controller.Hearts;
+//import edu.txstate.hearts.gui.HeartsUI;
+//import edu.txstate.hearts.utils.ReadFiles;
 import edu.txstate.hearts.utils.UserData;
 
 /**
@@ -20,7 +20,7 @@ import edu.txstate.hearts.utils.UserData;
  *
  */
 
-public class Achievements 
+public class Achievements
 {
 
 	static List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
@@ -31,12 +31,12 @@ public class Achievements
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
 	private final UserData user;
-	private Player player;
-	private Hearts hearts;
+	//private Player player;
+	//private Hearts hearts = new Hearts();
 	private static String userFileName;
 	private static ArrayList<String> arrayOfAchievements;
-	private static ArrayList<String> arrayOfUserAchievements;
-	private HeartsUI heartsUI;
+	//private static ArrayList<String> arrayOfUserAchievements;
+	//private HeartsUI heartsUI;
 	Map<String, Boolean> listOfAchievements;
 	
 	public Achievements(String userName, List<String> passedAchievements)
@@ -74,7 +74,7 @@ public class Achievements
 	{
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
 		listOfAchievements = new HashMap<String, Boolean>();		
-		for(String achievement : achievementNames) //steps through the enum
+		for(String achievement : achievementNames) //steps through list of names
 		{
 			listOfAchievements.put(achievement, false);
 		}
@@ -111,14 +111,16 @@ public class Achievements
 	}
 
 	/**
-	 * Notify achievement earned when this is set to true
-	 * @param achievementEarned
+	 * Sends message to the console that achievement has been earned.
+	 * This method is unable to send a message to the tooltip in the
+	 * GUI.
+	 * 
+	 * @param achievementName Name of the achievement earned
 	 */
 	public void notifyAchievementEarned(String achievementName)
 	{
 		System.out.println("Achievement Unlocked - " + achievementName);
-		//Hearts.heartsUI.ShowBalloonTip("WTF is going on");
-		//Hearts.accessUI.ShowBalloonTip("Achievement Unlocked - " + achievementName);
+		
 	}
 
 	/**
@@ -132,7 +134,7 @@ public class Achievements
 	 * @param userFileName the userFileName to set
 	 */
 	public void setUserFileName(String userFileName) {
-		this.userFileName = userFileName;
+		Achievements.userFileName = userFileName;
 	}
 
 	/**
@@ -153,15 +155,33 @@ public class Achievements
 	 * Check for and give the user any earned achievements at the end of each round.
 	 * The achievements to be checked are those which rely upon user score.
 	 * @param score
-	 * @param notifyAchievementEarned
+	 * @return int 0, 1, 2, or 3. Each number corresponds to a certain achievement
+	 * deemed to be true. 1 = Broken Heart, 2 = Shooting The Moon, 3 = Overshooting The 
+	 * Moon. It is impossible to earn more than one of these achievements at a time.
 	 */
-	public void endGameAchievements(int score, boolean notifyAchievementEarned){
-		BrokenHeart(score, notifyAchievementEarned);
-		ShootingTheMoon(score, notifyAchievementEarned);
-		OvershootingTheMoon(score, notifyAchievementEarned);
+	public int endGameAchievements(int score){
+		Boolean isTrue1, isTrue2, isTrue3 = false;
+		
+		isTrue1 = BrokenHeart(score);
+		isTrue2 = ShootingTheMoon(score);
+		isTrue3 = OvershootingTheMoon(score);
+		
+		if (isTrue1 == true)
+		{
+			return 1;
+		}
+		else if (isTrue2 == true)
+		{
+			return 2;
+		}
+		else if (isTrue3 == true)
+		{
+			return 3;
+		}
+		return 0;
 	}
 	
-	private boolean BrokenHeart(int score, boolean notifyAchievementEarned) {
+	private boolean BrokenHeart(int score) {
 		// "end game" usage
 		// Score: (Full_score)-(QoS)
 		String nameOfAchievement = "BrokenHeart";
@@ -174,22 +194,10 @@ public class Achievements
 				return true;
 			}
 		}
-		//TESTING ACHIEVEMENT UNLOCK - DO NOT SUBMIT THIS METHOD WITH FINAL PROGRAM
-		if (score >= 1) //test
-		{
-			if (giveAchievement(nameOfAchievement))
-			{
-				//notify achievement earned
-				notifyAchievementEarned("Broken Heart");
-				return true;
-			}
-		}
-		//DELETE THE ABOVE!!
-		
 		return false;
 	}
 	
-	private boolean ShootingTheMoon(int score, boolean notifyAchievementEarned) {
+	private boolean ShootingTheMoon(int score) {
 		// "end game" usage
 		// Score: (Full_score)
 		String nameOfAchievement = "ShootingTheMoon";
@@ -202,23 +210,20 @@ public class Achievements
 				return true;
 			}
 		}
-		//TESTING ACHIEVEMENT UNLOCK - DO NOT SUBMIT THIS METHOD WITH FINAL PROGRAM
-		if (score >= 1) //26 full score
-		{
-			if (giveAchievement(nameOfAchievement))
-			{
-				//notify achievement earned
-				notifyAchievementEarned("Shooting The Moon");
-				return true;
-			}
-		}
-		//DELETE THE ABOVE!!
 		return false;
-		
-		
 	}
 	
-	private boolean OvershootingTheMoon(int score, boolean notifyAchievementEarned) {
+	/**
+	 * There are three "achievements" to be earned here, according to the
+	 * achievementNames list, however, OvershootingTheMoon1 and
+	 * OvershootingTheMoon2 are "progression" achievements and do not
+	 * actually count as a full achievement. Therefore, this method will
+	 * only return true when the requirements for OvershootingTheMoon3 
+	 * are earned (which includes having  both progression "achievements")
+	 * @param score
+	 * @return true or false, which indicates achievement has been earned.
+	 */
+	private boolean OvershootingTheMoon(int score) {
 		// "end game" usage
 		// Score: (Full_score)
 		// Score must be obtained three times (meaning three different rounds)
@@ -237,7 +242,7 @@ public class Achievements
 					setCounterOvershootingTheMoon(1);
 					//progress toward achievement only
 					//no need to notify achievement earned
-					return true;
+					return false;
 				}
 			}
 			
@@ -248,7 +253,7 @@ public class Achievements
 					setCounterOvershootingTheMoon(2);
 					//progress toward achievement only
 					//no need to notify achievement earned
-					return true;
+					return false;
 				}
 			}
 			
@@ -364,7 +369,6 @@ public class Achievements
 			else
 			{
 				listOfAchievements.put(nameOfAchievement, true);
-				// user.writeAchievement(currentAchievement);
 				return true;
 			}
 		}
@@ -380,11 +384,10 @@ public class Achievements
 	{
 		if(arrayOfAchievements == null)
 			arrayOfAchievements = new ArrayList<String>(); 
-		for(String achievement : achievementNames) //steps through the enum
+		for(String achievement : achievementNames) //steps through list of names
 		{
 			arrayOfAchievements.add(achievement);
 		}
 		return arrayOfAchievements;
 	}
-
 }

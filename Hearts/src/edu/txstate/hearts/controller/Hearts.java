@@ -75,9 +75,9 @@ public class Hearts implements ActionListener
 	private final static boolean runUI = true;
 	private boolean showOpponentCards = true;
 	private User user; //for achievements
-	private HeartsUI heartsUI; //Public so that achievements can connect to it
+	private HeartsUI heartsUI;
 	private boolean startThePartyAchieve = false;
-	public static HeartsUI accessUI;
+	private Boolean achievementNotify = false;
 	
 	/**
 	 * 
@@ -216,7 +216,8 @@ public class Hearts implements ActionListener
 			this.players.get(0).getHand().remove(p0CardsToPass.get(i));
 		}
 		
-		user.getAchievements().PassingTheBuck(true, p0CardsToPass);
+		achievementPassingTheBuck(p0CardsToPass);
+		
 		
 		List<Card> p1CardsToPass = this.players.get(1).getCardsToPass(
 				this.passing);
@@ -476,9 +477,7 @@ public class Hearts implements ActionListener
 		this.heartsUI.ShowBalloonTip("First turn somewhere");
 		if (this.CURRENT_PLAYER_THIS_TURN == 0)
 		{
-			this.heartsUI.ShowBalloonTip("start party should be true");
 			startThePartyAchieve  = true;
-			this.heartsUI.ShowBalloonTip("should be true: " + startThePartyAchieve);
 			// do nothing, wait for user move
 		}
 		else
@@ -685,11 +684,7 @@ public class Hearts implements ActionListener
 				{
 					playerWithHighestValue.addTakenCard(cardsPlayed.get(j), !silent);
 					
-					//Give achievement to user (player 1) if cards are collected
-					if (players.get(0).equals(playerWithHighestValue));
-					{
-					user.getAchievements().HatTrick();
-					}
+					//achievementHatTrick(playerWithHighestValue);
 					
 					//figure out if hearts already broken
 					if(!this.heartsBroken && cardsPlayed.get(j).getSuit() == Suit.Hearts)
@@ -713,12 +708,7 @@ public class Hearts implements ActionListener
 				(this.CURRENT_TURN_FIRST && this.CURRENT_TURN == 0));
 		
 		//Give achievement if user has played correct card, boolean is true
-		if (startThePartyAchieve)
-		{
-			this.heartsUI.ShowBalloonTip("entering achievement give");
-			user.getAchievements().StartTheParty(CURRENT_CARDS_PLAYED);
-			startThePartyAchieve = false;
-		}
+		achievementStartTheParty();
 		
 		this.finalizePlayerTurn(card, position, player);
 	}
@@ -757,10 +747,7 @@ public class Hearts implements ActionListener
 				.indexOf(this.CURRENT_TURN_PLAYER_HIGHEST_VALUE);
 		
 		// If player who won the cards is the user, give achievement
-		if (this.CURRENT_PLAYER_THIS_TURN == 0)
-		{
-			user.getAchievements().HatTrick();
-		}
+		achievementHatTrick();
 	}
 	
 	private void initializeTurn()
@@ -871,6 +858,126 @@ public class Hearts implements ActionListener
 		}
 	}
 	
+	/**
+	 * Checks internal requirements for Start The Party achievement and
+	 * passes any additional requirements to the Achievements class for
+	 * further processing. If the Achievements class returns true,
+	 * this method will then pass the name of the earned Achievement to 
+	 * the achievementNotify method to process the message.
+	 * 
+	 */
+	private void achievementStartTheParty()
+	{
+		String achievement = "Start The Party";
+		if (startThePartyAchieve)
+		{
+			achievementNotify = user.getAchievements().StartTheParty(CURRENT_CARDS_PLAYED);
+			if (achievementNotify)
+			{
+				achievementNotify(achievement);
+			}
+			startThePartyAchieve = false;
+		}
+	}
+	
+	/**
+	 * Checks internal requirements for Passing The Buck achievement and
+	 * passes any additional requirements to the Achievements class for
+	 * further processing. If the Achievements class returns true,
+	 * this method will then pass the name of the earned Achievement to 
+	 * the achievementNotify method to process the message.
+	 * 
+	 * @param p0CardsToPass List of cards user has passed
+	 */
+	private void achievementPassingTheBuck(List<Card> p0CardsToPass)
+	{
+		String achievement = "Passing The Buck";
+		achievementNotify = user.getAchievements().PassingTheBuck(true, p0CardsToPass);
+		if (achievementNotify)
+		{
+			achievementNotify(achievement);
+		}
+	}
+	
+	/**
+	 * Checks internal requirements for Hat Trick achievement and
+	 * passes any additional requirements to the Achievements class for
+	 * further processing. If the Achievements class returns true,
+	 * this method will then pass the name of the earned Achievement to 
+	 * the achievementNotify method to process the message.
+	 * 
+	 */
+	private void achievementHatTrick()
+	{
+		String achievement = "Hat Trick";
+		if (this.CURRENT_PLAYER_THIS_TURN == 0)
+		{
+			achievementNotify = user.getAchievements().HatTrick();
+			if (achievementNotify)
+			{
+				achievementNotify(achievement);
+			}
+		}
+	}
+	
+	/**
+	 * Runs through all three achievements that need end game scores.
+	 * The method called within this method should return an integer
+	 * that corresponds to a particular achievement, 0 if no achievement
+	 * earned. If any number lower than 0 or higher than 3 is returned,
+	 * it will throw an exception as this shouldn't be possible.
+	 * @param scores
+	 */
+	private void achievementsEndGame(List<Integer> scores)
+	{
+		int earned = 0;
+		earned = user.getAchievements().endGameAchievements(scores.get(0));
+		try
+		{
+			if (earned == 1)
+			{
+				achievementNotify("Broken Heart");
+			} 
+			else if (earned == 2)
+			{
+				achievementNotify("Shooting The Moon");
+			} 
+			else if (earned == 3)
+			{
+				achievementNotify("Overshooting The Moon");
+			} 
+			else if (earned == 0)
+			{
+				// Do nothing. No achievement earned
+			} 
+			else
+			{
+				throw new Exception("Value of 'earned' shouldn't fall outside" +
+						"the range 0-3");
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		earned = 0; //reset to zero to be safe
+	}
+
+	/**
+	 * Pops the notification tooltip for the user that displays
+	 * the achievement unlocked message for a particular achievement.
+	 * This method MUST be called from within the actionPerformed
+	 * method in Hearts.java, or nested in a method that can be
+	 * traced back to actionPerformed, otherwise it will throw
+	 * a NullPointerException
+	 * 
+	 * @param achievement The name of the achievement
+	 */
+	private void achievementNotify(String achievement)
+	{
+		this.heartsUI.ShowBalloonTip("Achievement Unlocked - " + achievement);
+		achievementNotify = false;
+	}
+	
 	private int findPlayerToStart()
 	{
 		for (int i = 0; i < players.size(); i++)
@@ -928,7 +1035,7 @@ public class Hearts implements ActionListener
 		}
 		
 		//Run check for set of three achievements based on score --
-		user.getAchievements().endGameAchievements(scores.get(0), true);
+		achievementsEndGame(scores);
 		
 		for (int i = 0; i < players.size(); i++)
 		{
