@@ -94,7 +94,7 @@ public class PointsDisplay extends JFrame {
 		contentPane.add(lblBla);
 		
 		JButton btnPlayAgain = new JButton("Play Again");
-		btnPlayAgain.setBounds(10, 246, 89, 23);
+		btnPlayAgain.setBounds(42, 246, 89, 23);
 		contentPane.add(btnPlayAgain);
 		
 		JButton btnQuit = new JButton("Quit");
@@ -103,7 +103,7 @@ public class PointsDisplay extends JFrame {
 				System.exit(0);
 			}
 		});
-		btnQuit.setBounds(166, 246, 89, 23);
+		btnQuit.setBounds(176, 246, 89, 23);
 		contentPane.add(btnQuit);
 		
 		setVisible(true);
