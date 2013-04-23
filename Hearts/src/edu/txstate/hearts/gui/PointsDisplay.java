@@ -14,6 +14,8 @@ import javax.swing.JButton;
 
 import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.Player;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * this class displays the points of each player at the end of the game
@@ -96,6 +98,11 @@ public class PointsDisplay extends JFrame {
 		contentPane.add(btnPlayAgain);
 		
 		JButton btnQuit = new JButton("Quit");
+		btnQuit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		btnQuit.setBounds(166, 246, 89, 23);
 		contentPane.add(btnQuit);
 		
