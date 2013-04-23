@@ -55,7 +55,8 @@ public class Hearts implements ActionListener
 	private CardAction currentCardAction;
 	private ConfigurationUI configurationUI;
 	private Deck deck;
-	private List<Player> players;
+	private static List<Player> players;//static for points display
+	private static String winnerPlayer;//for point to know who wins
 	private List<Card> cardsSelectedToPass;
 	private List<JButton> buttonCardsSelectedToPass;
 	private Card cardSelectedToPlay;
@@ -86,6 +87,14 @@ public class Hearts implements ActionListener
 	public Set getSetofusers()
 	{
 		return setofusers;
+	}
+	
+	public static List<Player> getPlayers(){
+		return players;
+	}
+	
+	public static String getWinnerPlayer(){
+		return winnerPlayer; 
 	}
 	
 	/**
@@ -389,11 +398,13 @@ public class Hearts implements ActionListener
 								+ playerWithHighestTotalPoints.getName()
 								+ " loses with total score of "
 								+ playerWithHighestTotalPoints.getScore());
-					if(!silent)
+					if(!silent){
 						System.out.println("Player "
 								+ playerWithLowestTotalPoints.getName()
 								+ " wins with total score of "
 								+ playerWithLowestTotalPoints.getScore());
+						winnerPlayer = playerWithLowestTotalPoints.getName();
+					}
 					break;
 				}
 				
