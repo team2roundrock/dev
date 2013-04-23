@@ -53,19 +53,19 @@ public class PointsDisplay extends JFrame {
 		contentPane.add(lblPoints);
 		
 		JLabel lblPlayer = new JLabel(players.get(0).getName());
-		lblPlayer.setBounds(10, 141, 46, 14);
+		lblPlayer.setBounds(10, 141, 84, 21);
 		contentPane.add(lblPlayer);
 		
 		JLabel label = new JLabel(players.get(1).getName());
-		label.setBounds(10, 91, 46, 14);
+		label.setBounds(10, 91, 84, 21);
 		contentPane.add(label);
 		
 		JLabel label_1 = new JLabel(players.get(2).getName());
-		label_1.setBounds(10, 116, 46, 14);
+		label_1.setBounds(10, 116, 84, 21);
 		contentPane.add(label_1);
 		
 		JLabel lblUser = new JLabel(players.get(3).getName());
-		lblUser.setBounds(10, 66, 46, 14);
+		lblUser.setBounds(10, 66, 84, 21);
 		contentPane.add(lblUser);
 		
 		JLabel lblPointvalu = new JLabel(players.get(0).getScore()+"");
@@ -97,13 +97,13 @@ public class PointsDisplay extends JFrame {
 		JButton btnPlayAgain = new JButton("Play Again");
 		btnPlayAgain.putClientProperty("ButtonType", "PointDisplayPlayAgain");
 		btnPlayAgain.addActionListener(this.heartsController);
-		btnPlayAgain.setBounds(42, 246, 89, 23);
+		btnPlayAgain.setBounds(32, 246, 113, 38);
 		contentPane.add(btnPlayAgain);
 		
 		JButton btnQuit = new JButton("Quit");
 		btnPlayAgain.putClientProperty("ButtonType", "PointDisplayQuit");
 		btnQuit.addActionListener(this.heartsController);
-		btnQuit.setBounds(176, 246, 89, 23);
+		btnQuit.setBounds(155, 246, 110, 38);
 		contentPane.add(btnQuit);
 	}
 	
