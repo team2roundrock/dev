@@ -94,7 +94,7 @@ public class Hearts implements ActionListener
 	}
 	
 	public static String getWinnerPlayer(){
-		return winnerPlayer;
+		return winnerPlayer; 
 	}
 	
 	/**

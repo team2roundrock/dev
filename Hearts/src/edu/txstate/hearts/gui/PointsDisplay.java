@@ -15,6 +15,11 @@ import javax.swing.JButton;
 import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.Player;
 
+/**
+ * this class displays the points of each player at the end of the game
+ * @author Maria Poole
+ *
+ */
 public class PointsDisplay extends JFrame {
 
 	private JPanel contentPane;
