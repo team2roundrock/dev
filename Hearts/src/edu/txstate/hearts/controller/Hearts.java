@@ -145,21 +145,21 @@ public class Hearts implements ActionListener
 		
 		if(levelOfDifficulty.equalsIgnoreCase("Easy"))
 		{
-			player2 = new AgentGoofy("Computer 1", 1);
-			player3 = new AgentGoofy("Computer 2", 2);
-			player4 = new AgentDetermined("Computer 3", 3);
+			player2 = new AgentGoofy("Neil", 1);
+			player3 = new AgentGoofy("Jonathan", 2);
+			player4 = new AgentDetermined("Maria", 3);
 		}
 		else if(levelOfDifficulty.equalsIgnoreCase("Medium"))
 		{
-			player2 = new AgentGoofy("Computer 1", 1);
-			player3 = new AgentAggressive("Computer 2", 2);
-			player4 = new AgentDetermined("Computer 3", 3);
+			player2 = new AgentGoofy("Neil", 1);
+			player3 = new AgentAggressive("Jonathan", 2);
+			player4 = new AgentDetermined("Maria", 3);
 		}
 		else
 		{
-			player2 = new AgentAggressive("Computer 1", 1);
-			player3 = new AgentAggressive("Computer 2", 2);
-			player4 = new AgentDetermined("Computer 3", 3);
+			player2 = new AgentAggressive("Neil", 1);
+			player3 = new AgentAggressive("Jonathan", 2);
+			player4 = new AgentDetermined("Maria", 3);
 		}
 		
 		players.add(player1);
