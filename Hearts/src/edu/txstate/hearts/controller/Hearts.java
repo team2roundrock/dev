@@ -27,6 +27,7 @@ import edu.txstate.hearts.gui.ConfigurationUI;
 import edu.txstate.hearts.gui.HeartsUI;
 import edu.txstate.hearts.gui.HeartsUI.CardAction;
 import edu.txstate.hearts.gui.HeartsUI.Position;
+import edu.txstate.hearts.gui.PointsDisplay;
 import edu.txstate.hearts.gui.RulesWindow;
 import edu.txstate.hearts.model.*;
 import edu.txstate.hearts.model.Card.Face;
@@ -813,6 +814,9 @@ public class Hearts implements ActionListener
 							+ playerWithLowestTotalPoints.getName()
 							+ " wins with total score of "
 							+ playerWithLowestTotalPoints.getScore());
+				
+				PointsDisplay pointDisplay = new PointsDisplay(this, this.players);
+				pointDisplay.showDialog();
 				return;
 			}
 			
@@ -1116,9 +1120,20 @@ public class Hearts implements ActionListener
 					initialize(playerName, endScore, levelOfDifficulty);
 					runGame();
 				}
-			} else if (buttonType.equals("ConfigurationCancel")) {
+			} 
+			else if (buttonType.equals("ConfigurationCancel")) 
+			{
 				System.exit(0);
-			} else if (buttonType.equals("PassButton")) {
+			}
+			else if (buttonType.equals("PointDisplayPlayAgain")) 
+			{
+				//TODO: play again
+			}
+			else if (buttonType.equals("PointDisplayQuit")) 
+			{
+				System.exit(0);
+			}
+			else if (buttonType.equals("PassButton")) {
 				if (this.numCardsSelectedToPass != 3) {
 					this.heartsUI.ShowBalloonTip("Pick 3 cards to pass!");
 					return;

@@ -22,6 +22,8 @@ import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.apache.commons.math3.util.MultidimensionalCounter.Iterator;
 
@@ -52,6 +54,7 @@ public class ConfigurationUI {
 	private String playerName;
 	private Set theUsers;
 	private JComboBox comboBox;
+	private JTextField scoreTextField;
 	private Hearts heartsController;
 	private boolean userErrorShown = false;
 
@@ -68,7 +71,9 @@ public class ConfigurationUI {
 		return this.levelOfDifficulty;
 	}
 
-	public int getEndScore() {
+	public int getEndScore() 
+	{
+		this.endScore = Integer.parseInt(this.scoreTextField.getText());
 		return this.endScore;
 	}
 
@@ -128,9 +133,9 @@ public class ConfigurationUI {
 		frmConfigurationWindow.getContentPane().add(lblSetEndScore);
 		String[] defaultEndScore = { "100" };
 		// JComboBox comboBox_1 = new JComboBox(defaultEndScore);
-		JTextField comboBox_1 = new JTextField(defaultEndScore[0]);
+		this.scoreTextField = new JTextField(defaultEndScore[0]);
 		// add an action listener for the score
-		comboBox_1.addActionListener(new ActionListener() {
+		this.scoreTextField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// JComboBox cb = (JComboBox)arg0.getSource();
 				JTextField cb = (JTextField) arg0.getSource();
@@ -160,10 +165,10 @@ public class ConfigurationUI {
 
 			}// end of action listener
 		});
-		comboBox_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		comboBox_1.setEditable(true);
-		comboBox_1.setBounds(138, 94, 163, 29);
-		frmConfigurationWindow.getContentPane().add(comboBox_1);
+		this.scoreTextField.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		this.scoreTextField.setEditable(true);
+		this.scoreTextField.setBounds(138, 94, 163, 29);
+		frmConfigurationWindow.getContentPane().add(this.scoreTextField);
 
 		// create label and drop down menu for the level of difficulty
 		JLabel lblLevelOfDifficulty = new JLabel("Level of Difficulty");

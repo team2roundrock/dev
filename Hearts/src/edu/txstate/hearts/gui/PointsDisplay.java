@@ -25,14 +25,15 @@ import java.awt.event.ActionEvent;
 public class PointsDisplay extends JFrame {
 
 	private JPanel contentPane;
+	private Hearts heartsController;
 
 	
 	/**
 	 * Create the frame.
 	 */
-	public PointsDisplay() {
-		List<Player> players = Hearts.getPlayers();
-		
+	public PointsDisplay(Hearts heartsController, List<Player> players) 
+	{
+		this.heartsController = heartsController;
 		setTitle("Final Scores");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 327, 333);
@@ -94,18 +95,28 @@ public class PointsDisplay extends JFrame {
 		contentPane.add(lblBla);
 		
 		JButton btnPlayAgain = new JButton("Play Again");
+		btnPlayAgain.putClientProperty("ButtonType", "PointDisplayPlayAgain");
+		btnPlayAgain.addActionListener(this.heartsController);
 		btnPlayAgain.setBounds(42, 246, 89, 23);
 		contentPane.add(btnPlayAgain);
 		
 		JButton btnQuit = new JButton("Quit");
-		btnQuit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		btnPlayAgain.putClientProperty("ButtonType", "PointDisplayQuit");
+		btnQuit.addActionListener(this.heartsController);
 		btnQuit.setBounds(176, 246, 89, 23);
 		contentPane.add(btnQuit);
-		
-		setVisible(true);
+	}
+	
+	public void showDialog() 
+	{
+		try 
+		{
+			this.setLocationRelativeTo(null);
+			this.setVisible(true);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 	}
 }
