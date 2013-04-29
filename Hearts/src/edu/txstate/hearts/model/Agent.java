@@ -3,8 +3,6 @@
  */
 package edu.txstate.hearts.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import edu.txstate.hearts.controller.Hearts.Passing;
