@@ -1,37 +1,32 @@
 package edu.txstate.hearts.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
 import java.util.List;
-
 import javax.swing.JButton;
-
 import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.Player;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import edu.txstate.hearts.utils.ReadFiles;
 
 /**
- * this class displays the points of each player at the end of the game
- * @author Maria Poole
+ * This class displays the points of each player at the end of the game
+ * @author Maria Poole, I Gede Sutapa
  *
  */
-public class PointsDisplay extends JFrame {
-
+@SuppressWarnings("serial")
+public class PointsDisplay extends JFrame 
+{
 	private JPanel contentPane;
 	private Hearts heartsController;
-
 	
 	/**
 	 * Create the frame.
 	 */
-	public PointsDisplay(Hearts heartsController, List<Player> players) 
+	public PointsDisplay(Hearts heartsController, List<Player> players, String winnerName) 
 	{
 		this.heartsController = heartsController;
 		setTitle("Final Scores");
@@ -89,7 +84,7 @@ public class PointsDisplay extends JFrame {
 		lblTheWinnerIs.setBounds(10, 195, 99, 27);
 		contentPane.add(lblTheWinnerIs);
 		
-		JLabel lblBla = new JLabel(Hearts.getWinnerPlayer());
+		JLabel lblBla = new JLabel(winnerName);
 		lblBla.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblBla.setBounds(166, 195, 99, 27);
 		contentPane.add(lblBla);
@@ -105,8 +100,15 @@ public class PointsDisplay extends JFrame {
 		btnQuit.addActionListener(this.heartsController);
 		btnQuit.setBounds(155, 246, 110, 38);
 		contentPane.add(btnQuit);
+		
+		Image image = ReadFiles.getImage("heart.png");
+		this.setIconImage(image);
 	}
 	
+	
+	/**
+	 * Show UI in center screen
+	 */
 	public void showDialog() 
 	{
 		try 

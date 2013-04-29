@@ -3,20 +3,25 @@ package edu.txstate.hearts.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
 
 /**
  * This class implements the logic for a medium level AI.
- * @author Gede Sutapa, Maria Poole
+ * @author I Gede Sutapa, Maria Poole
  *
  */
-public class AgentDetermined extends Agent {
-
-	public AgentDetermined(String playerName, int num) {
-		super(playerName, num);
-		// TODO Auto-generated constructor stub
+public class AgentDetermined extends Agent 
+{
+	/**
+	 * Constructor
+	 * 
+	 * @param name	agent name
+	 * @param num	position index
+	 */
+	public AgentDetermined(String name, int num) 
+	{
+		super(name, num);
 	}
 	
 	/**
@@ -104,11 +109,12 @@ public class AgentDetermined extends Agent {
 		getHand().remove(cardToPlay);
 		return cardToPlay;
 	}
-/**
- * This method determines how AgentDetermine passes cards at the beginning of a turn. If the Queen of Spades or
- *  the Ace, Ten, Jack, King and Queen of Hearts are in its hand, it is going to pass those cards. Otherwise, it will
- *  pass the highest cards it has. 
- */
+	
+	/**
+	 * This method determines how AgentDetermine passes cards at the beginning of a turn. If the Queen of Spades or
+	 * the Ace, Ten, Jack, King and Queen of Hearts are in its hand, it is going to pass those cards. Otherwise, it will
+	 * pass the highest cards it has. 
+	 */
 	public List<Card> getCardsToPass() 
 	{
 		int numCardsToPass = 3;
@@ -143,5 +149,4 @@ public class AgentDetermined extends Agent {
 		}
 		return cardsToPass;
 	}
-
 }

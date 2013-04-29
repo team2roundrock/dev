@@ -1,12 +1,8 @@
 package edu.txstate.hearts.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
-
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -15,19 +11,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-//import java.awt.event.KeyEvent;
 import java.awt.event.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import edu.txstate.hearts.controller.Hearts;
 import edu.txstate.hearts.model.*;
 import edu.txstate.hearts.model.Card.Suit;
@@ -74,6 +62,9 @@ public class HeartsUI
 	private final int PANEL_WIDTH = 740;
 	private final int PANEL_HEIGHT = 730;
 	
+	/**
+	 * Show UI in center screen
+	 */
 	public void showDialog()
 	{
 		try
@@ -87,16 +78,18 @@ public class HeartsUI
 		}
 	}
 	
+	/**
+	 * Default constructor
+	 */
 	public HeartsUI()
 	{
 	}
 	
-	public HeartsUI(List<Player> players)
-	{
-		this.players = players;
-		initialize();
-	}
-	
+	/**
+	 * Set player names to display on the table
+	 * 
+	 * @param players	list of players
+	 */
 	public void setPlayers(List<Player> players)
 	{
 		this.players = players;
@@ -131,17 +124,30 @@ public class HeartsUI
 		this.panel.add(player4Label);
 	}
 	
+	/**
+	 * Set window for playing
+	 * 
+	 * @param showOpponentCards	indicator whether to show opponents' card or not
+	 */
 	public void setUI(boolean showOpponentCards)
 	{
 		this.SHOW_OPPONENT_CARDS = showOpponentCards;
 		initialize();
 	}
 	
+	/**
+	 * Add hearts controller to UI
+	 * 
+	 * @param heartsController	hearts controller
+	 */
 	public void addController(Hearts heartsController)
 	{
 		this.heartsController = heartsController;
 	}
 	
+	/**
+	 * Initialize table for playing
+	 */
 	private void initialize()
 	{
 		frame = new JFrame();
@@ -182,7 +188,7 @@ public class HeartsUI
 		});
 		
 		JMenuBar menuBar;
-		JMenu menu, submenu;
+		JMenu menu;
 		JMenuItem menuItem;
 
 		//Create the menu bar.
@@ -215,6 +221,9 @@ public class HeartsUI
 		frame.setJMenuBar(menuBar);
 	}
 	
+	/**
+	 * Display cards on table
+	 */
 	public void displayCards()
 	{
 		// remove old buttons
@@ -222,6 +231,9 @@ public class HeartsUI
 		initializeButtons();
 	}
 	
+	/**
+	 * @param flag	indicator whether to show pass button or not
+	 */
 	public void setPassButtonVisible(boolean flag)
 	{
 		passButton.setVisible(flag);
@@ -249,6 +261,11 @@ public class HeartsUI
 		return jButtonList;
 	}
 	
+	/**
+	 * Show balloon tip during the game
+	 * 
+	 * @param message	message to display
+	 */
 	public void ShowBalloonTip(String message)
 	{
 		this.balloonTextField.setText(message);
@@ -311,6 +328,9 @@ public class HeartsUI
 		
 	}
 	
+	/**
+	 * Redraw cards during the game
+	 */
 	public void redrawCards()
 	{
 		Player player = null;
@@ -517,6 +537,12 @@ public class HeartsUI
 		this.repaintPanel();
 	}
 	
+	/**
+	 * Show card that the player selected to play
+	 * 
+	 * @param position	player position
+	 * @param card		card selected to play
+	 */
 	public void showPlayedCardButton(Position position, Card card)
 	{
 		JButton jButton = null;
@@ -545,6 +571,9 @@ public class HeartsUI
 		this.repaintPanel();
 	}
 	
+	/**
+	 * Hide played cards button
+	 */
 	public void hideAllPlayedCardButtons()
 	{
 		this.northCardButton.setVisible(false);
@@ -555,8 +584,13 @@ public class HeartsUI
 		this.repaintPanel();
 	}
 	
-	
-	
+	/**
+	 * Find button containing card for a given position
+	 * 
+	 * @param position	player position
+	 * @param card		card to find
+	 * @return		button containing card for a given position
+	 */
 	public JButton findButton(Position position, Card card)
 	{
 		List<JButton> buttonList = null;
@@ -587,35 +621,38 @@ public class HeartsUI
 		return null;
 	}
 	
-	public void removeButton(JButton jButton, Position position)
+	/**
+	 * @param button	button to remove
+	 * @param position	player position
+	 */
+	public void removeButton(JButton button, Position position)
 	{
 		List<JButton> jButtonList = this.getJButtonList(position);
-		int index = jButtonList.indexOf(jButton);
-		int listSize = jButtonList.size();
+		int index = jButtonList.indexOf(button);
 		
 		// remove
-		jButtonList.remove(jButton);
-		panel.remove(jButton);
+		jButtonList.remove(button);
+		panel.remove(button);
 		
 		// if this is not the last card, rearrange
 		if(index < jButtonList.size() || jButtonList.size() == 1)
 		{
 			for (int i = index; i < jButtonList.size(); i++)
 			{
-				jButton = jButtonList.get(i);
+				button = jButtonList.get(i);
 				switch (position)
 				{
 					case North:
-						jButton.setLocation(jButton.getX() - 50, jButton.getY());
+						button.setLocation(button.getX() - 50, button.getY());
 						break;
 					case South:
-						jButton.setLocation(jButton.getX() - 50, jButton.getY());
+						button.setLocation(button.getX() - 50, button.getY());
 						break;
 					case West:
-						jButton.setLocation(jButton.getX(), jButton.getY() - 20);
+						button.setLocation(button.getX(), button.getY() - 20);
 						break;
 					case East:
-						jButton.setLocation(jButton.getX(), jButton.getY() - 20);
+						button.setLocation(button.getX(), button.getY() - 20);
 						break;
 				}
 			}
@@ -624,18 +661,34 @@ public class HeartsUI
 		this.repaintPanel();
 	}
 	
+	/**
+	 * Set card as "selected" to pass
+	 * 
+	 * @param button	button selected
+	 */
 	public void setCardSelected(JButton button)
 	{
 		button.setLocation(button.getX(), button.getY() - 20);
 		button.putClientProperty("Selected", true);
 	}
 	
+	/**
+	 * Set card as "unselected" to pass
+	 * 
+	 * @param button	button unselected
+	 */
 	public void setCardUnselected(JButton button)
 	{
 		button.setLocation(button.getX(), button.getY() + 20);
 		button.putClientProperty("Selected", false);
 	}
 	
+	/**
+	 * Show or hide player played card button
+	 * 
+	 * @param position	player position
+	 * @param flag		indicator whether to show/hide the button
+	 */
 	public void setPlayedCardVisible(Position position, boolean flag)
 	{
 		switch (position)

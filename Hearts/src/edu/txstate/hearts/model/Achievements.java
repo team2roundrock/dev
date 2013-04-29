@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.txstate.hearts.model;
 
 import java.io.IOException;
@@ -9,10 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-//import edu.txstate.hearts.controller.Hearts;
-//import edu.txstate.hearts.gui.HeartsUI;
-//import edu.txstate.hearts.utils.ReadFiles;
 import edu.txstate.hearts.utils.UserData;
 
 /**
@@ -22,7 +15,6 @@ import edu.txstate.hearts.utils.UserData;
 
 public class Achievements
 {
-
 	static List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
 			"StartTheParty","HatTrick","OvershootingTheMoon1","OvershootingTheMoon2", 
 			"OvershootingTheMoon");
@@ -31,12 +23,8 @@ public class Achievements
 	private int counterOvershootingTheMoon;
 	boolean achievedOrNot;
 	private final UserData user;
-	//private Player player;
-	//private Hearts hearts = new Hearts();
 	private static String userFileName;
 	private static ArrayList<String> arrayOfAchievements;
-	//private static ArrayList<String> arrayOfUserAchievements;
-	//private HeartsUI heartsUI;
 	Map<String, Boolean> listOfAchievements;
 	
 	public Achievements(String userName, List<String> passedAchievements)

@@ -1,21 +1,15 @@
-/**
- * 
- */
 package edu.txstate.hearts.model;
 
-import java.util.Comparator;
-
 /**
+ * Card class
+ * 
  * @author Neil Stickels, I Gede Sutapa
- *
  */
 public class Card
 {
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj) 
+	{
 		Card card = (Card)obj;
 		return card.getFace() == getFace() && card.getSuit() == getSuit();
 	}
@@ -28,17 +22,29 @@ public class Card
 	private final Face face;
 	private final Suit suit;
 	
-	public Card(Face cardFace, Suit cardSuit)
+	/**
+	 * Constructor
+	 * 
+	 * @param face	card face
+	 * @param suit	card suit
+	 */
+	public Card(Face face, Suit suit)
 	{
-		this.face = cardFace;
-		this.suit = cardSuit;
+		this.face = face;
+		this.suit = suit;
 	}
 	
+	/**
+	 * @return card face
+	 */
 	public Face getFace()
 	{
 		return this.face;
 	}
 	
+	/**
+	 * @return card suit
+	 */
 	public Suit getSuit()
 	{
 		return this.suit;

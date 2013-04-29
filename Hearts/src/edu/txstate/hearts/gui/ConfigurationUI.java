@@ -1,34 +1,18 @@
 package edu.txstate.hearts.gui;
 
-import java.awt.EventQueue;
 import java.awt.Image;
-
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import java.awt.Font;
-
 import java.awt.event.*;
-import java.util.Set;
 import java.util.Vector;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import org.apache.commons.math3.util.MultidimensionalCounter.Iterator;
-
 import edu.txstate.hearts.controller.Hearts;
-import edu.txstate.hearts.model.User;
 import edu.txstate.hearts.utils.ReadFiles;
 
 /**
@@ -37,40 +21,59 @@ import edu.txstate.hearts.utils.ReadFiles;
  * interface is made up of a JFrame containing 3 ComboBoxes that allow for easy
  * access to information.
  * 
- * @author Maria Poole
+ * @author Maria Poole, I Gede Sutapa
  * 
  */
-public class ConfigurationUI {
+public class ConfigurationUI 
+{
 
-	private JFrame frmConfigurationWindow;
+	private JFrame frame;
 
-	public JFrame getFrmConfigurationWindow() {
-		return frmConfigurationWindow;
+	public JFrame getFrame() 
+	{
+		return frame;
 	}
 
 	private final Action action = new SwingAction();
 	private int endScore = 100;
 	private String levelOfDifficulty = "Easy";
 	private String playerName;
-	private Set theUsers;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox;
 	private JTextField scoreTextField;
 	private Hearts heartsController;
 	private boolean userErrorShown = false;
 
-	public ConfigurationUI(Hearts heartsController) {
+	/**
+	 * Constructor
+	 * 
+	 * @param heartsController	hearts controller
+	 */
+	public ConfigurationUI(Hearts heartsController) 
+	{
 		this.heartsController = heartsController;
 		initialize();
 	}
 
-	public String getPlayerName() {
+	/**
+	 * @return player name
+	 */
+	public String getPlayerName() 
+	{
 		return this.playerName;
 	}
 
-	public String getLevelofDifficulty() {
+	/**
+	 * @return selected level of difficulty
+	 */
+	public String getLevelofDifficulty() 
+	{
 		return this.levelOfDifficulty;
 	}
 
+	/**
+	 * @return specified end score
+	 */
 	public int getEndScore() 
 	{
 		this.endScore = Integer.parseInt(this.scoreTextField.getText());
@@ -80,17 +83,19 @@ public class ConfigurationUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-		frmConfigurationWindow = new JFrame();
-		frmConfigurationWindow.setTitle("Hearts - configuration");
-		frmConfigurationWindow.getContentPane().setEnabled(false);
-		frmConfigurationWindow.setBounds(100, 100, 450, 300);
-		frmConfigurationWindow.setResizable(false);
-		frmConfigurationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmConfigurationWindow.getContentPane().setLayout(null);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void initialize() 
+	{
+		frame = new JFrame();
+		frame.setTitle("Hearts - configuration");
+		frame.getContentPane().setEnabled(false);
+		frame.setBounds(100, 100, 450, 300);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
 
 		Image image = ReadFiles.getImage("heart.png");
-		frmConfigurationWindow.setIconImage(image);
+		frame.setIconImage(image);
 
 		final JButton btnOk = new JButton("OK");
 		btnOk.putClientProperty("ButtonType", "ConfigurationOK");
@@ -119,18 +124,18 @@ public class ConfigurationUI {
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		comboBox.setEditable(true);
 		comboBox.setBounds(138, 37, 163, 29);
-		frmConfigurationWindow.getContentPane().add(comboBox);
+		frame.getContentPane().add(comboBox);
 
 		JLabel lblUserName = new JLabel("User Name");
 		lblUserName.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblUserName.setBounds(10, 38, 104, 14);
-		frmConfigurationWindow.getContentPane().add(lblUserName);
+		frame.getContentPane().add(lblUserName);
 
 		// Create Label and drop down menu for Setting the score
 		JLabel lblSetEndScore = new JLabel("Set End Score");
 		lblSetEndScore.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblSetEndScore.setBounds(10, 95, 93, 14);
-		frmConfigurationWindow.getContentPane().add(lblSetEndScore);
+		frame.getContentPane().add(lblSetEndScore);
 		String[] defaultEndScore = { "100" };
 		// JComboBox comboBox_1 = new JComboBox(defaultEndScore);
 		this.scoreTextField = new JTextField(defaultEndScore[0]);
@@ -168,13 +173,13 @@ public class ConfigurationUI {
 		this.scoreTextField.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		this.scoreTextField.setEditable(true);
 		this.scoreTextField.setBounds(138, 94, 163, 29);
-		frmConfigurationWindow.getContentPane().add(this.scoreTextField);
+		frame.getContentPane().add(this.scoreTextField);
 
 		// create label and drop down menu for the level of difficulty
 		JLabel lblLevelOfDifficulty = new JLabel("Level of Difficulty");
 		lblLevelOfDifficulty.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblLevelOfDifficulty.setBounds(10, 152, 118, 19);
-		frmConfigurationWindow.getContentPane().add(lblLevelOfDifficulty);
+		frame.getContentPane().add(lblLevelOfDifficulty);
 		// add an action listener when the level is changed
 		String[] levels = { "Easy", "Medium", "Hard" };
 		JComboBox comboBox_2 = new JComboBox(levels);
@@ -187,7 +192,7 @@ public class ConfigurationUI {
 		});
 		comboBox_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		comboBox_2.setBounds(138, 151, 163, 29);
-		frmConfigurationWindow.getContentPane().add(comboBox_2);
+		frame.getContentPane().add(comboBox_2);
 
 		// btnOk.addActionListener(new ActionListener() {
 		// public void actionPerformed(ActionEvent e)
@@ -197,7 +202,7 @@ public class ConfigurationUI {
 		// }
 		// });
 		btnOk.setBounds(119, 206, 93, 29);
-		frmConfigurationWindow.getContentPane().add(btnOk);
+		frame.getContentPane().add(btnOk);
 
 		// Cancel button includes event handler: closes window when pressed
 		JButton btnCancel = new JButton("CANCEL");
@@ -210,16 +215,19 @@ public class ConfigurationUI {
 		// });
 		btnCancel.setAction(action);
 		btnCancel.setBounds(259, 206, 93, 29);
-		frmConfigurationWindow.getContentPane().add(btnCancel);
+		frame.getContentPane().add(btnCancel);
 
 	}// end of initialize
 
+	/**
+	 * Show UI on center screen
+	 */
 	public void showDialog() 
 	{
 		try 
 		{
-			frmConfigurationWindow.setLocationRelativeTo(null);
-			frmConfigurationWindow.setVisible(true);
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
 		} 
 		catch (Exception e) 
 		{
@@ -227,26 +235,23 @@ public class ConfigurationUI {
 		}
 	}
 
-	public void setVisibility(boolean flag) {
-		try {
-			frmConfigurationWindow.setVisible(flag);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void displayErrorDialog(String message) {
+	public void displayErrorDialog(String message) 
+	{
 		JOptionPane.showMessageDialog(null, message, "",
 				JOptionPane.ERROR_MESSAGE);
 	}
 
-	public void displayInfoDialog(String message) {
+	public void displayInfoDialog(String message) 
+	{
 		JOptionPane.showMessageDialog(null, message, "",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
+	@SuppressWarnings("serial")
+	private class SwingAction extends AbstractAction 
+	{
+		public SwingAction() 
+		{
 			putValue(NAME, "CANCEL");
 			putValue(SHORT_DESCRIPTION, "Don't start game");
 		}
@@ -256,23 +261,19 @@ public class ConfigurationUI {
 		}
 	}
 
-	public void setUsers(Set setofusers) {
-		theUsers = setofusers;
-
-	}
-
 	/**
 	 * @return the userErrorShown
 	 */
-	public boolean isUserErrorShown() {
+	public boolean isUserErrorShown() 
+	{
 		return userErrorShown;
 	}
 
 	/**
-	 * @param userErrorShown
-	 *            the userErrorShown to set
+	 * @param userErrorShown	the userErrorShown to set
 	 */
-	public void setUserErrorShown(boolean userErrorShown) {
+	public void setUserErrorShown(boolean userErrorShown) 
+	{
 		this.userErrorShown = userErrorShown;
 	}
-}// end of configuration window class
+}

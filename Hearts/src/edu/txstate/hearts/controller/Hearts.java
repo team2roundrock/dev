@@ -1,42 +1,26 @@
-/**
- * 
- */
 package edu.txstate.hearts.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.awt.EventQueue;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
-
 import edu.txstate.hearts.gui.AchievementsDisplay;
 import edu.txstate.hearts.gui.ConfigurationUI;
 import edu.txstate.hearts.gui.HeartsUI;
-import edu.txstate.hearts.gui.HeartsUI.CardAction;
 import edu.txstate.hearts.gui.HeartsUI.Position;
 import edu.txstate.hearts.gui.PointsDisplay;
 import edu.txstate.hearts.gui.RulesWindow;
 import edu.txstate.hearts.model.*;
 import edu.txstate.hearts.model.Card.Face;
 import edu.txstate.hearts.model.Card.Suit;
-import edu.txstate.hearts.utils.RiskThresholds;
 
 /**
- * @author Neil Stickels, I Gede Sutapa
+ * Hearts Controller
  * 
+ * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton 
  */
 public class Hearts implements ActionListener
 {
@@ -44,122 +28,99 @@ public class Hearts implements ActionListener
 	{
 		Passing, Playing, Idle
 	}
-	
+
 	public enum Passing
 	{
 		Left, Right, Front, Stay
 	}
+
+	public final static boolean silent = false;
 	
-	private Position currentPlayingPosition;
-	private int numCardsSelectedToPass;
-	private boolean cardsReadyToPass;
-	private CardAction currentCardAction;
+	private final int maxTurnsPlayed = 13;
+	private final int maxCardsPerTurn = 4;
+	
+	private int cardsSelectedToPassCount;
+	private CardAction cardAction;
 	private ConfigurationUI configurationUI;
 	private Deck deck;
-	private static List<Player> players;//static for points display
-	private static String winnerPlayer;//for point to know who wins
+	private List<Player> players;
 	private List<Card> cardsSelectedToPass;
 	private List<JButton> buttonCardsSelectedToPass;
-	private Card cardSelectedToPlay;
-	private JButton buttonCardSelectedToPlay;
-	private boolean cardChosenToPlay;
-	private boolean cardReadyToPlay;
-	private int turnsPlayed;
-	private boolean heartsBroken; // flag when hearts broken to allow a heart as
-									// first card played
-	private boolean notifyHeartsBroken; // implement notification
-										// "Hearts has been broken"
+	private boolean notifyHeartsBroken; // implement notification "Hearts has been broken"
 	private Passing passing;
 	private int endScore;
-	public final static boolean silent = false;
-	private final static int GAMES_TO_RUN = 1;
-	private Set setofusers;
-	private final static boolean runUI = true;
 	private boolean showOpponentCards = true;
-	private User user; //for achievements
+	private User user; // for achievements
 	private HeartsUI heartsUI;
 	private boolean startThePartyAchieve = false;
 	private Boolean achievementNotify = false;
-	
+	private int currentPlayerIndexThisTurn;
+	private int currentTurn;
+	private List<Card> currentCardsPlayed;
+	private boolean currentTurnFirst;
+	private Card currentTurnFirstPlayedCard;
+	private Card currentTurnHighestValueCard;
+	private Player currentTurnPlayerWithHighestValue;
+	private boolean heartsBroken;
+
 	/**
-	 * 
-	 * @return
+	 * Constructor
+	 *
 	 */
-	public Set getSetofusers()
-	{
-		return setofusers;
-	}
-	
-	public static List<Player> getPlayers(){
-		return players;
-	}
-	
-	public static String getWinnerPlayer(){
-		return winnerPlayer; 
-	}
-	
-	/**
-	 * @param args
-	 */
-	/*
-	 * public static void main(String[] args) { final Hearts game = new
-	 * Hearts();
-	 * 
-	 * if(runUI) { EventQueue.invokeLater(new Runnable() { public void run() {
-	 * try { ConfigurationUI window = new ConfigurationUI(game);
-	 * window.getFrmConfigurationWindow().setVisible(true); } catch (Exception
-	 * e) { e.printStackTrace(); } } }); } else { game.oldInitialize();
-	 * game.runGame(); }
-	 * 
-	 * //game.initialize(); //game.runGame(); }
-	 */
-	
 	public Hearts()
 	{
-		
 	}
-	
+
+	/**
+	 * Add UI to be used for hearts game
+	 *
+	 * @param heartsUI	UI object
+	 */
 	public void addUI(HeartsUI heartsUI)
 	{
 		this.heartsUI = heartsUI;
 	}
-	
+
+	/**
+	 * The beginning of hearts game
+	 *
+	 */
 	public void run()
 	{
 		this.configurationUI = new ConfigurationUI(this);
 		configurationUI.showDialog();
-//		String playerName = "Mr.Awesome";
-//		int endScore = 100;
-//		String levelOfDifficulty = "Master";
-//		
-//		initialize(playerName, endScore, levelOfDifficulty);
-//		runGame();
 	}
-	
-	public void initialize(String playerName, int endScore,
-			String levelOfDifficulty)
+
+	/**
+	 * Initializing when the game starts
+	 *
+	 * @param playerName		player name
+	 * @param endScore			score to determine when the game ends
+	 * @param levelOfDifficulty	level of difficulty
+	 */
+	public void initialize(String playerName, int endScore, String levelOfDifficulty)
 	{
 		this.passing = Passing.Left; // initial
 		this.endScore = endScore; // default
 		this.cardsSelectedToPass = new ArrayList<Card>(3);
 		this.buttonCardsSelectedToPass = new ArrayList<JButton>(3);
-		
+
 		this.players = new ArrayList<Player>(4);
-		
+
 		Player player1 = new User(playerName, 0);
 		Player player2;
 		Player player3;
 		Player player4;
-		
-		user = (User) player1; //for achievements
-		
-		if(levelOfDifficulty.equalsIgnoreCase("Easy"))
+
+		user = (User) player1; // for achievements
+
+		if (levelOfDifficulty.equalsIgnoreCase("Easy"))
 		{
 			player2 = new AgentGoofy("Neil", 1);
 			player3 = new AgentGoofy("Jonathan", 2);
 			player4 = new AgentDetermined("Maria", 3);
 		}
-		else if(levelOfDifficulty.equalsIgnoreCase("Medium"))
+		else if (levelOfDifficulty.equalsIgnoreCase("Medium"))
 		{
 			player2 = new AgentGoofy("Neil", 1);
 			player3 = new AgentAggressive("Jonathan", 2);
@@ -171,24 +132,32 @@ public class Hearts implements ActionListener
 			player3 = new AgentAggressive("Jonathan", 2);
 			player4 = new AgentDetermined("Maria", 3);
 		}
-		
+
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
 		players.add(player4);
 	}
-	
+
+	/**
+	 * Shuffle cards in a deck
+	 *
+	 */
 	private void shuffleCards()
 	{
 		deck.shuffleCards();
-		
-		if(!silent)
+
+		if (!silent)
 		{
 			deck.printCards();
 			System.out.println("");
 		}
 	}
-	
+
+	/**
+	 * Deal cards to players
+	 *
+	 */
 	private void dealCards()
 	{
 		// deal cards
@@ -199,13 +168,13 @@ public class Hearts implements ActionListener
 				players.get(j).addCard(deck.dealCard());
 			}
 		}
-		
+
 		// print each player cards
 		for (int i = 0; i < players.size(); i++)
 		{
 			Player player = players.get(i);
 			player.sortCards();
-			if(!silent)
+			if (!silent)
 			{
 				System.out.println(player.getName());
 				player.printHand();
@@ -214,58 +183,57 @@ public class Hearts implements ActionListener
 			}
 		}
 	}
-	
+
+	/**
+	 * Passing the selected cards
+	 *
+	 */
 	private void passingCards()
 	{
-		if(this.passing == Passing.Stay)
+		if (this.passing == Passing.Stay)
 			return;
-		
+
 		List<Card> p0CardsToPass = this.cardsSelectedToPass;
 		for (int i = 0; i < p0CardsToPass.size(); i++)
 		{
 			this.players.get(0).getHand().remove(p0CardsToPass.get(i));
 		}
-		
+
 		achievementPassingTheBuck(p0CardsToPass);
-		
-		
-		List<Card> p1CardsToPass = this.players.get(1).getCardsToPass(
-				this.passing);
-		List<Card> p2CardsToPass = this.players.get(2).getCardsToPass(
-				this.passing);
-		List<Card> p3CardsToPass = this.players.get(3).getCardsToPass(
-				this.passing);
-		
-		if(this.passing == Passing.Left)
+
+		List<Card> p1CardsToPass = this.players.get(1).getCardsToPass(this.passing);
+		List<Card> p2CardsToPass = this.players.get(2).getCardsToPass(this.passing);
+		List<Card> p3CardsToPass = this.players.get(3).getCardsToPass(this.passing);
+
+		if (this.passing == Passing.Left)
 		{
 			this.players.get(0).addCards(p3CardsToPass);
 			this.players.get(1).addCards(p0CardsToPass);
 			this.players.get(2).addCards(p1CardsToPass);
 			this.players.get(3).addCards(p2CardsToPass);
 		}
-		else if(this.passing == Passing.Right)
+		else if (this.passing == Passing.Right)
 		{
 			this.players.get(0).addCards(p1CardsToPass);
 			this.players.get(1).addCards(p2CardsToPass);
 			this.players.get(2).addCards(p3CardsToPass);
 			this.players.get(3).addCards(p0CardsToPass);
 		}
-		else if(this.passing == Passing.Front)
+		else if (this.passing == Passing.Front)
 		{
 			this.players.get(0).addCards(p2CardsToPass);
 			this.players.get(1).addCards(p3CardsToPass);
 			this.players.get(2).addCards(p0CardsToPass);
 			this.players.get(3).addCards(p1CardsToPass);
 		}
-		if(!silent)
-			System.out.println("=====After passing cards to the "
-					+ this.passing.toString() + "=====");
+		if (!silent)
+			System.out.println("=====After passing cards to the " + this.passing.toString() + "=====");
 		// print each player cards
 		for (int i = 0; i < players.size(); i++)
 		{
 			Player player = players.get(i);
 			player.sortCards();
-			if(!silent)
+			if (!silent)
 			{
 				System.out.println(player.getName());
 				player.printHand();
@@ -274,222 +242,70 @@ public class Hearts implements ActionListener
 			}
 		}
 	}
-	
-	private void runGameOld()
-	{
-		this.heartsUI.setPlayers(this.players);
-		this.heartsUI.setUI(this.showOpponentCards);
-		this.heartsUI.showDialog();
-		
-		long start = System.nanoTime();
-		int myLossCount = 0;
-		int myWinCount = 0;
-		for (int n = 0; n < GAMES_TO_RUN; n++)
-		{
-			// while we still playing the game
-			for (int i = 0; i < players.size(); i++)
-			{
-				Player p = players.get(i);
-				int score = (-1) * p.getScore();
-				p.addScore(score);
-			}
-			while (true)
-			{
-				for (int i = 0; i < players.size(); i++)
-				{
-					Player p = players.get(i);
-					// clear each player cards
-					p.clearCards();
-					this.cardsSelectedToPass.clear();
-					this.buttonCardsSelectedToPass.clear();
-					
-					this.cardsReadyToPass = true;
-				}
-				
-				// initialize deck for the game
-				deck = new Deck();
-				shuffleCards();
-				dealCards();
-				
-				this.currentCardAction = CardAction.Idle;
-				this.numCardsSelectedToPass = 0;
-				this.heartsUI.displayCards();
-				
-				if(this.passing != Passing.Stay)
-				{
-					this.currentCardAction = CardAction.Passing;
-					this.heartsUI.setPassButtonVisible(true);
-					this.cardsReadyToPass = false;
-					
-					while (!cardsReadyToPass)
-					{
-						
-					}
-					
-					passingCards();
-					this.heartsUI.redrawCards();
-					
-					for (int k = 0; k < this.buttonCardsSelectedToPass.size(); k++)
-						this.heartsUI
-								.setCardUnselected(this.buttonCardsSelectedToPass
-										.get(k));
-				}
-				
-				// initialize game properties
-				this.currentCardAction = CardAction.Playing;
-				turnsPlayed = 0;
-				heartsBroken = false;
-				notifyHeartsBroken = false;
-				
-				// new round, find player to start round
-				int playerToStartRound = findPlayerToStart();
-				if(!silent)
-					System.out.println("Player "
-							+ players.get(playerToStartRound).getName()
-							+ " goes first");
-				
-				// while we still have cards
-				while (turnsPlayed < 13)
-				{
-					// clear player's in play cards
-					for (int i = 0; i < players.size(); i++)
-						players.get(i).clearInPlayCards();
-					
-					playerToStartRound = runTurnOld(playerToStartRound);
-					if(!silent)
-						System.out.println("=============== trick "
-								+ (turnsPlayed + 1) + " done ================");
-					// every 4 cards played is a "trick", a round is when all
-					// cards have been exhausted.
-					// changed "round <number> done" to "trick <number> done"
-					turnsPlayed++;
-				}
-				
-				// add scores to each player
-				assignScoresToPlayers();
-				
-				// check for highest point
-				Player playerWithHighestTotalPoints = null;
-				Player playerWithLowestTotalPoints = null;
-				for (int i = 0; i < players.size(); i++)
-				{
-					Player p = players.get(i);
-					if(playerWithHighestTotalPoints == null)
-					{
-						playerWithHighestTotalPoints = p;
-						playerWithLowestTotalPoints = p;
-					}
-					else if(playerWithHighestTotalPoints.getScore() < p
-							.getScore())
-						playerWithHighestTotalPoints = p;
-					else if(playerWithLowestTotalPoints.getScore() > p
-							.getScore())
-						playerWithLowestTotalPoints = p;
-				}
-				
-				// determine if the game ends
-				if(playerWithHighestTotalPoints.getScore() >= this.endScore)
-				{
-					if(playerWithHighestTotalPoints instanceof AgentAggressive)
-						myLossCount++;
-					if(playerWithLowestTotalPoints instanceof AgentAggressive)
-						myWinCount++;
-					if(!silent)
-						System.out.println("Player "
-								+ playerWithHighestTotalPoints.getName()
-								+ " loses with total score of "
-								+ playerWithHighestTotalPoints.getScore());
-					if(!silent){
-						System.out.println("Player "
-								+ playerWithLowestTotalPoints.getName()
-								+ " wins with total score of "
-								+ playerWithLowestTotalPoints.getScore());
-						winnerPlayer = playerWithLowestTotalPoints.getName();
-					}
-					break;
-				}
-				
-				// figure out next passing
-				if(this.passing == Passing.Left)
-					this.passing = Passing.Right;
-				else if(this.passing == Passing.Right)
-					this.passing = Passing.Front;
-				else if(this.passing == Passing.Front)
-					this.passing = Passing.Stay;
-				else if(this.passing == Passing.Stay)
-					this.passing = Passing.Left;
-			}
-		}
-		long done = System.nanoTime();
-		System.out.println("time to run was " + (done - start) / 1000000);
-		System.out.println("My loss count was " + myLossCount);
-		System.out.println("My win count was " + myWinCount);
-		
-		for (int i = 0; i < players.size(); i++)
-		{
-			Player p = players.get(i);
-			if(p instanceof AgentAggressive)
-			{
-				AgentAggressive aa = (AgentAggressive) p;
-				System.out.println("expected wins " + aa.getExpectedWins());
-				System.out.println("actual wins " + aa.getActualWins());
-				aa.serializeThresholds();
-			}
-		}
-	}
-	
+
+	/**
+	 * Running the game
+	 *
+	 */
 	private void runGame()
 	{
 		this.heartsUI.setUI(this.showOpponentCards);
 		this.heartsUI.setPlayers(this.players);
 		this.heartsUI.showDialog();
-		
+
 		this.runNextGame();
 	}
-	
+
+	/**
+	 * Initialize method for before the game starts
+	 *
+	 */
 	private void runNextGame()
 	{
 		this.deck = new Deck();
 		shuffleCards();
 		dealCards();
-		
+
 		this.cardsSelectedToPass.clear();
 		this.buttonCardsSelectedToPass.clear();
-		
-		this.currentCardAction = CardAction.Idle;
-		this.numCardsSelectedToPass = 0;
+
+		this.cardAction = CardAction.Idle;
+		this.cardsSelectedToPassCount = 0;
 		this.heartsUI.displayCards();
 		this.heartsUI.setPassButtonVisible(false);
-		
-		if(this.passing != Passing.Stay)
+
+		if (this.passing != Passing.Stay)
 		{
-			this.currentCardAction = CardAction.Passing;
+			this.cardAction = CardAction.Passing;
 			this.heartsUI.setPassButtonVisible(true);
-			this.cardsReadyToPass = false;
 		}
 		else
 		{
-			this.currentCardAction = CardAction.Playing;
+			this.cardAction = CardAction.Playing;
 			this.heartsUI.setPassButtonVisible(false);
 			this.initializeFirstTurn();
 		}
 	}
-	
+
+	/**
+	 * Initialize game before first turn
+	 *
+	 */
 	private void initializeFirstTurn()
 	{
 		// clear player's in play cards
 		for (int i = 0; i < players.size(); i++)
 			players.get(i).clearInPlayCards();
 
-		this.CURRENT_TURN = 0;
-		this.CURRENT_PLAYER_THIS_TURN = this.findPlayerToStart();
+		this.currentTurn = 0;
+		this.currentPlayerIndexThisTurn = this.findPlayerToStart();
 		this.initializeTurn();
 
 		// user move
 		this.heartsUI.ShowBalloonTip("First turn somewhere");
-		if (this.CURRENT_PLAYER_THIS_TURN == 0)
+		if (this.currentPlayerIndexThisTurn == 0)
 		{
-			startThePartyAchieve  = true;
+			startThePartyAchieve = true;
 			// do nothing, wait for user move
 		}
 		else
@@ -497,388 +313,255 @@ public class Hearts implements ActionListener
 			this.runAITurns();
 		}
 	}
-	
+
+	/**
+	 * Run AI turns as long as it is not the user's turn
+	 *
+	 */
 	private void runAITurns()
 	{
-		// while the next player to move is AI and this turn is not
-		// finished yet
-		while (this.CURRENT_PLAYER_THIS_TURN != 0
-				&& this.CURRENT_CARDS_PLAYED.size() != this.MAX_CARDS_PER_TURN)
+		// while the next player to move is AI and this turn is not finished yet
+		while (this.currentPlayerIndexThisTurn != 0 && this.currentCardsPlayed.size() != this.maxCardsPerTurn)
 		{
 			// AI move
-			this.runTurn(this.CURRENT_PLAYER_THIS_TURN);
+			this.runTurn(this.currentPlayerIndexThisTurn);
 		}
 
-		if (this.CURRENT_CARDS_PLAYED.size() == this.MAX_CARDS_PER_TURN)
+		if (this.currentCardsPlayed.size() == this.maxCardsPerTurn)
 		{
 			this.summarizeTurn();
-			this.CURRENT_TURN++;
+			this.currentTurn++;
 			this.initializeTurn();
 			this.nextTurn();
 		}
 	}
-	
-	private final int MAX_TURNS_PLAYED = 13;
-	private final int MAX_CARDS_PER_TURN = 4;
-	private int CURRENT_PLAYER_THIS_TURN;
-	private int CURRENT_TURN;
-	private List<Card> CURRENT_CARDS_PLAYED;
-	private boolean CURRENT_TURN_FIRST;
-	private Card CURRENT_TURN_FIRST_PLAYED_CARD;
-	private Card CURRENT_TURN_HIGHEST_VALUE_CARD;
-	private Player CURRENT_TURN_PLAYER_HIGHEST_VALUE;
-	private boolean HEARTS_BROKEN;
-	
+
+	/**
+	 * Finalizing player turn after each move
+	 *
+	 * @param card		played card
+	 * @param position	player position
+	 * @param player	player object
+	 */
 	private void finalizePlayerTurn(Card card, Position position, Player player)
 	{
 		JButton cardButton = this.heartsUI.findButton(position, card);
 		this.heartsUI.removeButton(cardButton, position);
 		this.heartsUI.showPlayedCardButton(position, card);
-		
+
 		try
 		{
 			Thread.sleep(500);
 		}
 		catch (InterruptedException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		this.CURRENT_CARDS_PLAYED.add(card);
-		if(this.CURRENT_TURN_FIRST)
+
+		this.currentCardsPlayed.add(card);
+		if (this.currentTurnFirst)
 		{
-			this.CURRENT_TURN_FIRST_PLAYED_CARD = card;
-			this.CURRENT_TURN_HIGHEST_VALUE_CARD = card;
-			this.CURRENT_TURN_PLAYER_HIGHEST_VALUE = player;
+			this.currentTurnFirstPlayedCard = card;
+			this.currentTurnHighestValueCard = card;
+			this.currentTurnPlayerWithHighestValue = player;
 		}
 		else
 		{
 			// compare with highest value
-			if(card.getSuit() == this.CURRENT_TURN_FIRST_PLAYED_CARD.getSuit())
+			if (card.getSuit() == this.currentTurnFirstPlayedCard.getSuit())
 			{
-				if(card.getFace().ordinal() > this.CURRENT_TURN_HIGHEST_VALUE_CARD
-						.getFace().ordinal())
+				if (card.getFace().ordinal() > this.currentTurnHighestValueCard.getFace().ordinal())
 				{
-					this.CURRENT_TURN_HIGHEST_VALUE_CARD = card;
-					this.CURRENT_TURN_PLAYER_HIGHEST_VALUE = player;
+					this.currentTurnHighestValueCard = card;
+					this.currentTurnPlayerWithHighestValue = player;
 				}
 			}
 		}
-		
-		this.CURRENT_TURN_FIRST = false;
-		if(!silent)
+
+		this.currentTurnFirst = false;
+		if (!silent)
 			System.out.println("Player " + player.getName() + " played " + card);
-		
+
 		// notify that hearts has been broken (once per round)
-		notifyHeartsBroken(this.CURRENT_CARDS_PLAYED, player);
-//		this.heartsUI.ShowBalloonTip("DEBUG MESSAGE: A card has been played");
-		
+		notifyHeartsBroken(this.currentCardsPlayed, player);
+
 		// add that card to each player's in play cards
 		for (int i = 0; i < players.size(); i++)
 			players.get(i).addInPlayCards(card);
-		
-		this.CURRENT_PLAYER_THIS_TURN++;
-		this.CURRENT_PLAYER_THIS_TURN %= 4;
+
+		this.currentPlayerIndexThisTurn++;
+		this.currentPlayerIndexThisTurn %= 4;
 	}
-	
-	private int runTurnOld(int num) 
-	{
-		this.cardReadyToPlay = false;
-		this.cardChosenToPlay = false;
-		this.cardSelectedToPlay = null;
-		
-		List<Card> cardsPlayed = new ArrayList<Card>(4);
-		boolean first = true;
-		Card firstPlayedCard = null;
-		Card cardWithHighestValue = null;
-		Player playerWithHighestValue = null;
-		
-		Card c = null;
-		
-		while(cardsPlayed.size() < 4)
-		{
-		  Player p = players.get(num);
-		  Position playerPosition = this.getPlayerPosition(num);
-		  
-		  //if this is user's turn
-		  if(p.getClass().equals(User.class))
-		  {
-			  User user = (User)p;
-			  this.currentCardAction = CardAction.Playing;
-			  
-			  while(!this.cardReadyToPlay)
-			  {
-				  try
-				  {
-					  while(!this.cardChosenToPlay)
-					  {
-						  
-					  }
-					  user.TryPlayCard(this.cardSelectedToPlay, cardsPlayed, heartsBroken, (first && turnsPlayed == 0));
-					  this.cardReadyToPlay = true;
-					  this.heartsUI.removeButton(this.buttonCardSelectedToPlay, playerPosition);
-					  
-					  c = this.cardSelectedToPlay;
-				  }
-				  catch(Exception ex)
-				  {
-					  this.cardChosenToPlay = false;
-					  //TODO show why this is illegal move
-				  }
-			  }
-		  }
-		  else
-		  {
-			  c = p.playCard(cardsPlayed, heartsBroken, (first && turnsPlayed == 0));
-			  JButton cardButton = this.heartsUI.findButton(playerPosition, c);
-			  this.heartsUI.removeButton(cardButton, playerPosition);
-		  }
-		  
-		  this.heartsUI.showPlayedCardButton(playerPosition, c);
-		  
-	  	  cardsPlayed.add(c);
-		  if(first)
-		  {
-			  firstPlayedCard = c;
-			  cardWithHighestValue = c;
-			  playerWithHighestValue = p;
-		  }
-		  else
-		  {
-			  //compare with highest value
-			  if(c.getSuit() == firstPlayedCard.getSuit())
-			  {
-				  if(c.getFace().ordinal() > cardWithHighestValue.getFace().ordinal())
-				  {
-					  cardWithHighestValue = c;
-					  playerWithHighestValue = p;
-				  }
-			  }
-		  }
-		  
-		  first = false;
-		  if(!silent)
-			  System.out.println("Player "+p.getName()+" played "+c);
-		
-		  //notify that hearts has been broken (once per round)
-		  notifyHeartsBroken(cardsPlayed, p);
-		  
-		  //add that card to each player's in play cards
-		  for(int i = 0; i < players.size(); i++)
-			  players.get(i).addInPlayCards(c);
-		  
-		  num++;
-		  num%=4;
-	  }
-		
-		//give a little time
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.heartsUI.hideAllPlayedCardButtons();
-		
-		
-		//also add to the played cards
-		//add that card to each player's list of played cards
-		for(int i = 0; i < players.size(); i++)
-		{
-			boolean tookCards = players.get(i).equals(playerWithHighestValue);
-			players.get(i).addPlayedCards(cardsPlayed, tookCards, num);
-			if(tookCards)
-			{
-				//add cards to the player with highest value
-				for(int j = 0; j < cardsPlayed.size(); j++)
-				{
-					playerWithHighestValue.addTakenCard(cardsPlayed.get(j), !silent);
-					
-					//achievementHatTrick(playerWithHighestValue);
-					
-					//figure out if hearts already broken
-					if(!this.heartsBroken && cardsPlayed.get(j).getSuit() == Suit.Hearts)
-						this.heartsBroken = true;
-						
-				}				
-			}
-		}
-		  
-		return this.players.indexOf(playerWithHighestValue);
-	}
-	
+
+	/**
+	 * Run turn
+	 *
+	 * @param playerNum	player index
+	 */
 	private void runTurn(int playerNum)
 	{
 		Card card = null;
-		
+
 		Player player = players.get(playerNum);
 		Position position = this.getPlayerPosition(playerNum);
-		
-		card = player.playCard(this.CURRENT_CARDS_PLAYED, this.HEARTS_BROKEN,
-				(this.CURRENT_TURN_FIRST && this.CURRENT_TURN == 0));
-		
-		//Give achievement if user has played correct card, boolean is true
+
+		card = player.playCard(this.currentCardsPlayed, this.heartsBroken, (this.currentTurnFirst && this.currentTurn == 0));
+
+		// Give achievement if user has played correct card, boolean is true
 		achievementStartTheParty();
-		
+
 		this.finalizePlayerTurn(card, position, player);
 	}
-	
+
+	/**
+	 * Summarizing turn after all players played their cards
+	 *
+	 */
 	private void summarizeTurn()
 	{
 		this.heartsUI.hideAllPlayedCardButtons();
-		
+
 		// also add to the played cards
 		// add that card to each player's list of played cards
 		for (int i = 0; i < players.size(); i++)
 		{
-			boolean tookCards = players.get(i).equals(
-					this.CURRENT_TURN_PLAYER_HIGHEST_VALUE);
-			players.get(i).addPlayedCards(this.CURRENT_CARDS_PLAYED, tookCards,
-					this.CURRENT_TURN);
-			
-			if(tookCards)
+			boolean tookCards = players.get(i).equals(this.currentTurnPlayerWithHighestValue);
+			players.get(i).addPlayedCards(this.currentCardsPlayed, tookCards, this.currentTurn);
+
+			if (tookCards)
 			{
 				// add cards to the player with highest value
-				for (int j = 0; j < this.CURRENT_CARDS_PLAYED.size(); j++)
+				for (int j = 0; j < this.currentCardsPlayed.size(); j++)
 				{
-					this.CURRENT_TURN_PLAYER_HIGHEST_VALUE.addTakenCard(
-							this.CURRENT_CARDS_PLAYED.get(j), !silent);
-					
+					this.currentTurnPlayerWithHighestValue.addTakenCard(this.currentCardsPlayed.get(j), !silent);
+
 					// figure out if hearts already broken
-					if(!this.HEARTS_BROKEN
-							&& this.CURRENT_CARDS_PLAYED.get(j).getSuit() == Suit.Hearts)
-						this.HEARTS_BROKEN = true;
+					if (!this.heartsBroken && this.currentCardsPlayed.get(j).getSuit() == Suit.Hearts)
+						this.heartsBroken = true;
 				}
 			}
 		}
-		
+
 		// find player to start next
-		this.CURRENT_PLAYER_THIS_TURN = this.players
-				.indexOf(this.CURRENT_TURN_PLAYER_HIGHEST_VALUE);
-		
+		this.currentPlayerIndexThisTurn = this.players.indexOf(this.currentTurnPlayerWithHighestValue);
+
 		// If player who won the cards is the user, give achievement
 		achievementHatTrick();
 	}
-	
+
+	/**
+	 * Initializing turn before players start playing their cards
+	 *
+	 */
 	private void initializeTurn()
 	{
-		this.CURRENT_CARDS_PLAYED = new ArrayList<Card>(4);
-		
+		this.currentCardsPlayed = new ArrayList<Card>(4);
+
 		for (int i = 0; i < players.size(); i++)
 			players.get(i).clearInPlayCards();
-		
-		this.CURRENT_TURN_FIRST = true;
-		this.CURRENT_TURN_FIRST_PLAYED_CARD = null;
-		this.CURRENT_TURN_HIGHEST_VALUE_CARD = null;
-		this.CURRENT_TURN_PLAYER_HIGHEST_VALUE = null;
+
+		this.currentTurnFirst = true;
+		this.currentTurnFirstPlayedCard = null;
+		this.currentTurnHighestValueCard = null;
+		this.currentTurnPlayerWithHighestValue = null;
 	}
-	
+
+	/**
+	 * Determine what the next turn is, run AI if this is AI turns
+	 *
+	 */
 	private void nextTurn()
 	{
-		if(this.CURRENT_TURN == this.MAX_TURNS_PLAYED)
+		if (this.currentTurn == this.maxTurnsPlayed)
 		{
 			this.assignScoresToPlayers();
-			
+
 			// check for highest point
 			Player playerWithHighestTotalPoints = null;
 			Player playerWithLowestTotalPoints = null;
-			
+
 			for (int i = 0; i < players.size(); i++)
 			{
 				Player player = players.get(i);
-				if(playerWithHighestTotalPoints == null)
+				if (playerWithHighestTotalPoints == null)
 				{
 					playerWithHighestTotalPoints = player;
 					playerWithLowestTotalPoints = player;
 				}
-				else if(playerWithHighestTotalPoints.getScore() < player
-						.getScore())
+				else if (playerWithHighestTotalPoints.getScore() < player.getScore())
 					playerWithHighestTotalPoints = player;
-				else if(playerWithLowestTotalPoints.getScore() > player
-						.getScore())
+				else if (playerWithLowestTotalPoints.getScore() > player.getScore())
 					playerWithLowestTotalPoints = player;
 			}
-			
+
 			// determine if the game ends
-			if(playerWithHighestTotalPoints.getScore() >= this.endScore)
+			if (playerWithHighestTotalPoints.getScore() >= this.endScore)
 			{
-				if(!silent)
-					System.out.println("Player "
-							+ playerWithHighestTotalPoints.getName()
-							+ " loses with total score of "
+				if (!silent)
+					System.out.println("Player " + playerWithHighestTotalPoints.getName() + " loses with total score of "
 							+ playerWithHighestTotalPoints.getScore());
-				if(!silent)
-					System.out.println("Player "
-							+ playerWithLowestTotalPoints.getName()
-							+ " wins with total score of "
+				if (!silent)
+					System.out.println("Player " + playerWithLowestTotalPoints.getName() + " wins with total score of "
 							+ playerWithLowestTotalPoints.getScore());
-				
-				PointsDisplay pointDisplay = new PointsDisplay(this, this.players);
+
+				PointsDisplay pointDisplay = new PointsDisplay(this, this.players, playerWithLowestTotalPoints.getName());
 				pointDisplay.showDialog();
 				return;
 			}
-			
+
 			// figure out next passing
-			if(this.passing == Passing.Left)
+			if (this.passing == Passing.Left)
 				this.passing = Passing.Right;
-			else if(this.passing == Passing.Right)
+			else if (this.passing == Passing.Right)
 				this.passing = Passing.Front;
-			else if(this.passing == Passing.Front)
+			else if (this.passing == Passing.Front)
 				this.passing = Passing.Stay;
-			else if(this.passing == Passing.Stay)
+			else if (this.passing == Passing.Stay)
 				this.passing = Passing.Left;
-			
+
 			this.runNextGame();
 		}
 		else
 		{
-			while (this.CURRENT_PLAYER_THIS_TURN != 0
-					&& this.CURRENT_CARDS_PLAYED.size() != 4)
+			while (this.currentPlayerIndexThisTurn != 0 && this.currentCardsPlayed.size() != 4)
 			{
 				// AI move
-				this.runTurn(this.CURRENT_PLAYER_THIS_TURN);
+				this.runTurn(this.currentPlayerIndexThisTurn);
 			}
 		}
 	}
-	
+
 	/**
-	 * This displays an instant notification when hearts have been broken during
-	 * a round. The notification also includes the name of the player who broke
-	 * hearts.
+	 * This displays an instant notification when hearts have been broken
+	 * during a round. The notification also includes the name of the player
+	 * who broke hearts.
 	 * 
-	 * @param cardsPlayed
-	 *            To monitor the cards on the table
-	 * @param p
-	 *            Player object. Enables passing in of player name.
-	 * @author Jonathan Shelton
+	 * @param cardsPlayed	to monitor the cards on the table
+	 * @param player		player that broke the heart
 	 */
-	private void notifyHeartsBroken(List<Card> cardsPlayed, Player p)
+	private void notifyHeartsBroken(List<Card> cardsPlayed, Player player)
 	{
-		if(notifyHeartsBroken == false)
+		if (notifyHeartsBroken == false)
 		{
 			for (int i = 0; i < cardsPlayed.size(); i++)
 			{
-				if(cardsPlayed.get(i).getSuit() == Suit.Hearts)
+				if (cardsPlayed.get(i).getSuit() == Suit.Hearts)
 				{
-					this.heartsUI.ShowBalloonTip("Hearts have been broken by "
-								+ p.getName());
-					if(!silent)
-						System.out.println("*****Hearts have been broken by "
-								+ p.getName() + "*****");
+					this.heartsUI.ShowBalloonTip("Hearts have been broken by " + player.getName());
+					if (!silent)
+						System.out.println("*****Hearts have been broken by " + player.getName() + "*****");
 					notifyHeartsBroken = true;
 				}
 			}
 		}
 	}
-	
+
 	/**
-	 * Checks internal requirements for Start The Party achievement and
-	 * passes any additional requirements to the Achievements class for
-	 * further processing. If the Achievements class returns true,
-	 * this method will then pass the name of the earned Achievement to 
-	 * the achievementNotify method to process the message.
+	 * Checks internal requirements for Start The Party achievement and passes
+	 * any additional requirements to the Achievements class for further
+	 * processing. If the Achievements class returns true, this method will
+	 * then pass the name of the earned Achievement to the achievementNotify
+	 * method to process the message.
 	 * 
 	 */
 	private void achievementStartTheParty()
@@ -886,7 +569,7 @@ public class Hearts implements ActionListener
 		String achievement = "Start The Party";
 		if (startThePartyAchieve)
 		{
-			achievementNotify = user.getAchievements().StartTheParty(CURRENT_CARDS_PLAYED);
+			achievementNotify = user.getAchievements().StartTheParty(currentCardsPlayed);
 			if (achievementNotify)
 			{
 				achievementNotify(achievement);
@@ -894,38 +577,38 @@ public class Hearts implements ActionListener
 			startThePartyAchieve = false;
 		}
 	}
-	
+
 	/**
-	 * Checks internal requirements for Passing The Buck achievement and
-	 * passes any additional requirements to the Achievements class for
-	 * further processing. If the Achievements class returns true,
-	 * this method will then pass the name of the earned Achievement to 
-	 * the achievementNotify method to process the message.
+	 * Checks internal requirements for Passing The Buck achievement and passes
+	 * any additional requirements to the Achievements class for further
+	 * processing. If the Achievements class returns true, this method will
+	 * then pass the name of the earned Achievement to the achievementNotify
+	 * method to process the message.
 	 * 
-	 * @param p0CardsToPass List of cards user has passed
+	 * @param cardsToPass	list of cards user has passed
 	 */
-	private void achievementPassingTheBuck(List<Card> p0CardsToPass)
+	private void achievementPassingTheBuck(List<Card> cardsToPass)
 	{
 		String achievement = "Passing The Buck";
-		achievementNotify = user.getAchievements().PassingTheBuck(true, p0CardsToPass);
+		achievementNotify = user.getAchievements().PassingTheBuck(true, cardsToPass);
 		if (achievementNotify)
 		{
 			achievementNotify(achievement);
 		}
 	}
-	
+
 	/**
-	 * Checks internal requirements for Hat Trick achievement and
-	 * passes any additional requirements to the Achievements class for
-	 * further processing. If the Achievements class returns true,
-	 * this method will then pass the name of the earned Achievement to 
-	 * the achievementNotify method to process the message.
+	 * Checks internal requirements for Hat Trick achievement and passes any
+	 * additional requirements to the Achievements class for further
+	 * processing. If the Achievements class returns true, this method will
+	 * then pass the name of the earned Achievement to the achievementNotify
+	 * method to process the message.
 	 * 
 	 */
 	private void achievementHatTrick()
 	{
 		String achievement = "Hat Trick";
-		if (this.CURRENT_PLAYER_THIS_TURN == 0)
+		if (this.currentPlayerIndexThisTurn == 0)
 		{
 			achievementNotify = user.getAchievements().HatTrick();
 			if (achievementNotify)
@@ -934,13 +617,14 @@ public class Hearts implements ActionListener
 			}
 		}
 	}
-	
+
 	/**
-	 * Runs through all three achievements that need end game scores.
-	 * The method called within this method should return an integer
-	 * that corresponds to a particular achievement, 0 if no achievement
-	 * earned. If any number lower than 0 or higher than 3 is returned,
-	 * it will throw an exception as this shouldn't be possible.
+	 * Runs through all three achievements that need end game scores. The
+	 * method called within this method should return an integer that
+	 * corresponds to a particular achievement, 0 if no achievement earned. If
+	 * any number lower than 0 or higher than 3 is returned, it will throw an
+	 * exception as this shouldn't be possible.
+	 * 
 	 * @param scores
 	 */
 	private void achievementsEndGame(List<Integer> scores)
@@ -952,91 +636,96 @@ public class Hearts implements ActionListener
 			if (earned == 1)
 			{
 				achievementNotify("Broken Heart");
-			} 
+			}
 			else if (earned == 2)
 			{
 				achievementNotify("Shooting The Moon");
-			} 
+			}
 			else if (earned == 3)
 			{
 				achievementNotify("Overshooting The Moon");
-			} 
+			}
 			else if (earned == 0)
 			{
 				// Do nothing. No achievement earned
-			} 
+			}
 			else
 			{
-				throw new Exception("Value of 'earned' shouldn't fall outside" +
-						"the range 0-3");
+				throw new Exception("Value of 'earned' shouldn't fall outside" + "the range 0-3");
 			}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		earned = 0; //reset to zero to be safe
+		earned = 0; // reset to zero to be safe
 	}
 
 	/**
-	 * Pops the notification tooltip for the user that displays
-	 * the achievement unlocked message for a particular achievement.
-	 * This method MUST be called from within the actionPerformed
-	 * method in Hearts.java, or nested in a method that can be
-	 * traced back to actionPerformed, otherwise it will throw
-	 * a NullPointerException
+	 * Pops the notification tooltip for the user that displays the achievement
+	 * unlocked message for a particular achievement. This method MUST be
+	 * called from within the actionPerformed method in Hearts.java, or nested
+	 * in a method that can be traced back to actionPerformed, otherwise it
+	 * will throw a NullPointerException
 	 * 
-	 * @param achievement The name of the achievement
+	 * @param achievement	the name of the achievement
 	 */
 	private void achievementNotify(String achievement)
 	{
 		this.heartsUI.ShowBalloonTip("Achievement Unlocked - " + achievement);
 		achievementNotify = false;
 	}
-	
+
+	/**
+	 * Finding player to start the game
+	 *
+	 * @return	true index number of player who starts the game
+	 */
 	private int findPlayerToStart()
 	{
 		for (int i = 0; i < players.size(); i++)
 		{
 			Player p = players.get(i);
-			if(p.hasTwoOfClubs())
+			if (p.hasTwoOfClubs())
 				return i;
 		}
 		throw new RuntimeException("Couldn't find the 2 of clubs");
 	}
-	
+
+	/**
+	 * Assign scores to players after each game
+	 *
+	 */
 	private void assignScoresToPlayers()
 	{
 		// see if a player collects all hearts and queen of spade
 		int numHearts;
 		int numQueenSpade;
-		boolean playerShootingTheMoon = false;
-		
+
 		List<Integer> scores = Arrays.asList(0, 0, 0, 0);
 		for (int i = 0; i < players.size(); i++)
 		{
 			numHearts = 0;
 			numQueenSpade = 0;
-			
+
 			Player player = players.get(i);
 			List<Card> takenCards = player.getTakenCards();
-			
+
 			for (int j = 0; j < takenCards.size(); j++)
 			{
 				Card takenCard = takenCards.get(j);
-				if(takenCard.getSuit() == Suit.Hearts)
+				if (takenCard.getSuit() == Suit.Hearts)
 					numHearts++;
-				else if(takenCard.getSuit() == Suit.Spades
-						&& takenCard.getFace() == Face.Queen)
+				else if (takenCard.getSuit() == Suit.Spades && takenCard.getFace() == Face.Queen)
 					numQueenSpade++;
 			}
-			
+
 			// if this player gets all the hearts & queen of spade
-			if(numHearts == 13 && numQueenSpade == 1)
+			if (numHearts == 13 && numQueenSpade == 1)
 			{
-				playerShootingTheMoon = true;
 				for (int j = 0; j < players.size(); j++)
 				{
-					if(i != j)
+					if (i != j)
 						scores.set(j, 26);
 					else
 						scores.set(j, 0);
@@ -1048,25 +737,29 @@ public class Hearts implements ActionListener
 				scores.set(i, numHearts + (numQueenSpade * 13));
 			}
 		}
-		
-		//Run check for set of three achievements based on score --
+
+		// Run check for set of three achievements based on score --
 		achievementsEndGame(scores);
-		
+
 		for (int i = 0; i < players.size(); i++)
 		{
 			Player player = players.get(i);
 			player.addScore(scores.get(i));
-			if(!silent)
+			if (!silent)
 			{
-				System.out.println("This round, " + player.getName()
-						+ " collected " + scores.get(i) + " points ");
-				System.out.println("Total points for " + player.getName()
-						+ " is " + player.getScore() + " points ");
+				System.out.println("This round, " + player.getName() + " collected " + scores.get(i) + " points ");
+				System.out.println("Total points for " + player.getName() + " is " + player.getScore() + " points ");
 				System.out.println("=======================================");
 			}
 		}
 	}
-	
+
+	/**
+	 * Gets player position based on index
+	 *
+	 * @param num	player index
+	 * @return	player position
+	 */
 	public Position getPlayerPosition(int num)
 	{
 		switch (num)
@@ -1083,23 +776,28 @@ public class Hearts implements ActionListener
 				return Position.South;
 		}
 	}
-	
+
+	/**
+	 * Handle events from UI
+	 *
+	 * @param actionEvent	action event object
+	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent)
 	{
 		Object source = actionEvent.getSource();
 
-		if (source.getClass() == JButton.class) {
+		if (source.getClass() == JButton.class)
+		{
 			JButton jButton = (JButton) source;
-			String buttonType = (String) jButton
-					.getClientProperty("ButtonType");
+			String buttonType = (String) jButton.getClientProperty("ButtonType");
 
-			if (buttonType.equals("ConfigurationOK")) 
+			if (buttonType.equals("ConfigurationOK"))
 			{
 				String playerName = this.configurationUI.getPlayerName();
-				if(playerName == null || playerName.trim().equals(""))
+				if (playerName == null || playerName.trim().equals(""))
 				{
-					if(!configurationUI.isUserErrorShown())
+					if (!configurationUI.isUserErrorShown())
 					{
 						configurationUI.displayErrorDialog("Enter a user name");
 						configurationUI.setUserErrorShown(true);
@@ -1107,34 +805,35 @@ public class Hearts implements ActionListener
 				}
 				else
 				{
-					String levelOfDifficulty = this.configurationUI
-						.getLevelofDifficulty();
+					String levelOfDifficulty = this.configurationUI.getLevelofDifficulty();
 					int endScore = this.configurationUI.getEndScore();
 
-					if (!silent) {
-						System.out.println("Player: " + playerName + ", Level: "
-							+ levelOfDifficulty + ", End Score: " + endScore);
+					if (!silent)
+					{
+						System.out.println("Player: " + playerName + ", Level: " + levelOfDifficulty + ", End Score: " + endScore);
 					}
-					this.configurationUI.getFrmConfigurationWindow().dispose();
+					this.configurationUI.getFrame().dispose();
 
 					initialize(playerName, endScore, levelOfDifficulty);
 					runGame();
 				}
-			} 
-			else if (buttonType.equals("ConfigurationCancel")) 
+			}
+			else if (buttonType.equals("ConfigurationCancel"))
 			{
 				System.exit(0);
 			}
-			else if (buttonType.equals("PointDisplayPlayAgain")) 
+			else if (buttonType.equals("PointDisplayPlayAgain"))
 			{
-				//TODO: play again
+				// TODO: play again
 			}
-			else if (buttonType.equals("PointDisplayQuit")) 
+			else if (buttonType.equals("PointDisplayQuit"))
 			{
 				System.exit(0);
 			}
-			else if (buttonType.equals("PassButton")) {
-				if (this.numCardsSelectedToPass != 3) {
+			else if (buttonType.equals("PassButton"))
+			{
+				if (this.cardsSelectedToPassCount != 3)
+				{
 					this.heartsUI.ShowBalloonTip("Pick 3 cards to pass!");
 					return;
 				}
@@ -1144,59 +843,58 @@ public class Hearts implements ActionListener
 
 				// set selected cards to normal mode
 				for (int k = 0; k < this.buttonCardsSelectedToPass.size(); k++)
-					this.heartsUI
-							.setCardUnselected(this.buttonCardsSelectedToPass
-									.get(k));
+					this.heartsUI.setCardUnselected(this.buttonCardsSelectedToPass.get(k));
 
 				this.heartsUI.setPassButtonVisible(false);
-				this.currentCardAction = CardAction.Playing;
+				this.cardAction = CardAction.Playing;
 				this.initializeFirstTurn();
-			} 
-			else if (buttonType.equals("CardButton")) 
+			}
+			else if (buttonType.equals("CardButton"))
 			{
 				Card card = (Card) jButton.getClientProperty("Card");
-				if (this.currentCardAction == CardAction.Passing) 
+				if (this.cardAction == CardAction.Passing)
 				{
 					boolean isSelected = (boolean) jButton.getClientProperty("Selected");
 
-					if (isSelected) 
+					if (isSelected)
 					{
 						this.heartsUI.setCardUnselected(jButton);
 						this.buttonCardsSelectedToPass.remove(jButton);
 						this.cardsSelectedToPass.remove(card);
-						this.numCardsSelectedToPass--;
-					} 
-					else 
+						this.cardsSelectedToPassCount--;
+					}
+					else
 					{
-						if (this.numCardsSelectedToPass != 3) 
+						if (this.cardsSelectedToPassCount != 3)
 						{
 							this.heartsUI.setCardSelected(jButton);
 							this.buttonCardsSelectedToPass.add(jButton);
 							this.cardsSelectedToPass.add(card);
-							this.numCardsSelectedToPass++;
+							this.cardsSelectedToPassCount++;
 						}
 						else
 						{
 							this.heartsUI.ShowBalloonTip("You can only select 3 cards to pass!");
 						}
 					}
-				} 
-				else if (this.currentCardAction == CardAction.Playing) {
+				}
+				else if (this.cardAction == CardAction.Playing)
+				{
 					// user turn
-					if (this.CURRENT_PLAYER_THIS_TURN == 0) {
-						try {
+					if (this.currentPlayerIndexThisTurn == 0)
+					{
+						try
+						{
 							User user = (User) this.players.get(0);
-							user.TryPlayCard(
-									card,
-									this.CURRENT_CARDS_PLAYED,
-									this.HEARTS_BROKEN,
-									(this.CURRENT_TURN_FIRST && this.CURRENT_TURN == 0));
+							user.TryPlayCard(card, this.currentCardsPlayed, this.heartsBroken,
+									(this.currentTurnFirst && this.currentTurn == 0));
 
-							this.finalizePlayerTurn(card, Position.South,
-									this.players.get(0));
+							this.finalizePlayerTurn(card, Position.South, this.players.get(0));
 
 							this.runAITurns();
-						} catch (Exception ex) {
+						}
+						catch (Exception ex)
+						{
 							// TODO show why this is illegal move
 							ex.printStackTrace();
 							this.heartsUI.ShowBalloonTip(ex.getMessage());
@@ -1205,23 +903,23 @@ public class Hearts implements ActionListener
 				}
 			}
 		}
-		else if(source.getClass() == JMenuItem.class)
+		else if (source.getClass() == JMenuItem.class)
 		{
-			JMenuItem jMenuItem = (JMenuItem)source;
-			String menuItemType = (String)jMenuItem.getClientProperty("MenuItemType");
-			
-			if(menuItemType.equalsIgnoreCase("Rules"))
+			JMenuItem jMenuItem = (JMenuItem) source;
+			String menuItemType = (String) jMenuItem.getClientProperty("MenuItemType");
+
+			if (menuItemType.equalsIgnoreCase("Rules"))
 			{
 				RulesWindow rulesWindow = new RulesWindow();
 				rulesWindow.showDialog();
 			}
-			else if(menuItemType.equalsIgnoreCase("Achievements"))
+			else if (menuItemType.equalsIgnoreCase("Achievements"))
 			{
-				User user = (User)this.players.get(0);
+				User user = (User) this.players.get(0);
 				AchievementsDisplay achivementsDisplay = new AchievementsDisplay(user);
 				achivementsDisplay.showDialog();
 			}
-			else if(menuItemType.equalsIgnoreCase("Exit"))
+			else if (menuItemType.equalsIgnoreCase("Exit"))
 			{
 				System.exit(0);
 			}

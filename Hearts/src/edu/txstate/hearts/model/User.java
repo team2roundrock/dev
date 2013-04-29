@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.txstate.hearts.model;
 
 import java.util.ArrayList;
@@ -24,39 +21,58 @@ import edu.txstate.hearts.utils.ReadFiles;
  * @author Neil Stickels, I Gede Sutapa, Jonathan Shelton
  *
  */
-
 public class User extends Player 
 {
 	private Achievements achievements; //this may not be needed
 	
-	public User(String playerName, int num) 
-	{
-		super(playerName, num);
-		try {
-			List<String> readAchievements = ReadFiles.readAchievements(playerName);
-			this.achievements = new Achievements(playerName, readAchievements);
-		} catch (FileNotFoundException e) {
-			this.achievements = new Achievements(playerName);
-		}
-		
-	}
 	/**
-	 * @return the achievements
+	 * Constructor
+	 * 
+	 * @param name	user name
+	 * @param num	position index
 	 */
-	public Achievements getAchievements() {
+	public User(String name, int num) 
+	{
+		super(name, num);
+		try 
+		{
+			List<String> readAchievements = ReadFiles.readAchievements(name);
+			this.achievements = new Achievements(name, readAchievements);
+		} 
+		catch (FileNotFoundException e) 
+		{
+			this.achievements = new Achievements(name);
+		}
+	}
+	
+	/**
+	 * @return user's achievements
+	 */
+	public Achievements getAchievements() 
+	{
 		return achievements;
 	}
 	
 	/**
-	 * @param achievements the achievements to set
+	 * Set user's achievements
+	 * 
+	 * @param achievements	the achievements to set
 	 */
-	public void setAchievements(Achievements achievements) {
+	public void setAchievements(Achievements achievements) 
+	{
 		this.achievements = achievements;
 	}
 	
-	
-	public void TryPlayCard(Card card, List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn)
-			throws Exception
+	/**
+	 * Try to play card selected by user
+	 * 
+	 * @param card			card selected to play
+	 * @param cardsPlayed	cards played for the current turn
+	 * @param heartsBroken	indicator whether hearts has been broken
+	 * @param veryFirstTurn	indicator whether this is a very first turn
+	 * @throws Exception	if card is not valid to play
+	 */
+	public void TryPlayCard(Card card, List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn) throws Exception
 	{
 		if(veryFirstTurn)
 		{
@@ -75,14 +91,15 @@ public class User extends Player
 	
 	/**
 	 * Human player is able to play a card
-	 * @param cardsPlayed
-	 * @param heartsBroken
-	 * @param veryFirstTurn
-	 * @return cardToPlay, a card
+	 * 
+	 * @param cardsPlayed		cards played for the current turn
+	 * @param heartsBroken		indicator whether hearts has been broken
+	 * @param veryFirstTurn		indicator whether this is a very first turn
+	 * @return cardToPlay		card selected to play
 	 */
 	@Override
-	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn) {
-		
+	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken, boolean veryFirstTurn) 
+	{	
 		Card cardToPlay = null;
 		String cardStr = null; //holds user input
 		List<Card> myHand = this.getHand();
@@ -115,12 +132,13 @@ public class User extends Player
 
 	/**
 	 * Human player is able to pass a card
-	 * @param passing
-	 * @return cardsToPass, a list of cards
+	 * 
+	 * @param passing		passing direction
+	 * @return cardsToPass	cards to pass
 	 */
 	@Override
-	public List<Card> getCardsToPass(Passing passing) {
-		
+	public List<Card> getCardsToPass(Passing passing) 
+	{	
 		Card cardToPass = null;
 		String cardStr = null; //holds user input
 		List<Card> cardsToPass = new ArrayList<Card>();
@@ -162,10 +180,11 @@ public class User extends Player
 	}
 	
 	/**
-	 * @param cardStr
-	 * @return
+	 * @param cardStr	input string
+	 * @return		card string
 	 */
-	private String getConsoleInput(String cardStr) {
+	private String getConsoleInput(String cardStr) 
+	{
 		BufferedReader cin = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			cardStr = cin.readLine();
@@ -178,12 +197,12 @@ public class User extends Player
 	/**
 	 * Notify user which suit must be played
 	 * 
-	 * @param cardsPlayed
-	 * @param veryFirstTurn
-	 * @param myHand
+	 * @param cardsPlayed	cards played for current turn
+	 * @param veryFirstTurn	indicator whether this is a very first turn
+	 * @param myHand		
 	 */
-	private void notifyPlayableSuit(List<Card> cardsPlayed,
-			boolean veryFirstTurn, List<Card> myHand) {
+	private void notifyPlayableSuit(List<Card> cardsPlayed, boolean veryFirstTurn, List<Card> myHand) 
+	{
 		Iterator<Card> searchHand = myHand.iterator();
 		boolean found = false;
 		while(searchHand.hasNext() && found == false)
@@ -235,8 +254,8 @@ public class User extends Player
 	 * @param potentialPlay
 	 * @return potentialPlay, which returns either a valid card or null
 	 */
-	private Card tokenizeString(String cardStr, List<Card> myHand,
-			Card potentialPlay) {
+	private Card tokenizeString(String cardStr, List<Card> myHand, Card potentialPlay) 
+	{
 		StringTokenizer st = new StringTokenizer(cardStr); //turn individual characters/words into tokens
 		String numStr = st.nextToken();
 		int myFace = Integer.parseInt(numStr);
@@ -284,13 +303,11 @@ public class User extends Player
 	 * card passing. Works by automatically passing the next 
 	 * highest card in user's hand
 	 * 
-	 * @param numCardsToPass Tells method how many cards are left
-	 * @return highest card in hand
+	 * @param numCardsToPass tells method how many cards are left
+	 * @return 			highest card in hand
 	 */
 	private Card devSkipPass(int numCardsToPass) 
 	{
-		//int numCardsToPass = 3;
-		//List<Card> cardsToPass = new ArrayList<Card>();
 		Card cardToPass = null;
 		List<Card> myHand = this.getHand();
 		Collections.sort(myHand, new CardComparator());
@@ -301,6 +318,5 @@ public class User extends Player
 			getHand().remove(myHand.get(i));
 		}
 		return cardToPass;
-	}
-	
+	}	
 }

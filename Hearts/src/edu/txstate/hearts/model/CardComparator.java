@@ -2,6 +2,11 @@ package edu.txstate.hearts.model;
 
 import java.util.Comparator;
 
+/**
+ * Card comparator class
+ * 
+ * @author I Gede Sutapa
+ */
 public class CardComparator implements Comparator<Card>
 {
 	@Override
