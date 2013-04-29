@@ -44,7 +44,8 @@ public class AgentDetermined extends Agent
 			Collections.sort(playable, new CardComparator());
 			
 			//if heart has not been broken
-			if(!heartsBroken){
+			if(!heartsBroken)
+			{
 				if(this.getInPlayCards().size() == 0)
 					cardToPlay = playable.get(0);
 				else
@@ -126,7 +127,7 @@ public class AgentDetermined extends Agent
 		
 		Collections.sort(myHand, new CardComparator());
 		
-		for(int i = 0; i < myHand.size() && cardsToPass.size() < numCardsToPass; i++)
+		for(int i = myHand.size() - 1; i >= 0 && cardsToPass.size() < numCardsToPass ; i--)
 		{
 			Card myCard = myHand.get(i);
 			if(myCard.getSuit() == Suit.Spades && myCard.getFace() == Face.Queen)
@@ -142,7 +143,7 @@ public class AgentDetermined extends Agent
 			}
 		}	
 			
-		for(int i = myHand.size() - 1; i >= myHand.size() - numCardsToPass && cardsToPass.size() < numCardsToPass ; i--)
+		for(int i = myHand.size() - 1; i >= 0 && cardsToPass.size() < numCardsToPass ; i--)
 		{
 			cardsToPass.add(myHand.get(i));
 			getHand().remove(myHand.get(i));

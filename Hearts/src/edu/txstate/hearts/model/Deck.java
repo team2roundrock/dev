@@ -75,4 +75,9 @@ public class Deck
 		
 		cards = Arrays.asList(deck);	
 	}
+	
+	public List<Card> getCards()
+	{
+		return this.cards;
+	}
 }
