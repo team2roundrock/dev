@@ -5,14 +5,13 @@ package edu.txstate.hearts.model;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-//import edu.txstate.hearts.model.Achievements.Achievement;
 
 /**
  * @author Jonathan Shelton
@@ -21,10 +20,10 @@ import org.junit.Test;
 public class AchievementsTest {
 
 	private User p;
-	//private String playerName;
-	private Deck deck;
 	private Achievements a;
-	private List<Card> listOfCards = new ArrayList<Card>();
+	private List<Card> listOfCards;
+	//For file deletion options when tests end
+	File file = new File("TestPlayer.txt");
 	
 	/**
 	 * @throws java.lang.Exception
@@ -33,8 +32,7 @@ public class AchievementsTest {
 	public void setUp() throws Exception {
 		p = new User("TestPlayer", 0);
 		a = new Achievements(p.getName());
-		deck = new Deck();
-		deck.shuffleCards();
+		listOfCards = new ArrayList<Card>();
 	}
 
 	/**
@@ -42,6 +40,7 @@ public class AchievementsTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		file.delete();
 	}
 
 	/**
@@ -51,21 +50,29 @@ public class AchievementsTest {
 	public void testAchievements() {
 		
 		//Ensure all achievements have been placed in list
-		assertEquals("Map doesn't have BrokenHeart achievement",true,a.listOfAchievements.containsKey
+		assertEquals("Map doesn't have BrokenHeart achievement",true,a.
+				listOfAchievements.containsKey
 				("BrokenHeart"));
-		assertEquals("Map doesn't have HatTrick achievement",true,a.listOfAchievements.containsKey
+		assertEquals("Map doesn't have HatTrick achievement",true,a.
+				listOfAchievements.containsKey
 				("HatTrick"));
-		assertEquals("Map doesn't have OvershootingTheMoon1 achievement",true,a.listOfAchievements.containsKey
+		assertEquals("Map doesn't have OvershootingTheMoon1 achievement",true,a.
+				listOfAchievements.containsKey
 				("OvershootingTheMoon1"));
-		assertEquals("Map doesn't have OvershootingTheMoon2 achievement",true,a.listOfAchievements.containsKey
+		assertEquals("Map doesn't have OvershootingTheMoon2 achievement",true,a.
+				listOfAchievements.containsKey
 				("OvershootingTheMoon2"));
-		assertEquals("Map doesn't have OvershootingTheMoon3 achievement",true,a.listOfAchievements.containsKey
-				("OvershootingTheMoon3"));
-		assertEquals("Map doesn't have PassingTheBuck achievement",true,a.listOfAchievements.containsKey
+		assertEquals("Map doesn't have OvershootingTheMoon achievement",true,a.
+				listOfAchievements.containsKey
+				("OvershootingTheMoon"));
+		assertEquals("Map doesn't have PassingTheBuck achievement",true,a.
+				listOfAchievements.containsKey
 				("PassingTheBuck"));
-		assertEquals("Map doesn't have ShootingTheMoon achievement",true,a.listOfAchievements.containsKey
+		assertEquals("Map doesn't have ShootingTheMoon achievement",true,a.
+				listOfAchievements.containsKey
 				("ShootingTheMoon"));
-		assertEquals("Map doesn't have StartTheParty achievement",true,a.listOfAchievements.containsKey
+		assertEquals("Map doesn't have StartTheParty achievement",true,a.
+				listOfAchievements.containsKey
 				("StartTheParty"));
 		
 		//Ensure that player name is being passed correctly
@@ -75,7 +82,8 @@ public class AchievementsTest {
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#getCounterOvershootingTheMoon()}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#
+	 * getCounterOvershootingTheMoon()}.
 	 */
 	@Test
 	public void testGetCounterOvershootingTheMoon() {
@@ -83,7 +91,8 @@ public class AchievementsTest {
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#setCounterOvershootingTheMoon(int)}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#
+	 * setCounterOvershootingTheMoon(int)}.
 	 */
 	@Test
 	public void testSetCounterOvershootingTheMoon() {
@@ -100,18 +109,18 @@ public class AchievementsTest {
 		
 		//Pass in a score of 25. Player is one heart short of an achievement.
 		a.endGameAchievements(25);
-		assertEquals("An achievement has been earned,",false,a.listOfAchievements.containsValue(true));
+		assertEquals("An achievement has been earned,",false,a.listOfAchievements.
+				containsValue(true));
 		assertEquals("Counter shouldn't be modified,",0,a.getCounterOvershootingTheMoon());
 		
 		
 		//Pass in a score of 13. Test "Broken Hearts" achievement.
 		a.endGameAchievements(13); 
 		assertEquals("Counter shouldn't be modified,",0,a.getCounterOvershootingTheMoon());
-		assertEquals("No achievement has been set,",true,a.listOfAchievements.containsValue(true));
+		assertEquals("No achievement has been set,",true,a.listOfAchievements.
+				containsValue(true));
 		assertEquals("Broken Heart hasn't been set,",true,a.listOfAchievements.get
 				("BrokenHeart"));
-		//assertEquals("Achievement not set,",true,a.achievedOrNot);
-		//assertEquals("Achievement notification not working,",true,a.notifyAchievementEarned);
 		
 		//Pass in first score of 26. Test "Overshooting The Moon1" & Shooting The M0on
 		a.endGameAchievements(26);
@@ -126,20 +135,21 @@ public class AchievementsTest {
 		a.endGameAchievements(26);
 		assertEquals("OvershootingTheMoon2 hasn't been set,",true,a.listOfAchievements.get
 				("OvershootingTheMoon2"));
-		assertEquals("OvershootingTheMoon3 has been set,",false,a.listOfAchievements.get
-				("OvershootingTheMoon3"));
+		assertEquals("OvershootingTheMoon has been set,",false,a.listOfAchievements.get
+				("OvershootingTheMoon"));
 		assertEquals("Counter is not 2,",2,a.getCounterOvershootingTheMoon());
 		
 		//Pass in a third score of 26. Test "Overshooting The Moon3" achievement
 		a.endGameAchievements(26);
-		assertEquals("OvershootingTheMoon3 hasn't been set,",true,a.listOfAchievements.get
-				("OvershootingTheMoon3"));
+		assertEquals("OvershootingTheMoon hasn't been set,",true,a.listOfAchievements.get
+				("OvershootingTheMoon"));
 		
 		
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#PassingTheBuck(int, boolean, List<Card>)}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#PassingTheBuck
+	 * (int, boolean, List<Card>)}.
 	 */
 	@Test
 	public void testPassingTheBuck() {
@@ -173,7 +183,8 @@ public class AchievementsTest {
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#StartTheParty(List<Card>, Player)}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#StartTheParty(List<Card>, 
+	 * Player)}.
 	 */
 	@Test
 	public void testStartTheParty() {
@@ -197,11 +208,13 @@ public class AchievementsTest {
 	}
 
 	/**
-	 * Test method for {@link edu.txstate.hearts.model.Achievements#HatTrick(int, boolean, int)}.
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#HatTrick(int, boolean, 
+	 * int)}.
 	 */
 	@Test
 	public void testHatTrick() {
-		//Special method - achievement is given to user that called it, if not already earned
+		/* Special method - achievement is given to user that called it, if not already 
+		   earned */
 		
 		//Ensure achievement is set
 		assertEquals("StartTheParty hasn't been set,",true,a.HatTrick());
@@ -213,16 +226,15 @@ public class AchievementsTest {
 		assertEquals("Method should return false,",false,a.HatTrick());
 	}
 
-//	/**
-//	 * Test method for {@link edu.txstate.hearts.model.Achievements#getListOfAchievements()}.
-//	 */
-//	@Test
-//	public void TestGetListOfAchievements() {
-//		//Activate the Hat Trick achievement
-//		a.HatTrick();
-//		assertEquals("The lists are not equal",a.listOfAchievements.get("HatTrick"),
-//				Achievements.getListOfAchievements().contains
-//				("HatTrick"));
-//	}
+	/**
+	 * Test method for {@link edu.txstate.hearts.model.Achievements#getListOfAchievements()}.
+	 */
+	@Test
+	public void TestGetListOfAchievements() {
+		//Activate the Hat Trick achievement
+		p.getAchievements().HatTrick();
+		assertEquals("The lists are not equal",true,
+				p.getAchievements().listOfAchievements.containsKey("HatTrick"));
+	}
 
 }

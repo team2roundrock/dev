@@ -23,10 +23,19 @@ import edu.txstate.hearts.utils.ReadFiles;
  */
 public class User extends Player 
 {
-	private Achievements achievements; //this may not be needed
+	private Achievements achievements;
 	
 	/**
-	 * Constructor
+	 * Constructor. If there exists a filename associated with 
+	 * the passed in user name, then this user has chosen an
+	 * existing user that may have achievements, and the 
+	 * achievements class is filled with data read from existing
+	 * file. 
+	 * 
+	 * If file is not found, that particular exception is
+	 * caught and a brand new achievements list is created using
+	 * the alternate overloaded constructor (for new users) found 
+	 * within the achievements class.
 	 * 
 	 * @param name	user name
 	 * @param num	position index
@@ -223,15 +232,6 @@ public class User extends Player
 						found = true;
 						System.out.println("(You must play " + suitLed + ")");
 					}
-					
-					//TODO Figure out why this doesn't work
-					//When uncommented, the else statement below executes first 
-					//followed by the if statement above
-//						else
-//						{
-//							match = true;
-//							System.out.println("You can play any card");
-//						}
 				}
 				else
 				{
@@ -301,7 +301,8 @@ public class User extends Player
 	/**
 	 * Exists to implement a dev testing option of skipping
 	 * card passing. Works by automatically passing the next 
-	 * highest card in user's hand
+	 * highest card in user's hand (note: only works using the 
+	 * console.)
 	 * 
 	 * @param numCardsToPass tells method how many cards are left
 	 * @return 			highest card in hand
