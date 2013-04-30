@@ -5,13 +5,16 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for user class
+ * Tests for user class. Majority of the methods in the
+ * user class being tested remain from when they relied
+ * on user input from the console. Therefore, test is
+ * only needed for the methods used by the GUI.
+ * 
  * @author Jonathan
  *
  */
@@ -21,14 +24,11 @@ public class UserTest {
 	//private Achievements a;
 	//private List<Card> listOfCards;
 	List<Card> cardsPlayed;
-	private Deck deck;
 	File file, file2;
 
 	@Before
 	public void setUp() throws Exception {
 		u = new User("TestPlayer", 0);
-		//a = new Achievements(u.getName());
-		//listOfCards = new ArrayList<Card>();
 		cardsPlayed = new ArrayList<Card>();
 		
 		//Two files that get created in different tests
@@ -41,16 +41,6 @@ public class UserTest {
 	public void tearDown() throws Exception {
 		file.delete();
 		file2.delete();
-	}
-
-	@Test
-	public void testPlayCard() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetCardsToPass() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -84,20 +74,9 @@ public class UserTest {
 				"OvershootingTheMoon=false, StartTheParty=false, " +
 				"PassingTheBuck=false, OvershootingTheMoon2=false, " +
 				"OvershootingTheMoon1=false, HatTrick=true, " +
-				"ShootingTheMoon=false}",newUser.getAchievements().listOfAchievements.toString());
-		
-		
+				"ShootingTheMoon=false}",newUser.getAchievements().listOfAchievements.
+				toString());	
 	}
-
-//	@Test
-//	public void testGetAchievements() {
-//		fail("Not yet implemented");
-//	}
-
-//	@Test
-//	public void testSetAchievements() {
-//		fail("Not yet implemented");
-//	} 
 
 	@Test
 	public void testTryPlayCard() {
@@ -195,14 +174,4 @@ public class UserTest {
 				u.getHand()
 						.contains(new Card(Card.Face.Ace, Card.Suit.Diamonds)));
 	}
-	
-//	private void dealRandomHand(int size) {
-//		deck.reset();
-//		deck.shuffleCards();
-//		u.getHand().clear();
-//		for (int i = 0; i < size; i++) {
-//			u.addCard(deck.dealCard());
-//		}
-//	}
-
 }
