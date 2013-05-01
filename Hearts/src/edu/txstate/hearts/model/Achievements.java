@@ -9,10 +9,14 @@ import java.util.Map;
 import edu.txstate.hearts.utils.UserData;
 
 /**
+ * This class handles all achievement related activities and
+ * the requirements to achieve them. When an achievement
+ * has been earned through gameplay, the name of that achievement
+ * is placed in a file for that user
+ * 
  * @author Jonathan Shelton
  *
  */
-
 public class Achievements
 {
 	static List<String> achievementNames = Arrays.asList("BrokenHeart","ShootingTheMoon","PassingTheBuck",
@@ -27,6 +31,14 @@ public class Achievements
 	private static ArrayList<String> arrayOfAchievements;
 	Map<String, Boolean> listOfAchievements;
 	
+	/**
+	 * This constructor is called when an existing user file
+	 * has been found in the system. It sets any achievements
+	 * found in the file to true in the local list of
+	 * achievements.
+	 * @param userName
+	 * @param passedAchievements
+	 */
 	public Achievements(String userName, List<String> passedAchievements)
 	{
 		user = new UserData(userName);
@@ -44,7 +56,11 @@ public class Achievements
 			counterOvershootingTheMoon = 3;
 	}
 	
-	
+	/**
+	 * This constructor is called when a user is new to the game
+	 * without an existing achievements file
+	 * @param userName
+	 */
 	public Achievements(String userName)
 	{	
 		user = new UserData(userName);
@@ -58,6 +74,12 @@ public class Achievements
 		
 	}
 	
+	/**
+	 * Initialize achievements for a user by setting up a list
+	 * of achievements and srtting them to default false values.
+	 * counterOvershootingTheMoon keeps track of progress toward
+	 * the overshooting the moon achievement and is set to zero
+	 */
 	private void initializeUser()
 	{
 		counterOvershootingTheMoon = 0; //each increment is progress toward achievement
@@ -88,10 +110,6 @@ public class Achievements
 						// place value in a boolean container
 						achievedOrNot = listOfAchievements.get(nameOfAchievement);
 						return achievedOrNot;
-//						if (!achievedOrNot) // if it's false (not achieved yet)
-//						{
-//							return true;
-//						}
 					}
 					//if key does not exist, achievement not earned
 				}
@@ -112,6 +130,7 @@ public class Achievements
 	}
 
 	/**
+	 * Get the name of current user file
 	 * @return the userFileName
 	 */
 	public static String getUserFileName() {
@@ -119,6 +138,7 @@ public class Achievements
 	}
 
 	/**
+	 * Set the name of current user file
 	 * @param userFileName the userFileName to set
 	 */
 	public void setUserFileName(String userFileName) {
@@ -126,6 +146,7 @@ public class Achievements
 	}
 
 	/**
+	 * Get the current counter for overshooting the moon achievement
 	 * @return counter for Overshooting The Moon achievement
 	 */
 	public int getCounterOvershootingTheMoon() {
@@ -133,6 +154,7 @@ public class Achievements
 	}
 
 	/**
+	 * Set the counter for overshooting the moon achievement
 	 * @param counterOvershootingTheMoon counter for Overshooting The Moon achievement
 	 */
 	public void setCounterOvershootingTheMoon(int counterOvershootingTheMoon) {
@@ -169,6 +191,15 @@ public class Achievements
 		return 0;
 	}
 	
+	/**
+	 * Uses the end game score to determine if the user has
+	 * satisfied the requirements for the Broken Heart
+	 * achievement (collected all the heart cards in the
+	 * game)
+	 * 
+	 * @param score
+	 * @return
+	 */
 	private boolean BrokenHeart(int score) {
 		// "end game" usage
 		// Score: (Full_score)-(QoS)
@@ -185,6 +216,15 @@ public class Achievements
 		return false;
 	}
 	
+	/**
+	 * Uses score at the end of a round to determine if player
+	 * has earned the specific requirements for the Shooting
+	 * The Mon achievement (Score of 26 = collected all point
+	 * value cards which includes all hearts and the queen of
+	 * spades
+	 * @param score
+	 * @return
+	 */
 	private boolean ShootingTheMoon(int score) {
 		// "end game" usage
 		// Score: (Full_score)
@@ -287,6 +327,12 @@ public class Achievements
 		return false;
 	}
 	
+	/**
+	 * Takes the passed in list of cards played on the table to
+	 * determine if the user started the round (with the Deuce
+	 * of Clubs).
+	 * @param cardsPlayed
+	 */
 	public boolean StartTheParty(List<Card> cardsPlayed) {
 		// tracked in "real time" - first card played every round
 		// Played: Two of Clubs
@@ -294,7 +340,6 @@ public class Achievements
 		//	  If two of clubs found, unlock achievement. Will be activated the moment 
 		//    the card is played
 		String nameOfAchievement = "StartTheParty";
-		//Hearts.accessUI.ShowBalloonTip("You are IN the achievement");
 		for (Card card : cardsPlayed)
 		{
 			if ((card.getSuit() == Card.Suit.Clubs)
@@ -307,7 +352,6 @@ public class Achievements
 				}
 			}
 		}
-		//Hearts.accessUI.ShowBalloonTip("You are NOT getting the achievement");
 		return false;
 	}
 	
@@ -332,6 +376,11 @@ public class Achievements
 	}
 	
 	/**
+	 * Method checks if user already has passed in achievement,
+	 * and writes the achievement if it doesn't exist in the
+	 * user's achievement list. Returns true if an achievement
+	 * was added, false if it doesn't
+	 * 
 	 * @param nameOfAchievement
 	 * @return
 	 */
@@ -364,6 +413,7 @@ public class Achievements
 	
 	/**
 	 * Returns all of a user's earned achievements
+	 * 
 	 * @param listOfAchievements
 	 * @return Earned achievements
 	 */
