@@ -47,6 +47,7 @@ import edu.txstate.hearts.utils.RiskThresholds.Threshold;
  * 
  * After each turn is done, look at the cards played in that turn.  If my card
  * won the trick, determine if I took any points, and if so, decrease the risk
+ * threshold.  If my card won and I did not win any points, increase the risk
  * threshold.  If my card did not win the trick, increase the risk threshold.
  * 
  * @author Neil Stickels, Jonathan Shelton
@@ -54,7 +55,7 @@ import edu.txstate.hearts.utils.RiskThresholds.Threshold;
  */
 public class AgentAggressive extends Agent {
 
-	private RiskThresholds thresholds;
+	private static RiskThresholds thresholds;
 	private boolean hasQueenOfSpades = false;
 	// private double lastChanceOfWin;
 	private double expectedWins;
@@ -64,31 +65,40 @@ public class AgentAggressive extends Agent {
 
 	/**
 	 * Contruct an Aggressive Agent with the name specified and as the player
-	 * number specified
+	 * number specified.  If the thresholds object hasn't been created, check
+	 * to see if a thresholds.bin file exists, which should contain the persisted
+	 * thresholds.  If it does, read in that binary file.  If it doesn't, create
+	 * some new default thresholds.
 	 * @param playerName the name to display for this player as a String
 	 * @param num the index of the player in the list of players for the game
 	 * @see edu.txstate.hearts.model.Agent#Agent(String, int)
 	 */
 	public AgentAggressive(String playerName, int num) {
 		super(playerName, num);
-		try {
-			// use buffering
-			InputStream file = new FileInputStream("thresholds.bin");
-			InputStream buffer = new BufferedInputStream(file);
-			ObjectInput input = new ObjectInputStream(buffer);
-			try {
-				// deserialize the RiskThreshold
-				thresholds = (RiskThresholds) input.readObject();
+		if (thresholds == null) 
+		{
+			try 
+			{
+				// use buffering
+				InputStream file = new FileInputStream("thresholds.bin");
+				InputStream buffer = new BufferedInputStream(file);
+				ObjectInput input = new ObjectInputStream(buffer);
+				try 
+				{
+					// deserialize the RiskThreshold
+					thresholds = (RiskThresholds) input.readObject();
 
-			} finally {
-				input.close();
+				} finally 
+				{
+					input.close();
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.out.println("problem reading in file thresholds.bin: "
+						+ e.getMessage());
+				thresholds = new RiskThresholds();
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("problem reading in file thresholds.bin: "
-					+ e.getMessage());
-			thresholds = new RiskThresholds();
 		}
 	}
 
