@@ -16,13 +16,23 @@ import edu.txstate.hearts.model.Card.Suit;
 
 /**
  * This class can be used for various probability gathering functions that
- * might be used by any agent.
+ * might be used by any agent.  In practice, I think only AgentAggressive is
+ * using any of this
  * 
  * @author Neil Stickels
  *
  */
 public abstract class ProbabilityUtils {
 	
+	/**
+	 * Determine the probability that everyone has at least one card of 
+	 * the specified suit
+	 * @param suit the suit being queried
+	 * @param hand the hand of the user making the request
+	 * @param muck all of the cards that have already been played
+	 * @return a probability between 0 and 1 that everyone has at least one card
+	 * in that suit
+	 */
 	public static double getProbabilityEveryoneHasOneOfASuit(Suit suit, List<Card> hand, Set<Card> muck)
 	{
 		double countWithOne = getTotalCardCombinationsWithForSuitAtLeastOne(suit, hand, muck);
@@ -185,7 +195,7 @@ public abstract class ProbabilityUtils {
 	 * @param muck the Cards that have already been played in the entire game
 	 * @param cardsPlayedThisTurn a List of Cards that have already been played this turn
 	 * @param knownCards a list of three Sets of known cards for opponents
-	 * @param list 
+	 * @param knownEmpties a List of three Sets, with each set being known suits that a player does not have any cards in
 	 * @param qosPlayed a boolean indicator of whether or not the Queen of Spades
 	 * 			has already been played in this game, if not, this algorithm
 	 * 			will count the Queen of Spades as a heart
@@ -195,43 +205,61 @@ public abstract class ProbabilityUtils {
 			Suit suit, Set<Card> muck, List<Card> cardsPlayedThisTurn, 
 			List<Set<Card>> knownCards, List<Set<Suit>> knownEmpties, boolean qosPlayed)
 	{
-		if(cardsPlayedThisTurn.size() > 0)
+		// check if I am playing first
+		if(cardsPlayedThisTurn.size() > 0) 
 		{
+			// I am not playing first, am I playing last?
 			if(cardsPlayedThisTurn.size() == 3)
 			{
+				// yes, I am playing last.  That makes this easy, if someone
+				// has already played hearts, then the probability is 1, if
+				// no one has, then the probability is 0.
 				if(cardsPlayedThisTurn.get(0).getSuit() == Suit.Hearts ||
 						cardsPlayedThisTurn.get(1).getSuit() == Suit.Hearts ||
 						cardsPlayedThisTurn.get(2).getSuit() == Suit.Hearts)
 					return 1d;
 				return 0d;
 			}
+			// am i playing third?
 			else if(cardsPlayedThisTurn.size() == 2)
 			{
+				// if someone has already played hearts, then return 1,
+				// otherwise make sure we factor in what was already played
+				// into the rest of the calculations
 				if(cardsPlayedThisTurn.get(0).getSuit() == Suit.Hearts ||
 						cardsPlayedThisTurn.get(1).getSuit() == Suit.Hearts)
 					return 1d;
 				knownCards.get(1).add(cardsPlayedThisTurn.get(0));
 				knownCards.get(2).add(cardsPlayedThisTurn.get(1));
-			} else if(cardsPlayedThisTurn.size() == 1)
+			} 
+			// am i playing second?
+			else if(cardsPlayedThisTurn.size() == 1)
 			{
+				// if the first player played hearts, return 1, otherwise,
+				// make sure we factor the card into what was already played
 				if(cardsPlayedThisTurn.get(0).getSuit() == Suit.Hearts)
 					return 1d;
 				knownCards.get(2).add(cardsPlayedThisTurn.get(0));
 			} else
+				// this means I am not playing first, second, third or fourth?
 				throw new RuntimeException("how i get here? cards played this turn - "+cardsPlayedThisTurn.size());
 		}
+		// count how many cards of each suit are still left
 		Map<Card.Suit, Integer> suitCounter = new HashMap<Card.Suit, Integer>();
 		suitCounter.put(Card.Suit.Clubs, 13);
 		suitCounter.put(Card.Suit.Diamonds, 13);
 		suitCounter.put(Card.Suit.Hearts, 13);
 		suitCounter.put(Card.Suit.Spades, 13);
 		Iterator<Card> handIterator = hand.iterator();
+		// take all of my cards out of the cards available for each suit
 		while(handIterator.hasNext())
 		{
 			Card.Suit s = handIterator.next().getSuit();
 			int prev = suitCounter.get(s);
 			suitCounter.put(s, --prev);
 		}
+		// take all of the cards that have already been played out of the cards
+		// available
 		Iterator<Card> muckIterator = muck.iterator();
 		while(muckIterator.hasNext())
 		{
@@ -239,13 +267,17 @@ public abstract class ProbabilityUtils {
 			int prev = suitCounter.get(s);
 			suitCounter.put(s, --prev);			
 		}
+		// if there are no hearts remaining, no one could possibly play hearts
+		// so return 0
 		if(suitCounter.get(Suit.Hearts) == 0)
 			return 0d;
-		if(suitCounter.get(suit) == 0 && suitCounter.get(Suit.Hearts) > 0)
-		{
-			//System.out.println("no one else has that suit, and there are hearts, returning 1");
-			return 1d;
-		}
+		// if no one else has the suit led, and there are hearts out there,
+		// save the math and return 1.
+//		if(suitCounter.get(suit) == 0 && suitCounter.get(Suit.Hearts) > 0)
+//		{
+//			//System.out.println("no one else has that suit, and there are hearts, returning 1");
+//			return 1d;
+//		}
 		if(suit == Suit.Hearts)
 			if(suitCounter.get(Suit.Hearts) > 0)
 				return 1d;
@@ -513,6 +545,15 @@ public abstract class ProbabilityUtils {
  * totalCombos is the total combinations of legal hands possible
  * withHeartsNoSuitCombos is the number of combinations which contain hearts
  *   and no cards of the specified suit
+ *   
+ * Because it is possible for totalCombos to exceed Long.MAX_VALUE in some
+ * cases, in those instances, we are actually using this to count the number
+ * of times it was exceeded, and then when comparing the values, instead
+ * of doing a straight withHeartsNoSuitCombos/totalCombos, you can do 
+ * ((withHeartsNoSuitCombo/Long.MAX_VALUE)+withHeartsExceedCounter)/
+ * ((totalCombos/Long.MAX_VALUE)+totalCombosExceedCounter), which then
+ * compares how many MAX_LONGS each of the values are instead of the actual
+ * counts
  * 
  * @author Neil Stickels
  *
@@ -531,6 +572,16 @@ class CounterObject
 		return totalCombos;
 	}
 	
+	/**
+	 * Add in another batch of combinations in which a player could have
+	 * no cards of the suit and that they do have hearts.  There is some
+	 * extra logic here for in case this exceeds MAX_LONG, which shouldn't
+	 * happen in this case, but it did for getTotalCombos, so just in case
+	 * I put that logic in here as well.  If it does exceed MAX_LONG, then
+	 * increment the withHeartsExceedCounter to count the number of times it
+	 * exceeded MAX_LONG
+	 * @param l the number of combinations to add
+	 */
 	public void addWithHeartsNoSuitCombos(long l) {
 		withHeartsNoSuitCombos+=l;
 		if(withHeartsNoSuitCombos < 0)
@@ -541,6 +592,14 @@ class CounterObject
 
 	}
 	
+	/**
+	 * Add in another batch of combinations for how all of the cards could
+	 * be dealt between the players.  There is some extra logic here in case 
+	 * this exceeds MAX_LONG.  If it does exceed MAX_LONG, then
+	 * increment the totalCombosExceedCounter to count the number of times it
+	 * exceeded MAX_LONG
+	 * @param l the number of combinations to add
+	 */
 	public void addTotalCombos(long l) {
 		totalCombos+=l;
 		if(totalCombos < 0)
