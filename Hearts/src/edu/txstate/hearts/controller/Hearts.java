@@ -52,6 +52,7 @@ public class Hearts implements ActionListener
 	private boolean showOpponentCards = true;
 	private User user; // for achievements
 	private HeartsUI heartsUI;
+	private PointsDisplay pointDisplay;
 	private boolean startThePartyAchieve = false;
 	private Boolean achievementNotify = false;
 	private int currentPlayerIndexThisTurn;
@@ -505,6 +506,7 @@ public class Hearts implements ActionListener
 							+ playerWithLowestTotalPoints.getScore());
 
 				PointsDisplay pointDisplay = new PointsDisplay(this, this.players, playerWithLowestTotalPoints.getName());
+				this.pointDisplay = pointDisplay;
 				pointDisplay.showDialog();
 				return;
 			}
@@ -824,7 +826,9 @@ public class Hearts implements ActionListener
 			}
 			else if (buttonType.equals("PointDisplayPlayAgain"))
 			{
-				// TODO: play again
+				this.pointDisplay.dispose();
+				this.heartsUI.getframe().dispose();
+				this.run();
 			}
 			else if (buttonType.equals("PointDisplayQuit"))
 			{
