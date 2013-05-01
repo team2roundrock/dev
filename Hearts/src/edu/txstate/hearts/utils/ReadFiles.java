@@ -110,7 +110,11 @@ public abstract class ReadFiles {
 		}
 		return image;
 	}
-	
+	/**
+	 * Returns the image specify in fileName
+	 * @param fileName: name of image
+	 * @return
+	 */
 	public static Image getImage(String fileName)
 	{
 		String fullFileName = mainImagesFolder + fileName;
@@ -128,7 +132,12 @@ public abstract class ReadFiles {
 		
 		return image;
 	}
-	
+	/**
+	 * Opens a new file
+	 * @param fileName: name of file
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	private static Scanner openFile(String fileName) throws FileNotFoundException{
 		try{
 			File file = new File(fileName + ".txt");
@@ -182,7 +191,10 @@ public abstract class ReadFiles {
 			}
 		}
 	}
-	
+	/**
+	 * populates listOfUsers with a user record
+	 * @param userName
+	 */
 	public static void addUserRecord(String userName)
 	{
 		if(listOfUsers == null)
@@ -191,7 +203,11 @@ public abstract class ReadFiles {
 		}
 		listOfUsers.add(userName);
 	}
-	
+	/**
+	 * Reads information contained in the Users text file
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public static List<String> readUserRecords() throws FileNotFoundException {
 		if (listOfUsers == null) {
 			listOfUsers = new ArrayList<String>();
@@ -217,7 +233,12 @@ public abstract class ReadFiles {
 		}
 		return listOfUsers;
 	}// end of readRecords
-	
+	/**
+	 * reads a player's achievements
+	 * @param playerName
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public static List<String> readAchievements(String playerName) throws FileNotFoundException {
 
 //		if (readAchievements == null) {

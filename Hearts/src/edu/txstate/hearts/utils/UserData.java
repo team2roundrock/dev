@@ -16,10 +16,10 @@ import java.util.Set;
  * Holds implementation for the creation and modification of data belonging to
  * an individual user
  * 
- * @author Jonathan Shelton, Maria Poole,,,
+ * @author Jonathan Shelton, Maria Poole
  * 
  */
-public class UserData {
+	public class UserData {
 	
 	private final String userName;
 	
@@ -27,7 +27,12 @@ public class UserData {
 	{
 		this.userName = userName;
 	}
-
+	/**
+	 * this method creates a new text file for this particular user if the file does not exist. If the file
+	 * already exist this method writes the achievements on the text file.
+	 * @param achievements: list of achievements completed by a user
+	 * @throws IOException
+	 */
 	public void createUserDataFile(List<String> achievements) throws IOException {
 		if (!ReadFiles.getRecords().contains(userName)) {
 			addUserNameToFile();
@@ -46,7 +51,11 @@ public class UserData {
 		}
 
 	}// end of function
-
+	/**
+	 * This method adds the user name to an existing user file. This file keeps track of all the users that have
+	 * played the game
+	 * @throws IOException
+	 */
 	public void addUserNameToFile() throws IOException {
 		if(!ReadFiles.getRecords().contains(userName))
 		{
@@ -65,7 +74,10 @@ public class UserData {
 		}
 
 	}
-	
+	/**
+	 * This method helps determined which achievements have been accomplished by the user.
+	 * @param achievements
+	 */
 	public void writeAchievements(Map<String, Boolean> achievements)
 	{
 		Set<String> keySet = achievements.keySet();
