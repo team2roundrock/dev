@@ -73,6 +73,20 @@ public class Hearts implements ActionListener
 	}
 
 	/**
+	 * @return the players
+	 */
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	/**
+	 * @return the endScore
+	 */
+	public int getEndScore() {
+		return this.endScore;
+	}
+
+	/**
 	 * Add UI to be used for hearts game
 	 *
 	 * @param heartsUI	UI object
