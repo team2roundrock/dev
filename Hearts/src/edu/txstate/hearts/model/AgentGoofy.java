@@ -39,6 +39,9 @@ public class AgentGoofy extends Agent
 		return cardToPlay;
 	}
 
+	/**
+	 * @see edu.txstate.hearts.model.Agent#getCardsToPass()
+	 */
 	public List<Card> getCardsToPass()
 	{
 		int numCardsToPass = 3;
