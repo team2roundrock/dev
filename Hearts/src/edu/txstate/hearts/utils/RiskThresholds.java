@@ -4,6 +4,11 @@ package edu.txstate.hearts.utils;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.SortedMap;
+//import java.util.TreeMap;
+
+import edu.txstate.hearts.model.Card;
 
 /**
  * Class is designed to house risk thresholds and to track and
@@ -97,7 +102,6 @@ public class RiskThresholds implements Serializable {
 
 	//private Random rand = new Random();
 	// float threshold = rand.nextFloat();
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<Integer, Threshold> thresholdMap = new HashMap();
 
 	/**
@@ -125,6 +129,10 @@ public class RiskThresholds implements Serializable {
 	/**
 	 * Get the appropriate threshold based on which player in the turn you are
 	 * and whether or not the Queen of Spades has been played
+	 * @param numPlayed the number of people who have played already this turn
+	 * @param qos a boolean indicating whether the queen of spades has been 
+	 * played already or not.  true means it has been played, false means it
+	 * has not been played
 	 * @return the appropriate Threshold to use for this situation
 	 */
 	public Threshold getThreshold(int numPlayed, boolean qos) {
@@ -229,7 +237,7 @@ public class RiskThresholds implements Serializable {
 	{
 		// 1/(1+e^-(x-5))
 		double e = Math.E;
-		double denominator = 1d + Math.pow(e, (x - 5));
+		double denominator = 1d + Math.pow(e, (-1*(x - 5)));
 		return 1d / denominator;		
 	}
 

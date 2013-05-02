@@ -124,7 +124,7 @@ public abstract class ProbabilityUtils {
 	 * @param muck all of the cards already played
 	 * @return the number of ways the cards could legally be distributed 
 	 */
-	public static long getTotalCardCombinationsForSuit(Suit suit, List<Card> hand, Set<Card> muck)
+	private static long getTotalCardCombinationsForSuit(Suit suit, List<Card> hand, Set<Card> muck)
 	{
 		int available = removeCardsFromAvailable(suit, hand.iterator(), 13);
 		available = removeCardsFromAvailable(suit, muck.iterator(), available);
@@ -369,6 +369,8 @@ public abstract class ProbabilityUtils {
 			System.out.println("muck - "+muck);
 			
 		}
+		if(totalCombos == 0)
+			return 0d;
 		return heartCombos/totalCombos;
 	}
 
