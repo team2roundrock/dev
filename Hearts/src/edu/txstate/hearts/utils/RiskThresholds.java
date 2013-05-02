@@ -4,11 +4,6 @@ package edu.txstate.hearts.utils;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.SortedMap;
-//import java.util.TreeMap;
-
-import edu.txstate.hearts.model.Card;
 
 /**
  * Class is designed to house risk thresholds and to track and
@@ -102,6 +97,7 @@ public class RiskThresholds implements Serializable {
 
 	//private Random rand = new Random();
 	// float threshold = rand.nextFloat();
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<Integer, Threshold> thresholdMap = new HashMap();
 
 	/**

@@ -138,6 +138,7 @@ public class PlayerTest {
 	 * {@link edu.txstate.hearts.model.Player#getLegalCards(java.util.List, boolean)}
 	 * .
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetLegalCards() {
 		// test that an empty hand has no legal cards

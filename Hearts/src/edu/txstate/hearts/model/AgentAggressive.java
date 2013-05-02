@@ -397,6 +397,7 @@ public class AgentAggressive extends Agent {
 	 * @see edu.txstate.hearts.model.Agent#playCard(java.util.List, boolean,
 	 * boolean)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Card playCard(List<Card> cardsPlayed, boolean heartsBroken,
 			boolean veryFirstTurn) {
@@ -888,6 +889,7 @@ public class AgentAggressive extends Agent {
 	 * @see edu.txstate.hearts.model.Player#addPlayedCards(java.util.Collection,
 	 * boolean)
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public void addPlayedCards(Collection<Card> cards, boolean tookCards, int num) {
 		// TODO Auto-generated method stub

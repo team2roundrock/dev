@@ -38,6 +38,7 @@ public class ProbabilityUtilsTest {
 	/**
 	 * Test method for {@link edu.txstate.hearts.utils.ProbabilityUtils#getTotalCardCombinationsWithForSuitAtLeastOne(edu.txstate.hearts.model.Card.Suit, java.util.List, java.util.List)}.
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetTotalCardCombinationsWithForSuitAtLeastOne() {
 		Player p = new AgentDetermined("Tester", 0);

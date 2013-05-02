@@ -16,11 +16,13 @@ import edu.txstate.hearts.model.User;
 
 public class ReadFilesTest {
 	private List<String> records;
+	@SuppressWarnings("unused")
 	private List<String> achievement;
 	private File file;
 	private File userFile;
 	private Scanner input = null;
 	private User user;
+	@SuppressWarnings("unused")
 	private String playerName;
 	
 	@Before

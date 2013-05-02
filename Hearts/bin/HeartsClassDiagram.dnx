@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--xtools2_universal_type_manager-->
+<?com.ibm.xtools.emf.core.signature <signature id="com.ibm.xtools.mmi.ui.signatures.diagram" version="7.0.0"><feature description="" name="Rational Modeling Platform (com.ibm.xtools.rmp)" url="" version="7.0.0"/></signature>?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmlns:umlnotation="http://www.ibm.com/xtools/1.5.2/Umlnotation" xmi:id="_NW8oQGzUEeKyX6SKSz3auQ" type="Class" name="HeartsClassDiagram.dnx">
+  <eAnnotations xmi:id="_NW92YGzUEeKyX6SKSz3auQ" source="com.ibm.xtools.common.ui.reduction.editingCapabilities">
+    <details xmi:id="_NW92YWzUEeKyX6SKSz3auQ" key="com.ibm.xtools.activities.javaVisualizerActivity" value="1"/>
+  </eAnnotations>
+  <children xmi:id="_Zm4v4GzUEeKyX6SKSz3auQ">
+    <children xmi:id="_ZnOHEGzUEeKyX6SKSz3auQ" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_ZnOHEWzUEeKyX6SKSz3auQ" width="1320" height="1320"/>
+    </children>
+    <children xmi:id="_ZnOuIGzUEeKyX6SKSz3auQ" type="Stereotype"/>
+    <children xmi:id="_ZnRxcGzUEeKyX6SKSz3auQ" type="Name"/>
+    <children xmi:id="_ZnSYgGzUEeKyX6SKSz3auQ" type="Parent"/>
+    <children xmi:id="_ZnUNsGzUEeKyX6SKSz3auQ" visible="false" type="ANNOTATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_ZnUNsWzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_ZnZtQGzUEeKyX6SKSz3auQ" type="ANNOTATED_ATTRIBUTE_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_ZnZtQWzUEeKyX6SKSz3auQ" collapsed="true"/>
+    </children>
+    <children xmi:id="_ZnaUUGzUEeKyX6SKSz3auQ" type="ANNOTATED_OPERATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_ZnaUUWzUEeKyX6SKSz3auQ"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLShapeStyle" xmi:id="_Zm4v4WzUEeKyX6SKSz3auQ" showStereotype="Label"/>
+    <element xmi:type="uml:Class" href="mmi:///#jsrctype%5Ename=Hearts%5Bjcu%5Ename=Hearts.java%5Bjpack%5Ename=edu.txstate.hearts.controller%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D$uml.Class"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Zm4v4mzUEeKyX6SKSz3auQ" x="4392" y="1508"/>
+  </children>
+  <children xmi:id="_ffIVoGzUEeKyX6SKSz3auQ">
+    <children xmi:id="_ffJjwGzUEeKyX6SKSz3auQ" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_ffJjwWzUEeKyX6SKSz3auQ" width="1320" height="1320"/>
+    </children>
+    <children xmi:id="_ffKK0GzUEeKyX6SKSz3auQ" type="Stereotype"/>
+    <children xmi:id="_ffKK0WzUEeKyX6SKSz3auQ" type="Name"/>
+    <children xmi:id="_ffMAAGzUEeKyX6SKSz3auQ" type="Parent"/>
+    <children xmi:id="_ffMAAWzUEeKyX6SKSz3auQ" visible="false" type="ANNOTATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_ffMAAmzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_ffNOIGzUEeKyX6SKSz3auQ" type="ANNOTATED_ATTRIBUTE_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_ffNOIWzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_ffNOImzUEeKyX6SKSz3auQ" type="ANNOTATED_OPERATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_ffNOI2zUEeKyX6SKSz3auQ"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLShapeStyle" xmi:id="_ffIVoWzUEeKyX6SKSz3auQ" showStereotype="Label"/>
+    <element xmi:type="uml:Class" href="mmi:///#jsrctype%5Ename=Deck%5Bjcu%5Ename=Deck.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D$uml.Class"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ffIVomzUEeKyX6SKSz3auQ" x="9193" y="1585"/>
+  </children>
+  <children xmi:id="_j2NDkGzUEeKyX6SKSz3auQ">
+    <children xmi:id="_j2ORsGzUEeKyX6SKSz3auQ" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_j2ORsWzUEeKyX6SKSz3auQ" width="1320" height="1320"/>
+    </children>
+    <children xmi:id="_j2O4wGzUEeKyX6SKSz3auQ" type="Stereotype"/>
+    <children xmi:id="_j2Pf0GzUEeKyX6SKSz3auQ" type="Name"/>
+    <children xmi:id="_j2Pf0WzUEeKyX6SKSz3auQ" type="Parent"/>
+    <children xmi:id="_j2QG4GzUEeKyX6SKSz3auQ" visible="false" type="ANNOTATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_j2QG4WzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_j2Qt8GzUEeKyX6SKSz3auQ" type="ANNOTATED_ATTRIBUTE_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_j2Qt8WzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_j2Qt8mzUEeKyX6SKSz3auQ" type="ANNOTATED_OPERATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_j2Qt82zUEeKyX6SKSz3auQ"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLShapeStyle" xmi:id="_j2NDkWzUEeKyX6SKSz3auQ" showStereotype="Label"/>
+    <element xmi:type="uml:Class" href="mmi:///#jsrctype%5Ename=Card%5Bjcu%5Ename=Card.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D$uml.Class"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_j2NDkmzUEeKyX6SKSz3auQ" x="13948" y="1585"/>
+  </children>
+  <children xmi:id="_mf8F8GzUEeKyX6SKSz3auQ">
+    <children xmi:id="_mf9UEGzUEeKyX6SKSz3auQ" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_mf9UEWzUEeKyX6SKSz3auQ" width="1320" height="1320"/>
+    </children>
+    <children xmi:id="_mf97IGzUEeKyX6SKSz3auQ" type="Stereotype"/>
+    <children xmi:id="_mf-iMGzUEeKyX6SKSz3auQ" type="Name"/>
+    <children xmi:id="_mf-iMWzUEeKyX6SKSz3auQ" type="Parent"/>
+    <children xmi:id="_mf_JQGzUEeKyX6SKSz3auQ" visible="false" type="ANNOTATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_mf_JQWzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_mf_wUGzUEeKyX6SKSz3auQ" type="ANNOTATED_ATTRIBUTE_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_mf_wUWzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_mgAXYGzUEeKyX6SKSz3auQ" type="ANNOTATED_OPERATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_mgAXYWzUEeKyX6SKSz3auQ"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLShapeStyle" xmi:id="_mf8F8WzUEeKyX6SKSz3auQ" showStereotype="Label"/>
+    <element xmi:type="uml:Class" href="mmi:///#jsrctype%5Ename=Player%5Bjcu%5Ename=Player.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D$uml.Class"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mf8F8mzUEeKyX6SKSz3auQ" x="4755" y="5389"/>
+  </children>
+  <children xmi:id="_pAZQgGzUEeKyX6SKSz3auQ">
+    <children xmi:id="_pAaeoGzUEeKyX6SKSz3auQ" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_pAaeoWzUEeKyX6SKSz3auQ" width="1320" height="1320"/>
+    </children>
+    <children xmi:id="_pAbFsGzUEeKyX6SKSz3auQ" type="Stereotype"/>
+    <children xmi:id="_pAbswGzUEeKyX6SKSz3auQ" type="Name"/>
+    <children xmi:id="_pAdh8GzUEeKyX6SKSz3auQ" type="Parent"/>
+    <children xmi:id="_pAdh8WzUEeKyX6SKSz3auQ" visible="false" type="ANNOTATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_pAdh8mzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_pAewEGzUEeKyX6SKSz3auQ" type="ANNOTATED_ATTRIBUTE_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_pAewEWzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_pAewEmzUEeKyX6SKSz3auQ" type="ANNOTATED_OPERATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_pAewE2zUEeKyX6SKSz3auQ"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLShapeStyle" xmi:id="_pAZQgWzUEeKyX6SKSz3auQ" showStereotype="Label"/>
+    <element xmi:type="uml:Class" href="mmi:///#jsrctype%5Ename=User%5Bjcu%5Ename=User.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D$uml.Class"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_pAZQgmzUEeKyX6SKSz3auQ" x="317" y="5072"/>
+  </children>
+  <children xmi:id="_sExAcGzUEeKyX6SKSz3auQ">
+    <children xmi:id="_sEyOkGzUEeKyX6SKSz3auQ" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_sEyOkWzUEeKyX6SKSz3auQ" width="1320" height="1320"/>
+    </children>
+    <children xmi:id="_sEy1oGzUEeKyX6SKSz3auQ" type="Stereotype"/>
+    <children xmi:id="_sEzcsGzUEeKyX6SKSz3auQ" type="Name"/>
+    <children xmi:id="_sEzcsWzUEeKyX6SKSz3auQ" type="Parent"/>
+    <children xmi:id="_sEzcsmzUEeKyX6SKSz3auQ" visible="false" type="ANNOTATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_sEzcs2zUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_sE0q0GzUEeKyX6SKSz3auQ" type="ANNOTATED_ATTRIBUTE_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_sE0q0WzUEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_sE0q0mzUEeKyX6SKSz3auQ" type="ANNOTATED_OPERATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_sE0q02zUEeKyX6SKSz3auQ"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLShapeStyle" xmi:id="_sExAcWzUEeKyX6SKSz3auQ" showStereotype="Label"/>
+    <element xmi:type="uml:Class" href="mmi:///#jsrctype%5Ename=Computer%5Bjcu%5Ename=Computer.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D$uml.Class"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_sExAcmzUEeKyX6SKSz3auQ" x="9510" y="5072"/>
+  </children>
+  <children xmi:id="_SYoSEGzXEeKyX6SKSz3auQ">
+    <children xmi:id="_SYqHQGzXEeKyX6SKSz3auQ" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_SYqHQWzXEeKyX6SKSz3auQ" width="1320" height="1320"/>
+    </children>
+    <children xmi:id="_SYquUGzXEeKyX6SKSz3auQ" type="Stereotype"/>
+    <children xmi:id="_SYrVYGzXEeKyX6SKSz3auQ" type="Name"/>
+    <children xmi:id="_SYrVYWzXEeKyX6SKSz3auQ" type="Parent"/>
+    <children xmi:id="_SYrVYmzXEeKyX6SKSz3auQ" visible="false" type="ANNOTATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_SYrVY2zXEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_SYtxoGzXEeKyX6SKSz3auQ" type="ANNOTATED_ATTRIBUTE_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_SYtxoWzXEeKyX6SKSz3auQ"/>
+    </children>
+    <children xmi:id="_SYtxomzXEeKyX6SKSz3auQ" type="ANNOTATED_OPERATION_COMPARTMENT">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_SYtxo2zXEeKyX6SKSz3auQ"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLShapeStyle" xmi:id="_SYoSEWzXEeKyX6SKSz3auQ" showStereotype="Label"/>
+    <element xmi:type="uml:Class" href="mmi:///#jsrctype%5Ename=Achievements%5Bjcu%5Ename=Achievements.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D$uml.Class"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_SYoSEmzXEeKyX6SKSz3auQ" x="634" y="8242"/>
+  </children>
+  <styles xmi:type="umlnotation:UMLDiagramStyle" xmi:id="_NW8oQWzUEeKyX6SKSz3auQ"/>
+  <element xsi:nil="true"/>
+  <edges xmi:id="_pA0uUGzUEeKyX6SKSz3auQ" source="_pAZQgGzUEeKyX6SKSz3auQ" target="_mf8F8GzUEeKyX6SKSz3auQ">
+    <children xmi:id="_pA2jgGzUEeKyX6SKSz3auQ" type="NameLabel">
+      <children xmi:id="_pA3KkGzUEeKyX6SKSz3auQ" type="Stereotype"/>
+      <children xmi:id="_pA3KkWzUEeKyX6SKSz3auQ" type="Name"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_pA2jgWzUEeKyX6SKSz3auQ" y="-186"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLConnectorStyle" xmi:id="_pA0uUWzUEeKyX6SKSz3auQ" lineWidth="1" showStereotype="Text"/>
+    <element xmi:type="uml:Generalization" href="mmi:///#jgen%5Bjsrctype%5Ename=User%5Bjcu%5Ename=User.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D%5Bjsrctype%5Ename=Player%5Bjcu%5Ename=Player.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D$uml.Generalization"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_pA0uUmzUEeKyX6SKSz3auQ" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:id="_sFCtQGzUEeKyX6SKSz3auQ" source="_sExAcGzUEeKyX6SKSz3auQ" target="_mf8F8GzUEeKyX6SKSz3auQ">
+    <children xmi:id="_sFDUUGzUEeKyX6SKSz3auQ" type="NameLabel">
+      <children xmi:id="_sFDUUmzUEeKyX6SKSz3auQ" type="Stereotype"/>
+      <children xmi:id="_sFD7YGzUEeKyX6SKSz3auQ" type="Name"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_sFDUUWzUEeKyX6SKSz3auQ" y="-186"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLConnectorStyle" xmi:id="_sFCtQWzUEeKyX6SKSz3auQ" lineWidth="1" showStereotype="Text"/>
+    <element xmi:type="uml:Generalization" href="mmi:///#jgen%5Bjsrctype%5Ename=Computer%5Bjcu%5Ename=Computer.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D%5Bjsrctype%5Ename=Player%5Bjcu%5Ename=Player.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D$uml.Generalization"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_sFCtQmzUEeKyX6SKSz3auQ" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:id="_JHfv0GzVEeKyX6SKSz3auQ" source="_Zm4v4GzUEeKyX6SKSz3auQ" target="_ffIVoGzUEeKyX6SKSz3auQ">
+    <children xmi:id="_JHgW4GzVEeKyX6SKSz3auQ" type="FromMultiplicityLabel">
+      <children xmi:id="_JHg98GzVEeKyX6SKSz3auQ" type="FromMultiplicity"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_JHgW4WzVEeKyX6SKSz3auQ" y="396"/>
+    </children>
+    <children xmi:id="_JHhlAGzVEeKyX6SKSz3auQ" type="FromRoleLabel">
+      <children xmi:id="_JHhlAmzVEeKyX6SKSz3auQ" type="FromRole"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_JHhlAWzVEeKyX6SKSz3auQ" y="-397"/>
+    </children>
+    <children xmi:id="_JHiMEGzVEeKyX6SKSz3auQ" type="associationTypeLabel">
+      <children xmi:id="_JHiMEmzVEeKyX6SKSz3auQ" type="associationTypeCompartment"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_JHiMEWzVEeKyX6SKSz3auQ" y="-186"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLConnectorStyle" xmi:id="_JHfv0WzVEeKyX6SKSz3auQ" showStereotype="Text"/>
+    <element xmi:type="uml:Property" href="mmi:///#jfield%5Ename=deck%5Bjsrctype%5Ename=Hearts%5Bjcu%5Ename=Hearts.java%5Bjpack%5Ename=edu.txstate.hearts.controller%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D$uml.Property"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_JHfv0mzVEeKyX6SKSz3auQ" points="[44, 4, -136, 5]$[137, 26, -43, 27]"/>
+  </edges>
+  <edges xmi:id="_uWeu8GzVEeKyX6SKSz3auQ" source="_ffIVoGzUEeKyX6SKSz3auQ" target="_j2NDkGzUEeKyX6SKSz3auQ">
+    <children xmi:id="_uWf9EGzVEeKyX6SKSz3auQ" type="FromMultiplicityLabel">
+      <children xmi:id="_uWf9EmzVEeKyX6SKSz3auQ" type="FromMultiplicity"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_uWf9EWzVEeKyX6SKSz3auQ" y="396"/>
+    </children>
+    <children xmi:id="_uWf9E2zVEeKyX6SKSz3auQ" type="FromRoleLabel">
+      <children xmi:id="_uWgkIGzVEeKyX6SKSz3auQ" type="FromRole"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_uWf9FGzVEeKyX6SKSz3auQ" y="-397"/>
+    </children>
+    <children xmi:id="_uWgkIWzVEeKyX6SKSz3auQ" type="associationTypeLabel">
+      <children xmi:id="_uWgkI2zVEeKyX6SKSz3auQ" type="associationTypeCompartment"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_uWgkImzVEeKyX6SKSz3auQ" y="-186"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLConnectorStyle" xmi:id="_uWeu8WzVEeKyX6SKSz3auQ" showStereotype="Text"/>
+    <element xmi:type="uml:Property" href="mmi:///#jfield%5Ename=cards%5Bjsrctype%5Ename=Deck%5Bjcu%5Ename=Deck.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D$uml.Property"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_uWeu8mzVEeKyX6SKSz3auQ" points="[44, 4, -88, 4]$[89, 19, -43, 19]"/>
+  </edges>
+  <edges xmi:id="_pKk1UGzWEeKyX6SKSz3auQ" source="_mf8F8GzUEeKyX6SKSz3auQ" target="_Zm4v4GzUEeKyX6SKSz3auQ">
+    <children xmi:id="_pKlcYGzWEeKyX6SKSz3auQ" type="FromMultiplicityLabel">
+      <children xmi:id="_pKlcYmzWEeKyX6SKSz3auQ" type="FromMultiplicity"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_pKlcYWzWEeKyX6SKSz3auQ" y="396"/>
+    </children>
+    <children xmi:id="_pKlcY2zWEeKyX6SKSz3auQ" type="FromRoleLabel">
+      <children xmi:id="_pKmDcWzWEeKyX6SKSz3auQ" type="FromRole"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_pKmDcGzWEeKyX6SKSz3auQ" y="-397"/>
+    </children>
+    <children xmi:id="_pKmDcmzWEeKyX6SKSz3auQ" type="associationTypeLabel">
+      <children xmi:id="_pKmDdGzWEeKyX6SKSz3auQ" type="associationTypeCompartment"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_pKmDc2zWEeKyX6SKSz3auQ" y="-186"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLConnectorStyle" xmi:id="_pKk1UWzWEeKyX6SKSz3auQ" showStereotype="Text"/>
+    <element xmi:type="uml:Property" href="mmi:///#jfield%5Ename=players%5Bjsrctype%5Ename=Player%5Bjcu%5Ename=Player.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D$uml.Property"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_pKk1UmzWEeKyX6SKSz3auQ" points="[-44, -9, -31, 110]$[-15, -87, -2, 32]"/>
+  </edges>
+  <edges xmi:id="_W063MGzXEeKyX6SKSz3auQ" source="_pAZQgGzUEeKyX6SKSz3auQ" target="_SYoSEGzXEeKyX6SKSz3auQ">
+    <children xmi:id="_W07eQGzXEeKyX6SKSz3auQ" type="FromMultiplicityLabel">
+      <children xmi:id="_W07eQmzXEeKyX6SKSz3auQ" type="FromMultiplicity"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_W07eQWzXEeKyX6SKSz3auQ" y="396"/>
+    </children>
+    <children xmi:id="_W08FUGzXEeKyX6SKSz3auQ" type="FromRoleLabel">
+      <children xmi:id="_W08FUmzXEeKyX6SKSz3auQ" type="FromRole"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_W08FUWzXEeKyX6SKSz3auQ" y="-397"/>
+    </children>
+    <children xmi:id="_W08FU2zXEeKyX6SKSz3auQ" type="associationTypeLabel">
+      <children xmi:id="_W08FVWzXEeKyX6SKSz3auQ" type="associationTypeCompartment"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_W08FVGzXEeKyX6SKSz3auQ" y="-186"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLConnectorStyle" xmi:id="_W063MWzXEeKyX6SKSz3auQ" showStereotype="Text"/>
+    <element xmi:type="uml:Property" href="mmi:///#jfield%5Ename=achievements%5Bjsrctype%5Ename=User%5Bjcu%5Ename=User.java%5Bjpack%5Ename=edu.txstate.hearts.model%5Bjsrcroot%5Esrcfolder=src%5Bproject%5Eid=Hearts%5D%5D%5D%5D%5D$uml.Property"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_W063MmzXEeKyX6SKSz3auQ" points="[4, 29, -26, -91]$[10, 91, -20, -29]"/>
+  </edges>
+</notation:Diagram>

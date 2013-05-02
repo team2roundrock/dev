@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,6 +19,7 @@ public class UserDataTest {
 	private File fw;
 	private File fw2;
 	private String newUser;
+	@SuppressWarnings("unused")
 	private User user;
 	private List<String> records;
 

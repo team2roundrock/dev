@@ -6,9 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Vector;
@@ -239,6 +237,7 @@ public abstract class ReadFiles {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static List<String> readAchievements(String playerName) throws FileNotFoundException {
 
 //		if (readAchievements == null) {
@@ -269,6 +268,7 @@ public abstract class ReadFiles {
 //		return readAchievements.get(playerName);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Vector<String> getRecords(){
 		if(listOfUsers == null)
 		{
