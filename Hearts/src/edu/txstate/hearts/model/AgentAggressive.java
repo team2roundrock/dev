@@ -114,15 +114,15 @@ public class AgentAggressive extends Agent {
 	/**
 	 * Save all of the current threshold objects to disk 
 	 */
-	public void serializeThresholds() {
+	static public void serializeThresholds() {
 		try {
 			// use buffering
 			OutputStream file = new FileOutputStream("thresholds.bin");
 			OutputStream buffer = new BufferedOutputStream(file);
 			ObjectOutput output = new ObjectOutputStream(buffer);
 			try {
-				if(silent)
-					System.out.println("saving "+thresholds);
+				//if(silent)
+				//	System.out.println("saving "+thresholds);
 				output.writeObject(thresholds);
 			} finally {
 				output.close();

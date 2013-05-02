@@ -170,6 +170,10 @@ public class RiskThresholds implements Serializable {
 		double oldValue = t.getThreshold();
 		double factor = 1d+offset;
 		double newValue = factor * oldValue;
+		if(newValue > 10)
+			newValue = 10;
+		if(newValue < 0)
+			newValue = 0;
 		//System.out.println("factor is "+factor);
 		//System.out.println("doing increase oldValue is " + oldValue
 		//		+ " newValue is " + newValue);

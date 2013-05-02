@@ -522,6 +522,7 @@ public class Hearts implements ActionListener
 				PointsDisplay pointDisplay = new PointsDisplay(this, this.players, playerWithLowestTotalPoints.getName());
 				this.pointDisplay = pointDisplay;
 				pointDisplay.showDialog();
+				AgentAggressive.serializeThresholds();
 				return;
 			}
 
